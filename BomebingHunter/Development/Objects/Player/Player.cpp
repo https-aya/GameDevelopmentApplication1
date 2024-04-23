@@ -50,7 +50,7 @@ void Player::Update()
 void Player::Draw() const
 {
 	//プレイヤー画像の描画
-	DrawRotaGraphF(location.x, location.y, 1.0, radian, image, TRUE, flip_flag);
+	DrawRotaGraphF(location.x, location.y, 0.5, radian, image, TRUE, flip_flag);
 
 	//デバッグ用
 	#if _DEBUG
@@ -89,13 +89,19 @@ void Player::Movement()
 	//左右移動
 	if (InputControl::GetKey(KEY_INPUT_LEFT))
 	{
-		velocity.x += -1.0f;
-		flip_flag = TRUE;
+		if (location.x > 30.0f)
+		{
+			velocity.x += -1.0f;
+			flip_flag = TRUE;
+		}
 	}
 	else if (InputControl::GetKey(KEY_INPUT_RIGHT))
 	{
-		velocity.x += 1.0f;
-		flip_flag = FALSE;
+		if (location.x < 610.0f)
+		{
+			velocity.x += 1.0f;
+			flip_flag = FALSE;
+		}
 	}
 	else
 	{
