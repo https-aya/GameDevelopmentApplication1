@@ -1,6 +1,7 @@
 #include "Scene.h"
 #include "DxLib.h"
 #include "../Objects/Player/Player.h"
+#include "../Objects/Enemy/Enemy.h"
 
 //コンストラクタ
 Scene::Scene() : objects(),Background(NULL)
@@ -19,6 +20,7 @@ void Scene::Initialize()
 {
 	//プレイヤーを生成する
 	CreateObject<Player>(Vector2D(320.0f, 50.0f));
+	CreateObject<Enemy>(Vector2D(550.0f, 400.0f));
 	Background = LoadGraph("Resource/Images/BackGround.png");
 }
 

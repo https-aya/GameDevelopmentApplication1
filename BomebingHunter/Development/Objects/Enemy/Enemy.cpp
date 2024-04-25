@@ -32,7 +32,7 @@ void Enemy::Initialize()
 	image = animation[0];
 
 	//初期進行方向の設定
-	direction = Vector2D(1.0f, -0.5f);
+	direction = Vector2D(-1.0f, 0.0f);
 }
 
 //更新処理
@@ -42,6 +42,11 @@ void Enemy::Update()
 	Movement();
 	//アニメーション制御
 	AnimeControl();
+
+	if (location.x < 60)
+	{
+		Finalize();
+	}
 }
 
 //描画処理
@@ -81,10 +86,31 @@ void Enemy::OnHitCollision(GameObject* hit_object)
 
 void Enemy::Movement()
 {
-	if(((location.x+direction.x)<scale))
+
+
+
+	location += direction;
 }
 
 void Enemy::AnimeControl()
 {
+	//アニメーションカウントを加算する
+	animation_count++;
 
+	//60フレーム目に到達したら
+	if (animation_count >= 60)
+	{
+		//カウントリセット
+		animation_count = 0;
+
+		//画像の切り替え
+		if (image == animation[0])
+		{
+			image = animation[1];
+		}
+		else
+		{
+			image = animation[0];
+		}
+	}
 }
