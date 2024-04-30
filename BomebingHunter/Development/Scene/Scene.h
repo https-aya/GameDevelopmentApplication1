@@ -11,6 +11,10 @@ private:
 	//背景画像
 	int Background;
 
+	int counttime;
+	int countrand;
+	int createrand;
+
 public:
 	Scene();
 	~Scene();
@@ -37,10 +41,11 @@ private:
 			throw std::string("ゲームオブジェクトが生成できませんでした");
 		}
 
-		//初期化処理
-		new_object->Initialize();
 		//位置情報の設定
 		new_object->SetLocation(location);
+
+		//初期化処理
+		new_object->Initialize();
 
 		//オブジェクトリストに追加
 		objects.push_back(new_object);

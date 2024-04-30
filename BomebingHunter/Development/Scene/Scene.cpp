@@ -1,10 +1,11 @@
 #include "Scene.h"
 #include "DxLib.h"
 #include "../Objects/Player/Player.h"
-#include "../Objects/Enemy/Enemy.h"
+#include "../Objects/Enemy/boxEnemy.h"
+#include "../Objects/Enemy/WingEnemy.h"
 
 //コンストラクタ
-Scene::Scene() : objects(),Background(NULL)
+Scene::Scene() : objects(), Background(NULL), counttime(),countrand(),createrand()
 {
 }
 
@@ -20,18 +21,40 @@ void Scene::Initialize()
 {
 	//プレイヤーを生成する
 	CreateObject<Player>(Vector2D(320.0f, 50.0f));
-	CreateObject<Enemy>(Vector2D(550.0f, 400.0f));
+	CreateObject<boxEnemy>(Vector2D(600.0f, 400.0f));
+	CreateObject<WingEnemy>(Vector2D(600.0f, 300.0f));
+	counttime = 1;
+	countrand = 1000;
+	createrand = 0;
 	Background = LoadGraph("Resource/Images/BackGround.png");
 }
 
 //更新処理
 void Scene::Update()
 {
+	counttime++;
 	//シーンに存在するオブジェクトの更新処理
 	for (GameObject* obj : objects)
 	{
 		obj->Update();
 	}
+	if (counttime >= countrand)
+	{
+		if (createrand == 0)
+		{
+			CreateObject<boxEnemy>(Vector2D(600.0f, 400.0f));
+			CreateObject<WingEnemy>(Vector2D(600.0f, 300.0f));
+		}
+		else
+		{
+			CreateObject<boxEnemy>(Vector2D(0.0f, 400.0f));
+			CreateObject<WingEnemy>(Vector2D(0.0f, 300.0f));
+		}
+		createrand = GetRand(1);
+		countrand = GetRand(11) * 100;
+		counttime = 0;
+	}
+
 }
 
 //描画処理
