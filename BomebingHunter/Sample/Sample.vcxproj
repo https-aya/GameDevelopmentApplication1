@@ -131,19 +131,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AppMain.cpp" />
-    <ClCompile Include="Objects\GameObject.cpp" />
-    <ClCompile Include="Objects\Player\Player.cpp" />
-    <ClCompile Include="Scene\Scene.cpp" />
-    <ClCompile Include="Utility\InputControl.cpp" />
-    <ClCompile Include="Utility\Vector2D.cpp" />
+    <ClCompile Include="0203\AppMain.cpp" />
+    <ClCompile Include="0203\Objects\GameObject.cpp" />
+    <ClCompile Include="0203\Objects\Player\Player.cpp" />
+    <ClCompile Include="0203\Scene\Scene.cpp" />
+    <ClCompile Include="0203\Utility\InputControl.cpp" />
+    <ClCompile Include="0203\Utility\Vector2D.cpp" />
+    <ClCompile Include="0203\Objects\Enemy\Enemy.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Objects\GameObject.h" />
-    <ClInclude Include="Objects\Player\Player.h" />
-    <ClInclude Include="Scene\Scene.h" />
-    <ClInclude Include="Utility\InputControl.h" />
-    <ClInclude Include="Utility\Vector2D.h" />
+    <ClInclude Include="0203\Objects\GameObject.h" />
+    <ClInclude Include="0203\Objects\Player\Player.h" />
+    <ClInclude Include="0203\Scene\Scene.h" />
+    <ClInclude Include="0203\Utility\InputControl.h" />
+    <ClInclude Include="0203\Utility\UserTemplate.h" />
+    <ClInclude Include="0203\Utility\Vector2D.h" />
+    <ClInclude Include="0203\Objects\Enemy\Enemy.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

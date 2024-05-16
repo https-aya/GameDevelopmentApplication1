@@ -128,14 +128,5 @@ void WingEnemy::AnimeControl()
 		{
 			image = animation[0];
 		}
-
-		if (image == animation[2])
-		{
-			image = animation[3];
-		}
-		else if (image == animation[3])
-		{
-			image = animation[2];
-		}
 	}
 }
