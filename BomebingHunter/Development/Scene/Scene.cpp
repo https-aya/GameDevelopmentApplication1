@@ -3,6 +3,8 @@
 #include "../Objects/Player/Player.h"
 #include "../Objects/Enemy/boxEnemy.h"
 #include "../Objects/Enemy/WingEnemy.h"
+#include "../Objects/Bomb/Bomb.h"
+#include "../Utility/InputControl.h"
 
 //コンストラクタ
 Scene::Scene() : objects(), Background(NULL), counttime(),countrand(),createrand()
@@ -54,7 +56,11 @@ void Scene::Update()
 		countrand = GetRand(11) * 100;
 		counttime = 0;
 	}
-
+	if (InputControl::GetKeyDown(KEY_INPUT_Z))
+	{
+		Vector2D location = objects[0]->GetLocation();
+		CreateObject<Bomb>(Vector2D(location));
+	}
 }
 
 //描画処理

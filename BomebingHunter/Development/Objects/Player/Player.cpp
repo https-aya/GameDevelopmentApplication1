@@ -31,7 +31,7 @@ void Player::Initialize()
 	radian = 0.0;
 
 	//大きさの設定
-	scale = 64.0;
+	box_size = 64.0f;
 
 	//初期画像の設定
 	image = animation[0];
@@ -44,6 +44,7 @@ void Player::Update()
 	Movement();
 	//アニメーション制御
 	AnimeControl();
+
 }
 
 //描画処理
@@ -52,18 +53,8 @@ void Player::Draw() const
 	//プレイヤー画像の描画
 	DrawRotaGraphF(location.x, location.y, 0.5, radian, image, TRUE, flip_flag);
 
-	//デバッグ用
-	#if _DEBUG
-	//当たり判定の可視化
-	Vector2D box_collision_upper_left = location - (Vector2D(1.0f) *
-		(float)scale / 2.0f);
-	Vector2D box_collision_upper_right = location + (Vector2D(1.0f) *
-		(float)scale / 2.0f);
-
-	DrawBoxAA(box_collision_upper_left.x, box_collision_upper_left.y,
-			  box_collision_upper_right.x, box_collision_upper_right.y,
-			  GetColor(255, 0, 0), FALSE);
-	#endif
+	//親クラスの描画処理を呼び出す
+	__super::Draw();
 }
 
 //終了時処理

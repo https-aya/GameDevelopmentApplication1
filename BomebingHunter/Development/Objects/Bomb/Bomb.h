@@ -1,11 +1,12 @@
 #pragma once
+
 #include "../GameObject.h"
 
 class Bomb : public GameObject
 {
 private:
 	int animation;
-	int flip_flag;
+	Vector2D direction;
 
 public:
 	Bomb();

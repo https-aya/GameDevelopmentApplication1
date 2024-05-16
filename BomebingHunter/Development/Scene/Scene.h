@@ -6,8 +6,9 @@
 
 class Scene
 {
-private:
+public:
 	std::vector<GameObject*> objects;
+private:
 	//”wŒi‰æ‘œ
 	int Background;
 
