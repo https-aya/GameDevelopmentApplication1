@@ -1,13 +1,12 @@
 #include "Scene.h"
 #include "DxLib.h"
 #include "../Objects/Player/Player.h"
-#include "../Objects/Enemy/boxEnemy.h"
-#include "../Objects/Enemy/WingEnemy.h"
+#include "../Objects/Enemy/Enemy.h"
 #include "../Objects/Bomb/Bomb.h"
 #include "../Utility/InputControl.h"
 
 //コンストラクタ
-Scene::Scene() : objects(), Background(NULL), counttime(),countrand(),createrand()
+Scene::Scene() : objects(), Background(NULL), count_time(),count_rand(),create_rand()
 {
 }
 
@@ -22,44 +21,54 @@ Scene::~Scene()
 void Scene::Initialize()
 {
 	//プレイヤーを生成する
-	CreateObject<Player>(Vector2D(320.0f, 50.0f));
-	CreateObject<boxEnemy>(Vector2D(600.0f, 400.0f));
-	CreateObject<WingEnemy>(Vector2D(600.0f, 300.0f));
-	counttime = 1;
-	countrand = 1000;
-	createrand = 0;
+	CreateObject<Player>(Vector2D(320.0f, 50.0f),1);
+	CreateObject<Enemy>(Vector2D(600.0f, 400.0f),6);
+	CreateObject<Enemy>(Vector2D(600.0f, 300.0f),5);
+	count_time = 1;
+	count_rand = 1000;
+	create_rand = 0;
 	Background = LoadGraph("Resource/Images/BackGround.png");
 }
 
 //更新処理
 void Scene::Update()
 {
-	counttime++;
+	count_time++;
 	//シーンに存在するオブジェクトの更新処理
 	for (GameObject* obj : objects)
 	{
 		obj->Update();
 	}
-	if (counttime >= countrand)
+	if (count_time >= count_rand)
 	{
-		if (createrand == 0)
+		if (create_rand == 0)
 		{
-			CreateObject<boxEnemy>(Vector2D(600.0f, 400.0f));
-			CreateObject<WingEnemy>(Vector2D(600.0f, 300.0f));
+			CreateObject<Enemy>(Vector2D(600.0f, 400.0f),6);
+			CreateObject<Enemy>(Vector2D(600.0f, 300.0f),5);
 		}
 		else
 		{
-			CreateObject<boxEnemy>(Vector2D(0.0f, 400.0f));
-			CreateObject<WingEnemy>(Vector2D(0.0f, 300.0f));
+			CreateObject<Enemy>(Vector2D(0.0f, 400.0f),6);
+			CreateObject<Enemy>(Vector2D(0.0f, 300.0f),5);
 		}
-		createrand = GetRand(1);
-		countrand = GetRand(11) * 100;
-		counttime = 0;
+		create_rand = GetRand(1);
+		count_rand = GetRand(11) * 100;
+		count_time = 0;
 	}
+	//オブジェクト同士の当たり判定チェック
+	for (int i = 0; i < objects.size(); i++)
+	{
+		for (int j = i + 1; j < objects.size(); j++)
+		{
+			//当たり判定チェック処理
+			HitCheckObject(objects[i], objects[j]);
+		}
+	}
+
 	if (InputControl::GetKeyDown(KEY_INPUT_Z))
 	{
 		Vector2D location = objects[0]->GetLocation();
-		CreateObject<Bomb>(Vector2D(location));
+		CreateObject<Bomb>(Vector2D(location),2);
 	}
 }
 
@@ -93,4 +102,20 @@ void Scene::Finalize()
 
 	//動的配列の開放
 	objects.clear();
+}
+
+void Scene::HitCheckObject(GameObject* a, GameObject* b)
+{
+	Vector2D diff = a->GetLocation() - b->GetLocation();
+
+	Vector2D box_size = (a->GetScale() + b->GetScale()) / 2.0f;
+
+	if ((fabsf(diff.x) < box_size.x) && (fabsf(diff.y) < box_size.y))
+	{
+		if ((a->GetType() == 2 || b->GetType() == 2) && (a->GetType() != 1 && b->GetType() != 1))
+		{
+			a->OnHitCollision(b);
+			b->OnHitCollision(a);
+		}
+	}
 }

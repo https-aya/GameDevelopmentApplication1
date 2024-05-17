@@ -31,7 +31,10 @@ void Bomb::Update()
 {
 	Movement();
 
-
+	if (location.y >= 400)
+	{
+		Finalize();
+	}
 }
 
 void Bomb::Draw() const
@@ -45,7 +48,6 @@ void Bomb::Draw() const
 void Bomb::Finalize()
 {
 	DeleteGraph(animation);
-	location = NULL;
 }
 
 void Bomb::OnHitCollision(GameObject* hit_object)

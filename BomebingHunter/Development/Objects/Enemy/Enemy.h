@@ -2,16 +2,18 @@
 
 #include "../GameObject.h"
 
-class WingEnemy : public GameObject
+class Enemy : public GameObject
 {
 private:
-	int animation[2];			//アニメーション画像
+	int animation[5];			//アニメーション画像
 	int animation_count;		//アニメーション時間
 	Vector2D direction;			//進行方向
+	int max_animation;
+	int anime_time;
 
 public:
-	WingEnemy();
-	~WingEnemy();
+	Enemy();
+	~Enemy();
 
 	virtual void Initialize() override;			//初期化処理
 	virtual void Update() override;				//更新処理

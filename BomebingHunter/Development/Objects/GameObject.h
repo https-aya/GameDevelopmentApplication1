@@ -13,6 +13,7 @@ protected:
 	double radian;				//Œü‚«
 	int image;					//•`‰æ‚·‚é‰æ‘œ
 	int sound;					//Ä¶‚·‚é‰¹Œ¹
+	int type;					//ƒvƒŒƒCƒ„[‚©“G‚©‚ğ”»’f‚·‚é
 
 public:
 	GameObject();
@@ -32,5 +33,9 @@ public:
 	void SetLocation(const Vector2D& location);
 
 	Vector2D GetScale() const;
+
+	int GetType() const;
+
+	void SetType(const int type);
 };
 

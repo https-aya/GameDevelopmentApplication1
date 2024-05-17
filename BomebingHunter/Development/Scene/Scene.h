@@ -6,15 +6,15 @@
 
 class Scene
 {
-public:
+private:
 	std::vector<GameObject*> objects;
 private:
 	//背景画像
 	int Background;
 
-	int counttime;
-	int countrand;
-	int createrand;
+	int count_time;
+	int count_rand;
+	int create_rand;
 
 public:
 	Scene();
@@ -26,9 +26,12 @@ public:
 	void Finalize();
 
 private:
+	//当たり判定チェック
+	void HitCheckObject(GameObject* a, GameObject* b);
+
 	//オブジェクト生成処理
 	template <class T>
-	T* CreateObject(const Vector2D& location)
+	T* CreateObject(const Vector2D& location,int enemytype)
 	{
 		//指定したクラスを生成する
 		T* new_instance = new T();
@@ -41,6 +44,8 @@ private:
 			delete new_instance;
 			throw std::string("ゲームオブジェクトが生成できませんでした");
 		}
+
+		new_object->SetType(enemytype);
 
 		//位置情報の設定
 		new_object->SetLocation(location);

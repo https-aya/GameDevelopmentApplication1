@@ -7,7 +7,8 @@ GameObject::GameObject() :
 	box_size(0.0f),
 	radian(0.0),
 	image(0),
-	sound(0)
+	sound(0),
+	type(0)
 {
 }
 
@@ -68,4 +69,14 @@ void GameObject::SetLocation(const Vector2D& location)
 Vector2D GameObject::GetScale() const
 {
 	return box_size;
+}
+
+int GameObject::GetType() const
+{
+	return type;
+}
+
+void GameObject::SetType(const int type)
+{
+	this->type = type;
 }
