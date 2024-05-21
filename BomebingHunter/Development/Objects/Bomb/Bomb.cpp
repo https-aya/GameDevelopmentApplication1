@@ -47,12 +47,14 @@ void Bomb::Draw() const
 
 void Bomb::Finalize()
 {
+	box_size = NULL;
+	location = NULL;
+	direction = 0.0f;
 	DeleteGraph(animation);
 }
 
 void Bomb::OnHitCollision(GameObject* hit_object)
 {
-	direction = 0.0f;
 	Finalize();
 }
 

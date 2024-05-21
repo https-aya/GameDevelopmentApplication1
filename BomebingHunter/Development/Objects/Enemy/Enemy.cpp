@@ -122,12 +122,14 @@ void Enemy::Finalize()
 	{
 		DeleteGraph(animation[i]);
 	}
+	box_size = NULL;
+	direction = 0.0f;
+	location = NULL;
 }
 
 //“–‚½‚Á‚½‚Ìˆ—
 void Enemy::OnHitCollision(GameObject* hit_object)
 {
-	direction = 0.0f;
 	Finalize();
 }
 

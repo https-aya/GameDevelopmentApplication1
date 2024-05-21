@@ -34,10 +34,15 @@ void Scene::Initialize()
 void Scene::Update()
 {
 	count_time++;
+	
 	//シーンに存在するオブジェクトの更新処理
 	for (GameObject* obj : objects)
 	{
-		obj->Update();
+		Vector2D i=obj->GetScale();		
+		if (i.x != NULL && i.y != NULL)
+		{
+			obj->Update();
+		}
 	}
 	if (count_time >= count_rand)
 	{
@@ -67,8 +72,7 @@ void Scene::Update()
 
 	if (InputControl::GetKeyDown(KEY_INPUT_Z))
 	{
-		Vector2D location = objects[0]->GetLocation();
-		CreateObject<Bomb>(Vector2D(location),2);
+		CreateObject<Bomb>(objects[0]->GetLocation(), 2);
 	}
 }
 
