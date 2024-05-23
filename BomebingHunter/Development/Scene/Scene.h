@@ -12,9 +12,10 @@ private:
 	//”wŒi‰æ‘œ
 	int Background;
 
-	int count_time;
-	int count_rand;
-	int create_rand;
+	int count_time;			//¶¬ŠÔŠu‚ÌƒJƒEƒ“ƒg
+	int count_rand;			//ƒ‰ƒ“ƒ_ƒ€‚Å¶¬ŠÔŠu‚ğŒˆ‚ß‚é
+	int create_rand;		//¶¬ˆÊ’u‚ğƒ‰ƒ“ƒ_ƒ€‚ÅŒˆ‚ß‚é
+	int count_bome;			//ƒ{ƒ€‚Ì¶¬ŠÔŠu
 
 public:
 	Scene();

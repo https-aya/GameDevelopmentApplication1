@@ -6,7 +6,7 @@
 #include "../Utility/InputControl.h"
 
 //コンストラクタ
-Scene::Scene() : objects(), Background(NULL), count_time(),count_rand(),create_rand()
+Scene::Scene() : objects(), Background(NULL), count_time(),count_rand(),create_rand(),count_bome()
 {
 }
 
@@ -27,6 +27,7 @@ void Scene::Initialize()
 	count_time = 1;
 	count_rand = 1000;
 	create_rand = 0;
+	count_bome = 0;
 	Background = LoadGraph("Resource/Images/BackGround.png");
 }
 
@@ -34,7 +35,8 @@ void Scene::Initialize()
 void Scene::Update()
 {
 	count_time++;
-	
+	count_bome--;
+
 	//シーンに存在するオブジェクトの更新処理
 	for (GameObject* obj : objects)
 	{
@@ -72,7 +74,15 @@ void Scene::Update()
 
 	if (InputControl::GetKeyDown(KEY_INPUT_Z))
 	{
-		CreateObject<Bomb>(objects[0]->GetLocation(), 2);
+		if (count_bome <= 0)
+		{
+			CreateObject<Bomb>(objects[0]->GetLocation(), 2);
+			count_bome = 300;
+		}
+	}
+	if (count_bome <= 0)
+	{
+		count_bome = 0;
 	}
 }
 
@@ -86,6 +96,7 @@ void Scene::Draw() const
 	{
 		obj->Draw();
 	}
+	DrawFormatString(10, 10, 0x000000, "%d", count_bome);
 }
 
 //終了時処理

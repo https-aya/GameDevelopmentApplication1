@@ -9,7 +9,6 @@ private:
 	int animation_count;		//アニメーション時間
 	int flip_flag;				//反転フラグ
 
-
 public:
 	Player();
 	~Player();

@@ -8,8 +8,9 @@ private:
 	int animation[5];			//アニメーション画像
 	int animation_count;		//アニメーション時間
 	Vector2D direction;			//進行方向
-	int max_animation;
-	int anime_time;
+	int max_animation;			//アニメーションの最大数
+	int anime_time;				//どのアニメーションか
+	int attack_count;
 
 public:
 	Enemy();

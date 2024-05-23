@@ -1,7 +1,8 @@
 #include "Enemy.h"
+#include "EnemyBullet.h"
 #include "DxLib.h"
 
-Enemy::Enemy() : animation_count(0), direction(0.0f), max_animation(0), anime_time(0)
+Enemy::Enemy() : animation_count(0), direction(0.0f), max_animation(0), anime_time(0),attack_count(0)
 {
 	for (int i = 0; i < 5; i++)
 	{
@@ -24,6 +25,7 @@ void Enemy::Initialize()
 		animation[2] = NULL;
 		animation[3] = NULL;
 		animation[4] = NULL;
+		box_size = 64.0f;
 		break;
 	case 4:
 		animation[0] = LoadGraph("Resource/Images/WingEnemy/1.png");
@@ -31,6 +33,7 @@ void Enemy::Initialize()
 		animation[2] = NULL;
 		animation[3] = NULL;
 		animation[4] = NULL;
+		box_size = 64.0f;
 		break;
 	case 5:
 		animation[0] = LoadGraph("Resource/Images/Harpy/1.png");
@@ -38,6 +41,7 @@ void Enemy::Initialize()
 		animation[2] = NULL;
 		animation[3] = NULL;
 		animation[4] = NULL;
+		box_size = 64.0f;
 		break;
 	case 6:
 		animation[0] = LoadGraph("Resource/Images/GoldEnemy/1.png");
@@ -45,6 +49,7 @@ void Enemy::Initialize()
 		animation[2] = LoadGraph("Resource/Images/GoldEnemy/3.png");
 		animation[3] = LoadGraph("Resource/Images/GoldEnemy/4.png");
 		animation[4] = LoadGraph("Resource/Images/GoldEnemy/5.png");
+		box_size = 32.0f;
 		break;
 	}
 
@@ -60,24 +65,24 @@ void Enemy::Initialize()
 		}
 	}
 	
-	float randam = (GetRand(20) + 1.0) / 10;
+	float random = (GetRand(20) + 1.0) / 10;
 
 	if (location.x >= 590.0f)
 	{
-		randam *= -1;
+		random *= -1;
 	}
 
 	//向きの設定
 	radian = 0.0;
 
 	//大きさの設定
-	box_size = 64.0f;
+	
 
 	//初期画像の設定
 	image = animation[0];
 
 	//初期進行方向の設定
-	direction = Vector2D(randam, 0.0f);
+	direction = Vector2D(random, 0.0f);
 }
 
 //更新処理
@@ -87,6 +92,29 @@ void Enemy::Update()
 	Movement();
 	//アニメーション制御
 	AnimeControl();
+
+	attack_count++;
+	EnemyBullet* bullet=NULL;
+
+	if (attack_count >= 100)
+	{
+		bullet = new EnemyBullet;
+		bullet->SetLocation(this->location);
+		attack_count = 0;
+	}
+
+	if (bullet != NULL)
+	{
+		if (bullet->GetLocation().y <= 0.0f)
+		{
+			delete bullet;
+		}
+		else
+		{
+			bullet->Update();
+			bullet->Draw();
+		}
+	}
 
 	if (location.x < 0)
 	{
@@ -109,7 +137,7 @@ void Enemy::Draw() const
 	}
 
 	DrawRotaGraphF(location.x, location.y, 0.5, radian, image, TRUE, flip_flag);
-
+	DrawFormatString(100, 100, 0xffff00, "%d", attack_count);
 	//親クラスの描画処理を呼び出す
 	__super::Draw();
 }
