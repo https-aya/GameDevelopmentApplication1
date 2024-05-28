@@ -3,6 +3,7 @@
 #include "../Objects/Player/Player.h"
 #include "../Objects/Enemy/Enemy.h"
 #include "../Objects/Bomb/Bomb.h"
+#include "../Objects/Bomb/Blast.h"
 #include "../Utility/InputControl.h"
 
 //コンストラクタ
@@ -84,6 +85,7 @@ void Scene::Update()
 	{
 		count_bome = 0;
 	}
+	if(objects.)
 }
 
 //描画処理
@@ -129,6 +131,14 @@ void Scene::HitCheckObject(GameObject* a, GameObject* b)
 	{
 		if ((a->GetType() == 2 || b->GetType() == 2) && (a->GetType() != 1 && b->GetType() != 1))
 		{
+			if (a->GetType() == 2)
+			{
+				CreateObject<Blast>(a->GetLocation(), 2);
+			}
+			else if (b->GetType() == 2)
+			{
+				CreateObject<Blast>(b->GetLocation(), 2);
+			}
 			a->OnHitCollision(b);
 			b->OnHitCollision(a);
 		}

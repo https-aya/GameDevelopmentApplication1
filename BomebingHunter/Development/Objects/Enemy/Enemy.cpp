@@ -2,7 +2,7 @@
 #include "EnemyBullet.h"
 #include "DxLib.h"
 
-Enemy::Enemy() : animation_count(0), direction(0.0f), max_animation(0), anime_time(0),attack_count(0)
+Enemy::Enemy() : animation_count(0), direction(0.0f), max_animation(0), anime_time(0)
 {
 	for (int i = 0; i < 5; i++)
 	{
@@ -93,29 +93,6 @@ void Enemy::Update()
 	//アニメーション制御
 	AnimeControl();
 
-	attack_count++;
-	EnemyBullet* bullet=NULL;
-
-	if (attack_count >= 100)
-	{
-		bullet = new EnemyBullet;
-		bullet->SetLocation(this->location);
-		attack_count = 0;
-	}
-
-	if (bullet != NULL)
-	{
-		if (bullet->GetLocation().y <= 0.0f)
-		{
-			delete bullet;
-		}
-		else
-		{
-			bullet->Update();
-			bullet->Draw();
-		}
-	}
-
 	if (location.x < 0)
 	{
 		Finalize();
@@ -137,7 +114,6 @@ void Enemy::Draw() const
 	}
 
 	DrawRotaGraphF(location.x, location.y, 0.5, radian, image, TRUE, flip_flag);
-	DrawFormatString(100, 100, 0xffff00, "%d", attack_count);
 	//親クラスの描画処理を呼び出す
 	__super::Draw();
 }

@@ -10,7 +10,6 @@ private:
 	Vector2D direction;			//進行方向
 	int max_animation;			//アニメーションの最大数
 	int anime_time;				//どのアニメーションか
-	int attack_count;
 
 public:
 	Enemy();

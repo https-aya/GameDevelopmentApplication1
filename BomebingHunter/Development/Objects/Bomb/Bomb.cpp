@@ -1,7 +1,7 @@
 #include "Bomb.h"
 #include "DxLib.h"
 
-Bomb :: Bomb() : animation(NULL),direction(0.0f)
+Bomb::Bomb() : direction(0.0f), animation(NULL)
 {
 }
 
@@ -19,12 +19,15 @@ void Bomb::Initialize()
 		throw("ƒ{ƒ€‚Ì‰æ‘œ‚ª‚ ‚è‚Ü‚¹‚ñ");
 	}
 
+
+
 	radian = 90 * (3.14/180);
 
 	box_size = 32.0;
 
 	direction = Vector2D(0.0f, 1.0f);
 
+	image = animation;
 }
 
 void Bomb::Update()
@@ -40,21 +43,21 @@ void Bomb::Update()
 void Bomb::Draw() const
 {
 
-	DrawRotaGraphF(location.x, location.y, 0.5, radian, animation, TRUE);
-
+	DrawRotaGraphF(location.x, location.y, 0.5, radian, image, TRUE);
 	__super::Draw();
 }
 
 void Bomb::Finalize()
 {
+	direction = 0.0f;
 	box_size = NULL;
 	location = NULL;
-	direction = 0.0f;
 	DeleteGraph(animation);
 }
 
 void Bomb::OnHitCollision(GameObject* hit_object)
 {
+
 	Finalize();
 }
 
