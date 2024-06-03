@@ -14,6 +14,7 @@ protected:
 	int image;					//•`‰æ‚·‚é‰æ‘œ
 	int sound;					//Ä¶‚·‚é‰¹Œ¹
 	int type;					//ƒvƒŒƒCƒ„[‚©“G‚©‚ğ”»’f‚·‚é
+	bool Delete;
 
 public:
 	GameObject();
@@ -35,6 +36,8 @@ public:
 	Vector2D GetScale() const;
 
 	int GetType() const;
+
+	bool GetDelete() const;
 
 	void SetType(const int type);
 };

@@ -5,8 +5,11 @@
 class Bomb : public GameObject
 {
 private:
-	int animation;
+	int animation[4];
 	Vector2D direction;
+	int anime_count;
+	int anime_num;
+	bool anime_flag;
 
 public:
 	Bomb();
@@ -23,5 +26,7 @@ public:
 private:
 	//ˆÚ“®ˆ—
 	void Movement();
+
+	void AnimeControl();
 };
 

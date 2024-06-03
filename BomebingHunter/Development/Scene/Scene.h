@@ -16,6 +16,7 @@ private:
 	int count_rand;			//ランダムで生成間隔を決める
 	int create_rand;		//生成位置をランダムで決める
 	int count_bome;			//ボムの生成間隔
+	int enemy_rand;
 
 public:
 	Scene();

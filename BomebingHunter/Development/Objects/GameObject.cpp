@@ -8,7 +8,8 @@ GameObject::GameObject() :
 	radian(0.0),
 	image(0),
 	sound(0),
-	type(0)
+	type(0),
+	Delete(FALSE)
 {
 }
 
@@ -74,6 +75,11 @@ Vector2D GameObject::GetScale() const
 int GameObject::GetType() const
 {
 	return type;
+}
+
+bool GameObject::GetDelete() const
+{
+	return Delete;
 }
 
 void GameObject::SetType(const int type)

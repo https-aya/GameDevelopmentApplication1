@@ -1,8 +1,12 @@
 #include "Bomb.h"
 #include "DxLib.h"
 
-Bomb::Bomb() : direction(0.0f), animation(NULL)
+Bomb::Bomb() : direction(0.0f),anime_flag(false),anime_count(0),anime_num(0)
 {
+	for (int i = 0; i < 4; i++)
+	{
+		animation[i] = NULL;
+	}
 }
 
 Bomb :: ~Bomb()
@@ -12,14 +16,18 @@ Bomb :: ~Bomb()
 
 void Bomb::Initialize()
 {
-	animation = LoadGraph("Resource/Images/Bomb/Bomb.png");
+	animation[0] = LoadGraph("Resource/Images/Bomb/Bomb.png");
+	animation[1] = LoadGraph("Resource/Images/Blast/1.png");
+	animation[2] = LoadGraph("Resource/Images/Blast/2.png");
+	animation[3] = LoadGraph("Resource/Images/Blast/3.png");
 
-	if (animation == -1)
+	for (int i = 0; i < 4; i++)
 	{
-		throw("ƒ{ƒ€‚Ì‰æ‘œ‚ª‚ ‚è‚Ü‚¹‚ñ");
+		if (animation[i] == -1)
+		{
+			throw("ƒ{ƒ€‚Ì‰æ‘œ%d‚ª‚ ‚è‚Ü‚¹‚ñ",i);
+		}
 	}
-
-
 
 	radian = 90 * (3.14/180);
 
@@ -27,41 +35,75 @@ void Bomb::Initialize()
 
 	direction = Vector2D(0.0f, 1.0f);
 
-	image = animation;
+	image = animation[0];
 }
 
 void Bomb::Update()
 {
 	Movement();
 
-	if (location.y >= 400)
-	{
-		Finalize();
-	}
+	AnimeControl();
+
 }
 
 void Bomb::Draw() const
 {
 
 	DrawRotaGraphF(location.x, location.y, 0.5, radian, image, TRUE);
+	DrawFormatString(50, 50, 0xffffff, "%d", anime_flag);
 	__super::Draw();
 }
 
 void Bomb::Finalize()
 {
-	direction = 0.0f;
-	box_size = NULL;
 	location = NULL;
-	DeleteGraph(animation);
+	Delete = TRUE;
+	for (int i = 0; i < 4; i++)
+	{
+		DeleteGraph(animation[i]);
+	}
 }
 
 void Bomb::OnHitCollision(GameObject* hit_object)
 {
-
-	Finalize();
+	anime_flag = true;
+	direction = 0.0f; 
+	box_size = NULL;
 }
 
 void Bomb::Movement()
 {
 	location += direction;
+
+	if (location.y >= 400)
+	{
+		direction = 0.0f;
+		anime_flag = true;
+		box_size = NULL;
+
+	}
+}
+
+void Bomb::AnimeControl()
+{
+	if (anime_flag == true)
+	{
+		anime_count++;
+		if (anime_count >= 15)
+		{
+			radian = 0;
+			anime_num++;
+			if (anime_num < 4)
+			{
+				image = animation[anime_num];
+			}
+			else
+			{
+				Finalize();
+			}
+
+			anime_count = 0;
+		}
+
+	}
 }

@@ -129,6 +129,7 @@ void Enemy::Finalize()
 	box_size = NULL;
 	direction = 0.0f;
 	location = NULL;
+	Delete = TRUE;
 }
 
 //“–‚½‚Á‚½‚Ìˆ—
