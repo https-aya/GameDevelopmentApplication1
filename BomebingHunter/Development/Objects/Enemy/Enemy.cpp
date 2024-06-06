@@ -26,6 +26,7 @@ void Enemy::Initialize()
 		animation[3] = NULL;
 		animation[4] = NULL;
 		box_size = 64.0f;
+		sca = 10;
 		break;
 	case 4:
 		animation[0] = LoadGraph("Resource/Images/WingEnemy/1.png");
@@ -34,6 +35,7 @@ void Enemy::Initialize()
 		animation[3] = NULL;
 		animation[4] = NULL;
 		box_size = 64.0f;
+		sca = 10;
 		break;
 	case 5:
 		animation[0] = LoadGraph("Resource/Images/Harpy/1.png");
@@ -42,6 +44,7 @@ void Enemy::Initialize()
 		animation[3] = NULL;
 		animation[4] = NULL;
 		box_size = 64.0f;
+		sca = -20;
 		break;
 	case 6:
 		animation[0] = LoadGraph("Resource/Images/GoldEnemy/1.png");
@@ -50,6 +53,7 @@ void Enemy::Initialize()
 		animation[3] = LoadGraph("Resource/Images/GoldEnemy/4.png");
 		animation[4] = LoadGraph("Resource/Images/GoldEnemy/5.png");
 		box_size = 32.0f;
+		sca = 100;
 		break;
 	}
 
@@ -65,9 +69,9 @@ void Enemy::Initialize()
 		}
 	}
 	
-	float random = (GetRand(20) + 1.0) / 10;
+	float random = (GetRand(10) + 10.0) / 10;
 
-	if (location.x >= 590.0f)
+	if (location.x >= 50.0f)
 	{
 		random *= -1;
 	}
@@ -95,18 +99,21 @@ void Enemy::Update()
 	//アニメーション制御
 	AnimeControl();
 
-	if (shot_count >= 100)
+	if (type != 5)
 	{
-		shot_flag = TRUE;
-		shot_count = 0;
-		shot_rand = (GetRand(3) + 1) * 100;
+		if (shot_count >= shot_rand)
+		{
+			shot_flag = TRUE;
+			shot_count = 0;
+			shot_rand = (GetRand(2) + 1) * 100;
+		}
+		else
+		{
+			shot_flag = FALSE;
+		}
 	}
-	else
-	{
-		shot_flag = FALSE;
-	}
-
-	if (location.x < 0)
+	
+	if (location.x < 0 || location.x > 630)
 	{
 		Finalize();
 	}
@@ -162,7 +169,7 @@ void Enemy::AnimeControl()
 	animation_count++;
 
 	//60フレーム目に到達したら
-	if (animation_count >= 60)
+	if (animation_count >= 30)
 	{
 		//カウントリセット
 		animation_count = 0;

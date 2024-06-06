@@ -33,7 +33,7 @@ void Bomb::Initialize()
 
 	box_size = 32.0;
 
-	SetDirection(Vector2D(0.0f, -1.0f));
+	SetDirection(Vector2D(0.0f, 2.0f));
 
 	image = animation[0];
 }
@@ -89,7 +89,7 @@ void Bomb::AnimeControl()
 	if (anime_flag == true)
 	{
 		anime_count++;
-		if (anime_count >= 15)
+		if (anime_count >= 10)
 		{
 			radian = 0;
 			anime_num++;

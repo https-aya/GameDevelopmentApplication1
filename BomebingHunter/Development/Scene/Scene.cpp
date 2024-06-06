@@ -7,7 +7,15 @@
 #include "../Utility/InputControl.h"
 
 //コンストラクタ
-Scene::Scene() : objects(), Background(NULL), count_time(), count_rand(), create_rand(), count_bome(), enemy_rand(),enemy_count()
+Scene::Scene() : 
+	objects(), 
+	Background(NULL), 
+	count_time(0), 
+	count_rand(0), 
+	create_rand(0), 
+	enemy_rand(0),
+	enemy_count(0),
+	sca(0)
 {
 }
 
@@ -22,13 +30,10 @@ Scene::~Scene()
 void Scene::Initialize()
 {
 	//プレイヤーを生成する
-	CreateObject<Player>(Vector2D(320.0f, 50.0f),2);
+	CreateObject<Player>(Vector2D(320.0f, 50.0f),2, 0.0f);
 	count_time = 1;
-	count_rand = 1000;
-	create_rand = 0;
-	count_bome = 0;
-	enemy_rand = 0;
-	enemy_count = 0;
+	count_rand = 100;
+	enemy_rand = 3;
 	Background = LoadGraph("Resource/Images/BackGround.png");
 }
 
@@ -37,7 +42,7 @@ void Scene::Update()
 {
 	count_time++;
 	count_bome--;
-
+	
 	//シーンに存在するオブジェクトの更新処理
 	for (GameObject* obj : objects)
 	{
@@ -47,50 +52,53 @@ void Scene::Update()
 			obj->Update();
 	//	}
 	}
-	if (count_time >= count_rand&&enemy_count<=6)
+	if (count_time >= count_rand)
 	{
-		if (create_rand == 0)
+		if (enemy_count < 6)
 		{
-			switch (enemy_rand)
+			if (create_rand == 0)
 			{
-			case 0:
-				CreateObject<Enemy>(Vector2D(600.0f, 400.0f), enemy_rand + 3);
-				break;
-			case 1:
-				CreateObject<Enemy>(Vector2D(600.0f, 300.0f), enemy_rand + 3);
-				break;
-			case 2:
-				CreateObject<Enemy>(Vector2D(600.0f, 300.0f), enemy_rand + 3);
-				break;
-			case 3:
-				CreateObject<Enemy>(Vector2D(600.0f, 400.0f), enemy_rand + 3);
-				break;
-			}
+				switch (enemy_rand)
+				{
+				case 3:
+					CreateObject<Enemy>(Vector2D(600.0f, 400.0f), enemy_rand, 0.0f);
+					break;
+				case 4:
+					CreateObject<Enemy>(Vector2D(600.0f, 300.0f), enemy_rand, 0.0f);
+					break;
+				case 5:
+					CreateObject<Enemy>(Vector2D(600.0f, 300.0f), enemy_rand, 0.0f);
+					break;
+				case 6:
+					CreateObject<Enemy>(Vector2D(600.0f, 400.0f), enemy_rand, 0.0f);
+					break;
+				}
 
-		}
-		else
-		{
-			switch (enemy_rand)
-			{
-			case 0:
-				CreateObject<Enemy>(Vector2D(0.0f, 400.0f), enemy_rand + 3);
-				break;
-			case 1:
-				CreateObject<Enemy>(Vector2D(0.0f, 300.0f), enemy_rand + 3);
-				break;
-			case 2:
-				CreateObject<Enemy>(Vector2D(0.0f, 300.0f), enemy_rand + 3);
-				break;
-			case 3:
-				CreateObject<Enemy>(Vector2D(0.0f, 400.0f), enemy_rand + 3);
-				break;
 			}
+			else
+			{
+				switch (enemy_rand)
+				{
+				case 3:
+					CreateObject<Enemy>(Vector2D(40.0f, 400.0f), enemy_rand, 0.0f);
+					break;
+				case 4:
+					CreateObject<Enemy>(Vector2D(40.0f, 300.0f), enemy_rand, 0.0f);
+					break;
+				case 5:
+					CreateObject<Enemy>(Vector2D(40.0f, 300.0f), enemy_rand, 0.0f);
+					break;
+				case 6:
+					CreateObject<Enemy>(Vector2D(40.0f, 400.0f), enemy_rand, 0.0f);
+					break;
+				}
+			}
+			enemy_count++;
+			create_rand = GetRand(1);
 		}
-		create_rand = GetRand(1);
-		count_rand = GetRand(6) * 100;
-		enemy_rand = GetRand(4);
+		count_rand = (GetRand(1) + 1) * 100;
+		enemy_rand = GetRand(3)+3;
 		count_time = 0;
-		enemy_count++;
 	}
 	//オブジェクト同士の当たり判定チェック
 	for (int i = 0; i < objects.size(); i++)
@@ -104,34 +112,36 @@ void Scene::Update()
 
 	if (InputControl::GetKeyDown(KEY_INPUT_Z))
 	{
-	//	if (count_bome <= 0)
-	//	{
-			CreateObject<Bomb>(objects[0]->GetLocation(), 2);
-			count_bome = 300;
-	//	}
+		CreateObject<Bomb>(objects[0]->GetLocation(), 2, 0.0f);
+
 	}
 	if (InputControl::GetKey(KEY_INPUT_X))
 	{
-		//	if (count_bome <= 0)
-		//	{
-		CreateObject<Bomb>(objects[0]->GetLocation(), 2);
-		//	}
-	}
-	if (count_bome <= 0)
-	{
-		count_bome = 0;
+		CreateObject<Bomb>(objects[0]->GetLocation(), 2, 0.0f);
 	}
 	for (int i = 0; i <= objects.size()-1; i++)
 	{
 		if (objects[i]->GetShotFlag() == TRUE)
 		{
-			CreateObject<EnemyBullet>(objects[i]->GetLocation(), 7);
+			Vector2D P = objects[0]->GetLocation();
+			Vector2D E = objects[i]->GetLocation();
+			float a = ((P.x - E.x) * (P.x - E.x) + (P.y - E.y) * (P.y - E.y));
+			CreateObject<EnemyBullet>(objects[i]->GetLocation(), 7, ((P - E) / a));
 		}
+	}
+	if (sca < 0)
+	{
+		sca = 0;
 	}
 	for (int i = 0; i <= objects.size()-1; i++)
 	{
 		if (objects[i]->GetDelete() == TRUE)
 		{
+			int type = objects[i]->GetType();
+			if (type != 1 && type != 2 && type != 7)
+			{
+				enemy_count--;
+			}
 			objects.erase(objects.begin() + i);
 		}
 	}
@@ -147,7 +157,8 @@ void Scene::Draw() const
 	{
 		obj->Draw();
 	}
-	DrawFormatString(10, 10, 0x000000, "%d", count_bome);
+	DrawFormatString(500, 450, 0xffffff, "スコア:%d", sca);
+	DrawFormatString(10, 10, 0x000000, "%d", enemy_count);
 }
 
 //終了時処理
@@ -180,6 +191,8 @@ void Scene::HitCheckObject(GameObject* a, GameObject* b)
 	{
 		if ((a->GetType() != b->GetType()) && (a->GetType() == 2 || b->GetType() == 2))
 		{
+			sca += a->GetSca();
+			sca += b->GetSca();
 			a->OnHitCollision(b);
 			b->OnHitCollision(a);
 		}

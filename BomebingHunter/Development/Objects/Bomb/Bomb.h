@@ -5,10 +5,10 @@
 class Bomb : public GameObject
 {
 private:
-	int animation[4];
-	int anime_count;
-	int anime_num;
-	bool anime_flag;
+	int animation[4];	//アニメーション画像
+	int anime_count;	//アニメーション時間
+	int anime_num;		//画像の番号
+	bool anime_flag;	//アニメーションするかどうか
 
 public:
 	Bomb();
@@ -25,7 +25,7 @@ public:
 private:
 	//移動処理
 	void Movement();
-
+	//アニメーション管理
 	void AnimeControl();
 };
 

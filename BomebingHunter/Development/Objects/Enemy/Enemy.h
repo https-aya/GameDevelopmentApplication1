@@ -9,8 +9,8 @@ private:
 	int animation_count;		//アニメーション時間
 	int max_animation;			//アニメーションの最大数
 	int anime_time;				//どのアニメーションか
-	int shot_count;
-	int shot_rand;
+	int shot_count;				//敵弾を打つ間隔
+	int shot_rand;				//敵弾の間隔をランダムにする
 
 public:
 	Enemy();

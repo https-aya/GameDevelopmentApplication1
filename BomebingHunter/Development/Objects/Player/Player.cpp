@@ -27,6 +27,8 @@ void Player::Initialize()
 		throw("トリパイロットの画像がありません\n");
 	}
 
+	sca = -10;
+
 	//向きの設定
 	radian = 0.0;
 
@@ -74,13 +76,12 @@ void Player::OnHitCollision(GameObject* hit_object)
 //移動処理
 void Player::Movement()
 {
-
 	//左右移動
 	if (InputControl::GetKey(KEY_INPUT_LEFT))
 	{
 		if (location.x > 30.0f)
 		{
-			direction.x += -1.0f;
+			direction.x = -2.0f;
 			flip_flag = TRUE;
 		}
 	}
@@ -88,13 +89,13 @@ void Player::Movement()
 	{
 		if (location.x < 610.0f)
 		{
-			direction.x += 1.0f;
+			direction.x = 2.0f;
 			flip_flag = FALSE;
 		}
 	}
 	else
 	{
-		direction.x += 0.0f;
+		direction.x = 0.0f;
 	}
 
 	//現在の位置座標に速さを加算する
@@ -108,7 +109,7 @@ void Player::AnimeControl()
 	animation_count++;
 
 	//60フレーム目に到達したら
-	if (animation_count >= 60)
+	if (animation_count >= 30)
 	{
 		//カウントリセット
 		animation_count = 0;

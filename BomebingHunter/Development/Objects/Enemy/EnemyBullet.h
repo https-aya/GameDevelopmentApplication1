@@ -5,10 +5,10 @@
 class EnemyBullet : public GameObject
 {
 private:
-	int animation[4];
-	bool anime_flag;
-	int anime_count;
-	int anime_num;
+	int animation[4];		//アニメーション画像
+	bool anime_flag;		//アニメーションするかどうか
+	int anime_count;		//アニメーション時間
+	int anime_num;			//アニメーション番号
 
 public:
 	EnemyBullet();
@@ -22,7 +22,9 @@ public:
 	virtual void OnHitCollision(GameObject* hit_object) override;
 
 private:
+	//移動処理
 	void Movement();
+	//アニメーション管理
 	void AnimeControl();
 
 };

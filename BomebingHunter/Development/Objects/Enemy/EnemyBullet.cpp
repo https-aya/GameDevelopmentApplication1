@@ -21,7 +21,7 @@ void EnemyBullet::Initialize()
 	animation[2] = LoadGraph("Resource/Images/EnemyBullet/eff2.png");
 	animation[3] = LoadGraph("Resource/Images/EnemyBullet/eff3.png");
 
-	SetDirection(Vector2D(0.0f, -1.0f));
+	direction *= 1000;
 
 	radian = 0.0;
 	
@@ -75,7 +75,7 @@ void EnemyBullet::AnimeControl()
 	if (anime_flag == TRUE)
 	{
 		anime_count++;
-		if (anime_count >= 10)
+		if (anime_count >= 5)
 		{
 			anime_num++;
 			if (anime_num < 4)

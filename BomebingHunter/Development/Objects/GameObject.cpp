@@ -10,6 +10,7 @@ GameObject::GameObject() :
 	image(0),
 	sound(0),
 	type(0),
+	sca(0),
 	Delete(FALSE),
 	shot_flag(FALSE)
 {
@@ -97,4 +98,9 @@ void GameObject::SetType(const int type)
 bool GameObject::GetShotFlag() const
 {
 	return shot_flag;
+}
+
+int GameObject::GetSca() const
+{
+	return sca;
 }

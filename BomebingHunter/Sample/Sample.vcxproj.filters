@@ -27,6 +27,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="0203\Objects\Enemy\Enemy.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="0203\Objects\Player\Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -45,11 +48,11 @@
     <ClCompile Include="0203\AppMain.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="0203\Objects\Enemy\Enemy.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="0203\Objects\Enemy\Enemy.h">
+      <Filter>ソース ファイル\ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="0203\Objects\Player\Player.h">
       <Filter>ソース ファイル\ヘッダー ファイル</Filter>
     </ClInclude>
@@ -62,13 +65,10 @@
     <ClInclude Include="0203\Utility\InputControl.h">
       <Filter>ソース ファイル\ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="0203\Utility\Vector2D.h">
-      <Filter>ソース ファイル\ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="0203\Utility\UserTemplate.h">
       <Filter>ソース ファイル\ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="0203\Objects\Enemy\Enemy.h">
+    <ClInclude Include="0203\Utility\Vector2D.h">
       <Filter>ソース ファイル\ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
