@@ -6,7 +6,6 @@ class Bomb : public GameObject
 {
 private:
 	int animation[4];
-	Vector2D direction;
 	int anime_count;
 	int anime_num;
 	bool anime_flag;

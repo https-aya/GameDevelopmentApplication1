@@ -2,11 +2,12 @@
 #include "DxLib.h"
 #include "../Objects/Player/Player.h"
 #include "../Objects/Enemy/Enemy.h"
+#include "../Objects/Enemy/EnemyBullet.h"
 #include "../Objects/Bomb/Bomb.h"
 #include "../Utility/InputControl.h"
 
 //コンストラクタ
-Scene::Scene() : objects(), Background(NULL), count_time(), count_rand(), create_rand(), count_bome(), enemy_rand()
+Scene::Scene() : objects(), Background(NULL), count_time(), count_rand(), create_rand(), count_bome(), enemy_rand(),enemy_count()
 {
 }
 
@@ -27,6 +28,7 @@ void Scene::Initialize()
 	create_rand = 0;
 	count_bome = 0;
 	enemy_rand = 0;
+	enemy_count = 0;
 	Background = LoadGraph("Resource/Images/BackGround.png");
 }
 
@@ -45,7 +47,7 @@ void Scene::Update()
 			obj->Update();
 	//	}
 	}
-	if (count_time >= count_rand)
+	if (count_time >= count_rand&&enemy_count<=6)
 	{
 		if (create_rand == 0)
 		{
@@ -60,7 +62,7 @@ void Scene::Update()
 			case 2:
 				CreateObject<Enemy>(Vector2D(600.0f, 300.0f), enemy_rand + 3);
 				break;
-			case 4:
+			case 3:
 				CreateObject<Enemy>(Vector2D(600.0f, 400.0f), enemy_rand + 3);
 				break;
 			}
@@ -79,15 +81,16 @@ void Scene::Update()
 			case 2:
 				CreateObject<Enemy>(Vector2D(0.0f, 300.0f), enemy_rand + 3);
 				break;
-			case 4:
+			case 3:
 				CreateObject<Enemy>(Vector2D(0.0f, 400.0f), enemy_rand + 3);
 				break;
 			}
 		}
 		create_rand = GetRand(1);
-		count_rand = GetRand(11) * 100;
+		count_rand = GetRand(6) * 100;
 		enemy_rand = GetRand(4);
 		count_time = 0;
+		enemy_count++;
 	}
 	//オブジェクト同士の当たり判定チェック
 	for (int i = 0; i < objects.size(); i++)
@@ -117,6 +120,13 @@ void Scene::Update()
 	if (count_bome <= 0)
 	{
 		count_bome = 0;
+	}
+	for (int i = 0; i <= objects.size()-1; i++)
+	{
+		if (objects[i]->GetShotFlag() == TRUE)
+		{
+			CreateObject<EnemyBullet>(objects[i]->GetLocation(), 7);
+		}
 	}
 	for (int i = 0; i <= objects.size()-1; i++)
 	{

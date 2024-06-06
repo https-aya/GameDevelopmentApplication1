@@ -6,7 +6,9 @@ class EnemyBullet : public GameObject
 {
 private:
 	int animation[4];
-	Vector2D direction;
+	bool anime_flag;
+	int anime_count;
+	int anime_num;
 
 public:
 	EnemyBullet();
@@ -20,7 +22,8 @@ public:
 	virtual void OnHitCollision(GameObject* hit_object) override;
 
 private:
-	virtual void Movement() ;
- 
+	void Movement();
+	void AnimeControl();
+
 };
 

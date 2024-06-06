@@ -1,7 +1,7 @@
 #include "EnemyBullet.h"
 #include "DxLib.h"
 
-EnemyBullet::EnemyBullet() : direction(NULL)
+EnemyBullet::EnemyBullet() :anime_flag(FALSE),anime_count(0),anime_num(0)
 {
 	for (int i = 0; i < 4; i++)
 	{
@@ -21,11 +21,11 @@ void EnemyBullet::Initialize()
 	animation[2] = LoadGraph("Resource/Images/EnemyBullet/eff2.png");
 	animation[3] = LoadGraph("Resource/Images/EnemyBullet/eff3.png");
 
-	direction = Vector2D(0.1f, 0.0f);
+	SetDirection(Vector2D(0.0f, -1.0f));
 
 	radian = 0.0;
 	
-	box_size = 32.0f;
+	box_size = 16.0f;
 
 	image = animation[0];
 }
@@ -33,11 +33,18 @@ void EnemyBullet::Initialize()
 void EnemyBullet::Update()
 {
 	Movement();
+
+	AnimeControl();
+
+	if ((location.x < box_size.x) || (location.x > box_size.x + 640) || (location.y < box_size.y))
+	{
+		Finalize();
+	}
 }
 
 void EnemyBullet::Draw() const
 {
-	DrawRotaGraphF(location.x, location.y, 1.0, radian, image, TRUE);
+	DrawRotaGraphF(location.x, location.y, 0.5, radian, image, TRUE);
 	__super::Draw();
 }
 
@@ -47,17 +54,39 @@ void EnemyBullet::Finalize()
 	{
 		DeleteGraph(animation[i]);
 	}
-	box_size = 0.0f;
-	direction = 0.0f;
 	location = NULL;
+	Delete = TRUE;
 }
 
 void EnemyBullet::OnHitCollision(GameObject* hit_object)
 {
-	Finalize();
+	anime_flag = TRUE;
+	box_size = NULL;
+	direction = NULL;
 }
 
 void EnemyBullet::Movement()
 {
 	location += direction;
+}
+
+void EnemyBullet::AnimeControl()
+{
+	if (anime_flag == TRUE)
+	{
+		anime_count++;
+		if (anime_count >= 10)
+		{
+			anime_num++;
+			if (anime_num < 4)
+			{
+				image = animation[anime_num];
+			}
+			else
+			{
+				Finalize();
+			}
+			anime_count = 0;
+		}
+	}
 }

@@ -10,11 +10,13 @@ class GameObject
 protected:
 	Vector2D location;			//位置情報
 	Vector2D box_size;				//大きさ
+	Vector2D direction;
 	double radian;				//向き
 	int image;					//描画する画像
 	int sound;					//再生する音源
 	int type;					//プレイヤーか敵かを判断する
 	bool Delete;
+	bool shot_flag;
 
 public:
 	GameObject();
@@ -39,5 +41,9 @@ public:
 
 	bool GetDelete() const;
 
+	void SetDirection(const Vector2D& direction);
+
 	void SetType(const int type);
+
+	bool GetShotFlag() const;
 };

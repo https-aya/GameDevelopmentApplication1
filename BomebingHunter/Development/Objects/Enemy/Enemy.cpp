@@ -2,7 +2,7 @@
 #include "EnemyBullet.h"
 #include "DxLib.h"
 
-Enemy::Enemy() : animation_count(0), direction(0.0f), max_animation(0), anime_time(0)
+Enemy::Enemy() : animation_count(0), max_animation(0), anime_time(0), shot_count(0),shot_rand(0)
 {
 	for (int i = 0; i < 5; i++)
 	{
@@ -76,22 +76,35 @@ void Enemy::Initialize()
 	radian = 0.0;
 
 	//大きさの設定
-	
+	shot_rand = 100;
 
 	//初期画像の設定
 	image = animation[0];
 
 	//初期進行方向の設定
-	direction = Vector2D(random, 0.0f);
+	SetDirection(Vector2D(random, 0.0f));
 }
 
 //更新処理
 void Enemy::Update()
 {
+	shot_count++;
+
 	//移動処理
 	Movement();
 	//アニメーション制御
 	AnimeControl();
+
+	if (shot_count >= 100)
+	{
+		shot_flag = TRUE;
+		shot_count = 0;
+		shot_rand = (GetRand(3) + 1) * 100;
+	}
+	else
+	{
+		shot_flag = FALSE;
+	}
 
 	if (location.x < 0)
 	{

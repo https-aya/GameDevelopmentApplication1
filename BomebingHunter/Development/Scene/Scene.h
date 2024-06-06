@@ -17,6 +17,7 @@ private:
 	int create_rand;		//生成位置をランダムで決める
 	int count_bome;			//ボムの生成間隔
 	int enemy_rand;
+	int enemy_count;
 
 public:
 	Scene();
@@ -33,7 +34,7 @@ private:
 
 	//オブジェクト生成処理
 	template <class T>
-	T* CreateObject(const Vector2D& location,int enemytype)
+	T* CreateObject(const Vector2D& location,int enemy_type)
 	{
 		//指定したクラスを生成する
 		T* new_instance = new T();
@@ -47,7 +48,7 @@ private:
 			throw std::string("ゲームオブジェクトが生成できませんでした");
 		}
 
-		new_object->SetType(enemytype);
+		new_object->SetType(enemy_type);
 
 		//位置情報の設定
 		new_object->SetLocation(location);

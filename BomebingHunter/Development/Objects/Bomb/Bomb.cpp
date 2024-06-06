@@ -1,7 +1,7 @@
 #include "Bomb.h"
 #include "DxLib.h"
 
-Bomb::Bomb() : direction(0.0f),anime_flag(false),anime_count(0),anime_num(0)
+Bomb::Bomb() : anime_flag(false),anime_count(0),anime_num(0)
 {
 	for (int i = 0; i < 4; i++)
 	{
@@ -33,7 +33,7 @@ void Bomb::Initialize()
 
 	box_size = 32.0;
 
-	direction = Vector2D(0.0f, 1.0f);
+	SetDirection(Vector2D(0.0f, -1.0f));
 
 	image = animation[0];
 }

@@ -5,11 +5,13 @@
 GameObject::GameObject() :
 	location(0.0f),
 	box_size(0.0f),
+	direction(0.0f),
 	radian(0.0),
 	image(0),
 	sound(0),
 	type(0),
-	Delete(FALSE)
+	Delete(FALSE),
+	shot_flag(FALSE)
 {
 }
 
@@ -82,7 +84,17 @@ bool GameObject::GetDelete() const
 	return Delete;
 }
 
+void GameObject::SetDirection(const Vector2D& direction)
+{
+	this->direction = direction;
+}
+
 void GameObject::SetType(const int type)
 {
 	this->type = type;
+}
+
+bool GameObject::GetShotFlag() const
+{
+	return shot_flag;
 }

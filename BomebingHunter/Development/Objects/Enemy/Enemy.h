@@ -7,9 +7,10 @@ class Enemy : public GameObject
 private:
 	int animation[5];			//アニメーション画像
 	int animation_count;		//アニメーション時間
-	Vector2D direction;			//進行方向
 	int max_animation;			//アニメーションの最大数
 	int anime_time;				//どのアニメーションか
+	int shot_count;
+	int shot_rand;
 
 public:
 	Enemy();

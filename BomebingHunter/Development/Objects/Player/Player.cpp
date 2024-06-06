@@ -74,15 +74,13 @@ void Player::OnHitCollision(GameObject* hit_object)
 //移動処理
 void Player::Movement()
 {
-	//移動の速さ
-	Vector2D velocity = 0.0f;
 
 	//左右移動
 	if (InputControl::GetKey(KEY_INPUT_LEFT))
 	{
 		if (location.x > 30.0f)
 		{
-			velocity.x += -1.0f;
+			direction.x += -1.0f;
 			flip_flag = TRUE;
 		}
 	}
@@ -90,17 +88,17 @@ void Player::Movement()
 	{
 		if (location.x < 610.0f)
 		{
-			velocity.x += 1.0f;
+			direction.x += 1.0f;
 			flip_flag = FALSE;
 		}
 	}
 	else
 	{
-		velocity.x += 0.0f;
+		direction.x += 0.0f;
 	}
 
 	//現在の位置座標に速さを加算する
-	location += velocity;
+	location += direction;
 }
 
 //アニメーション制御
