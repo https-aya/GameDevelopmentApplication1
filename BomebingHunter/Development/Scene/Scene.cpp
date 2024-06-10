@@ -5,6 +5,7 @@
 #include "../Objects/Enemy/EnemyBullet.h"
 #include "../Objects/Bomb/Bomb.h"
 #include "../Utility/InputControl.h"
+#include "Score.h"
 
 //コンストラクタ
 Scene::Scene() : 
@@ -15,7 +16,8 @@ Scene::Scene() :
 	create_rand(0), 
 	enemy_rand(0),
 	enemy_count(0),
-	sca(0)
+	score(0),
+	high_score(0)
 {
 }
 
@@ -35,13 +37,13 @@ void Scene::Initialize()
 	count_rand = 100;
 	enemy_rand = 3;
 	Background = LoadGraph("Resource/Images/BackGround.png");
+	scores->Initialize();
 }
 
 //更新処理
 void Scene::Update()
 {
 	count_time++;
-	count_bome--;
 	
 	//シーンに存在するオブジェクトの更新処理
 	for (GameObject* obj : objects)
@@ -129,9 +131,9 @@ void Scene::Update()
 			CreateObject<EnemyBullet>(objects[i]->GetLocation(), 7, ((P - E) / a));
 		}
 	}
-	if (sca < 0)
+	if (score < 0)
 	{
-		sca = 0;
+		score = 0;
 	}
 	for (int i = 0; i <= objects.size()-1; i++)
 	{
@@ -145,6 +147,7 @@ void Scene::Update()
 			objects.erase(objects.begin() + i);
 		}
 	}
+	scores->Update(score);
 }
 
 //描画処理
@@ -157,13 +160,17 @@ void Scene::Draw() const
 	{
 		obj->Draw();
 	}
-	DrawFormatString(500, 450, 0xffffff, "スコア:%d", sca);
+	scores->Draw();
+	DrawFormatString(300, 450, 0xffffff, "%d", score);
 	DrawFormatString(10, 10, 0x000000, "%d", enemy_count);
 }
 
 //終了時処理
 void Scene::Finalize()
 {
+
+	scores->Finalize();
+
 	//動的配列が秋なら処理を終了する
 	if (objects.empty())
 	{
@@ -191,8 +198,8 @@ void Scene::HitCheckObject(GameObject* a, GameObject* b)
 	{
 		if ((a->GetType() != b->GetType()) && (a->GetType() == 2 || b->GetType() == 2))
 		{
-			sca += a->GetSca();
-			sca += b->GetSca();
+			score += a->GetSca();
+			score += b->GetSca();
 			a->OnHitCollision(b);
 			b->OnHitCollision(a);
 		}

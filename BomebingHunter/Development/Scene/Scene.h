@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include "../Objects/GameObject.h"
+#include "Score.h"
 
 class Scene
 {
@@ -11,13 +12,14 @@ private:
 private:
 	//背景画像
 	int Background;
-
 	int count_time;			//生成間隔のカウント
 	int count_rand;			//ランダムで生成間隔を決める
 	int create_rand;		//生成位置をランダムで決める
 	int enemy_rand;			//生成する敵をランダムで決める
 	int enemy_count;		//敵の生成数
-	int sca;				//スコア
+	int score;				//スコア
+	int high_score;
+	Score* scores = new Score;
 
 public:
 	Scene();
