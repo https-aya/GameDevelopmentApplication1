@@ -60,9 +60,12 @@ void EnemyBullet::Finalize()
 
 void EnemyBullet::OnHitCollision(GameObject* hit_object)
 {
-	anime_flag = TRUE;
-	box_size = NULL;
-	direction = NULL;
+	if (hit_object->GetType() == 1)
+	{
+		anime_flag = TRUE;
+		box_size = NULL;
+		direction = NULL;
+	}
 }
 
 void EnemyBullet::Movement()

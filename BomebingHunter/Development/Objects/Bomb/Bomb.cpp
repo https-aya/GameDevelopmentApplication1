@@ -66,9 +66,14 @@ void Bomb::Finalize()
 
 void Bomb::OnHitCollision(GameObject* hit_object)
 {
-	anime_flag = true;
-	direction = 0.0f; 
-	box_size = NULL;
+	int ty = hit_object->GetType();
+	if (ty != 1 && ty != 2 && ty != 7)
+	{
+		anime_flag = true;
+		direction = 0.0f;
+		box_size = NULL;
+	}
+
 }
 
 void Bomb::Movement()

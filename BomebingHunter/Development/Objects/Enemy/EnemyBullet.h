@@ -1,4 +1,4 @@
-#pragma on
+
 
 #include "../GameObject.h"
 

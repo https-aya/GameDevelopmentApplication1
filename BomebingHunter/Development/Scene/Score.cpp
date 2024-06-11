@@ -1,12 +1,13 @@
 #include "Score.h"
 #include "DxLib.h"
 
-Score::Score(): score_size(0) 
+Score::Score(): score_size(0)
 {
 	for (int i = 0; i < 10; i++)
 	{
 		score_image[i] = NULL;
 		score[i] = NULL;
+		high_score[i] = NULL;
 	}
 	for (int i = 0; i < 2; i++)
 	{

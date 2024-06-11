@@ -4,6 +4,7 @@
 #include <string>
 #include "../Objects/GameObject.h"
 #include "Score.h"
+#include "TimeUp.h"
 
 class Scene
 {
@@ -19,7 +20,9 @@ private:
 	int enemy_count;		//ìGÇÃê∂ê¨êî
 	int score;				//ÉXÉRÉA
 	int high_score;
+	int time;
 	Score* scores = new Score;
+	TimeUp* time_up = new TimeUp;
 
 public:
 	Scene();

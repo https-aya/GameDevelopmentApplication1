@@ -155,7 +155,10 @@ void Enemy::Finalize()
 //“–‚½‚Á‚½Žž‚Ìˆ—
 void Enemy::OnHitCollision(GameObject* hit_object)
 {
-	Finalize();
+	if (hit_object->GetType() == 2)
+	{
+		Finalize();
+	}
 }
 
 void Enemy::Movement()
