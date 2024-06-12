@@ -33,7 +33,7 @@ void TimeUp::Initialize()
 
 	draw = image[1];
 
-	count = 600;
+	count = 300;
 }
 
 void TimeUp::Update(int sco)
@@ -67,7 +67,7 @@ void TimeUp::Update(int sco)
 
 void TimeUp::Draw() const
 {
-	DrawRotaGraph(200, 300, 1.0, 0.0, draw, TRUE);
+	DrawRotaGraph(320, 240, 1.0, 0.0, draw, TRUE);
 }
 
 void TimeUp::Finalize()

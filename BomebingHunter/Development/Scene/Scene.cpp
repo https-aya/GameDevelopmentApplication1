@@ -39,7 +39,7 @@ void Scene::Initialize()
 	Background = LoadGraph("Resource/Images/BackGround.png");
 	scores->Initialize();
 	time_up->Initialize();
-	time = 6000;
+	time = 600;
 }
 
 //XVˆ—
@@ -228,13 +228,6 @@ void Scene::HitCheckObject(GameObject* a, GameObject* b)
 
 	if ((fabsf(diff.x) < box_size.x) && (fabsf(diff.y) < box_size.y))
 	{
-		int ty_a = a->GetType();
-		int ty_b = b->GetType();
-		if ((ty_a != ty_b) && (((ty_a == 2 ||ty_b == 2) && (ty_a != 7 || ty_b != 7))||(ty_a == 1 && ty_b == 7)))
-		{
-			score += a->GetSca();
-			score += b->GetSca();
-		}
 		a->OnHitCollision(b);
 		b->OnHitCollision(a);
 	}
