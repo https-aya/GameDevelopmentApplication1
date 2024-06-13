@@ -18,7 +18,6 @@ private:
 	int create_rand;		//生成位置をランダムで決める
 	int enemy_rand;			//生成する敵をランダムで決める
 	int enemy_count;		//敵の生成数
-	int score;				//スコア
 	int high_score;
 	int time;
 	Score* scores = new Score;

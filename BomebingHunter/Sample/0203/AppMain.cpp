@@ -4,7 +4,7 @@
 
 //メイン関数（プログラムはここから始まります）
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
-	_In_ LPSTR lpcmdLine, _In_ int nShowCmd)
+	_In_ LPSTR ipCmdLine, _In_ int nShowCmd)
 {
 	//Windowモードで起動
 	ChangeWindowMode(TRUE);

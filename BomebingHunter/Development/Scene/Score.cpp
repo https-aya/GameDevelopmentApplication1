@@ -1,7 +1,7 @@
 #include "Score.h"
 #include "DxLib.h"
 
-Score::Score() : score_size(0), score(0)
+Score::Score() :  score(0),high_score(0)
 {
 	for (int i = 0; i < 10; i++)
 	{
@@ -12,6 +12,7 @@ Score::Score() : score_size(0), score(0)
 	for (int i = 0; i < 2; i++)
 	{
 		font_image[i] = NULL;
+		score_size[i] = NULL;
 	}
 }
 
@@ -46,25 +47,26 @@ void Score::Initialize()
 	score = 0;
 }
 
-void Score::Update(int scr)
+void Score::Update()
 {
-	score_size = 0;
+	score_size[0] = 0;
+	int sco = score;
 	for (int i = 0; i < 10; i++)
 	{
-		if (scr == 0)
+		if (sco == 0)
 		{
-			scores[0] = scr;
+			scores[0] = sco;
 			break;
 		}
-		 if (scr < 1) 
+		 if (sco < 1) 
 		{
 			break;
 		}
 		else
 		{
-			score_size++;
-			scores[i] = scr % 10;
-			scr = scr / 10;
+			score_size[0]++;
+			scores[i] = sco % 10;
+			sco = sco / 10;
 		}
 	}
 }
@@ -74,9 +76,9 @@ void Score::Draw() const
 	DrawRotaGraph(240, 460, 1.0, 0.0, font_image[0], TRUE);
 	if (score_size != 0)
 	{
-		for (int i = 0; i < score_size; i++)
+		for (int i = 0; i < score_size[0]; i++)
 		{
-			DrawRotaGraph(280 + 12 * i, 460, 1.0, 0.0, score_image[scores[score_size - i - 1]], TRUE);
+			DrawRotaGraph(280 + 12 * i, 460, 1.0, 0.0, score_image[scores[score_size[0] - i - 1]], TRUE);
 		}
 	}
 	else
@@ -102,4 +104,41 @@ void Score::Finalize()
 void Score::SetScore(int scr)
 {
 	score += scr;
+	if (score < 0)
+	{
+		score = 0;
+	}
+}
+
+int Score::GetScore() const
+{
+	return score;
+}
+
+void Score::SetHighScore()
+{
+	if (high_score < score)
+	{
+		high_score = score;
+		score_size[1] = 0;
+		int hsco = high_score;
+		for (int i = 0; i < 10; i++)
+		{
+			if (hsco == 0)
+			{
+				high_scores[0] = hsco;
+				break;
+			}
+			if (hsco < 1)
+			{
+				break;
+			}
+			else
+			{
+				score_size[1]++;
+				high_scores[i] = hsco % 10;
+				hsco = hsco / 10;
+			}
+		}
+	}
 }

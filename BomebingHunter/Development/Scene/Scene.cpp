@@ -15,7 +15,6 @@ Scene::Scene() :
 	create_rand(0), 
 	enemy_rand(0),
 	enemy_count(0),
-	score(0),
 	high_score(0),
 	time(0)
 {
@@ -136,10 +135,6 @@ void Scene::Update()
 				CreateObject<EnemyBullet>(objects[i]->GetLocation(), 7, ((P - E) / a));
 			}
 		}
-		if (score < 0)
-		{
-			score = 0;
-		}
 		for (int i = 0; i <= objects.size() - 1; i++)
 		{
 			if (objects[i]->GetDelete() == TRUE)
@@ -152,15 +147,15 @@ void Scene::Update()
 				objects.erase(objects.begin() + i);
 			}
 		}
-		scores->Update(score);
+		scores->Update();
 	}
 	else
 	{
-		if (score > high_score)
+		if (scores->GetScore() > high_score)
 		{
-			high_score = score;
+			high_score = scores->GetScore();
 		}
-		time_up->Update(score);
+		time_up->Update(scores->GetScore());
 		if (InputControl::GetKeyDown(KEY_INPUT_SPACE))
 		{
 			Finalize();
@@ -172,7 +167,7 @@ void Scene::Update()
 		time = 0;
 	}
 }
-	
+
 
 //•`‰æˆ—
 void Scene::Draw() const
@@ -187,7 +182,7 @@ void Scene::Draw() const
 			obj->Draw();
 		}
 		scores->Draw();
-		DrawFormatString(300, 450, 0xffffff, "%d", score);
+		DrawFormatString(300, 450, 0xffffff, "%d", scores->GetScore());
 		DrawFormatString(10, 10, 0x000000, "%d", enemy_count);
 	}
 	else
@@ -228,6 +223,16 @@ void Scene::HitCheckObject(GameObject* a, GameObject* b)
 
 	if ((fabsf(diff.x) < box_size.x) && (fabsf(diff.y) < box_size.y))
 	{
+		int a_type = a->GetType();
+		int b_type = b->GetType();
+		if (a_type != b_type)
+		{
+			if (((a_type == 2 || b_type == 2) && (a_type != 7 || b_type != 7)) || (a_type == 1 && b_type == 7))
+			{
+				scores->SetScore(a->GetSca());
+				scores->SetScore(b->GetSca());
+			}
+		}
 		a->OnHitCollision(b);
 		b->OnHitCollision(a);
 	}
