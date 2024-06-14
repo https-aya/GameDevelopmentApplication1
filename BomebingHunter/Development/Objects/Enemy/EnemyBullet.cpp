@@ -21,13 +21,15 @@ void EnemyBullet::Initialize()
 	animation[2] = LoadGraph("Resource/Images/EnemyBullet/eff2.png");
 	animation[3] = LoadGraph("Resource/Images/EnemyBullet/eff3.png");
 
-	direction *= 1000;
+	direction *= 500;
 
 	radian = 0.0;
 	
 	box_size = 16.0f;
 
 	image = animation[0];
+
+	sca = -10;
 }
 
 void EnemyBullet::Update()

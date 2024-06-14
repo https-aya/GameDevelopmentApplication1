@@ -32,21 +32,22 @@ void Scene::Initialize()
 {
 	//プレイヤーを生成する
 	CreateObject<Player>(Vector2D(320.0f, 50.0f),1, 0.0f);
+	enemy_count = 0;
 	count_time = 1;
 	count_rand = 100;
 	enemy_rand = 3;
 	Background = LoadGraph("Resource/Images/BackGround.png");
 	scores->Initialize();
 	time_up->Initialize();
-	time = 600;
+	time = 6000;
 }
 
 //更新処理
 void Scene::Update()
 {
-	time--;
-	if (time >= 0)
+	if (time > 0)
 	{
+		time--;
 		count_time++;
 
 		//シーンに存在するオブジェクトの更新処理
@@ -147,14 +148,11 @@ void Scene::Update()
 				objects.erase(objects.begin() + i);
 			}
 		}
-		scores->Update();
+		scores->Update(time/100);
 	}
 	else
 	{
-		if (scores->GetScore() > high_score)
-		{
-			high_score = scores->GetScore();
-		}
+		scores->SetHighScore();
 		time_up->Update(scores->GetScore());
 		if (InputControl::GetKeyDown(KEY_INPUT_SPACE))
 		{
@@ -162,10 +160,7 @@ void Scene::Update()
 			Initialize();
 		}
 	}
-	if (time < 0)
-	{
-		time = 0;
-	}
+
 }
 
 
@@ -227,7 +222,7 @@ void Scene::HitCheckObject(GameObject* a, GameObject* b)
 		int b_type = b->GetType();
 		if (a_type != b_type)
 		{
-			if (((a_type == 2 || b_type == 2) && (a_type != 7 || b_type != 7)) || (a_type == 1 && b_type == 7))
+			if (((a_type == 2 || b_type == 2) && (a_type != 7 && b_type != 7)) || (a_type == 1 && b_type == 7))
 			{
 				scores->SetScore(a->GetSca());
 				scores->SetScore(b->GetSca());

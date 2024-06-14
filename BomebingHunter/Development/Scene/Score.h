@@ -4,10 +4,11 @@ class Score
 private:
 	int score;
 	int high_score;
-	int score_image[10];
-	int font_image[2];
+	int number_image[10];
+	int font_image[3];
 	int scores[10];
 	int high_scores[10];
+	int times[2];
 	int score_size[2];
 
 public:
@@ -15,7 +16,7 @@ public:
 	~Score();
 
 	void Initialize();
-	void Update();
+	void Update(int timer);
 	void Draw() const;
 	void Finalize();
 

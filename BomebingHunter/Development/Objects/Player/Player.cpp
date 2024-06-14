@@ -27,8 +27,6 @@ void Player::Initialize()
 		throw("トリパイロットの画像がありません\n");
 	}
 
-	sca = -10;
-
 	//向きの設定
 	radian = 0.0;
 
@@ -70,7 +68,7 @@ void Player::Finalize()
 //当たり判定通知処理
 void Player::OnHitCollision(GameObject* hit_object)
 {
-	//当たった時の処理
+
 }
 
 //移動処理
