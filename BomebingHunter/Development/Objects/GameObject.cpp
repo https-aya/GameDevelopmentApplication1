@@ -90,6 +90,11 @@ void GameObject::SetDirection(const Vector2D& direction)
 	this->direction = direction;
 }
 
+Vector2D GameObject::GetDirection() const
+{
+	return direction;
+}
+
 void GameObject::SetType(const int type)
 {
 	this->type = type;

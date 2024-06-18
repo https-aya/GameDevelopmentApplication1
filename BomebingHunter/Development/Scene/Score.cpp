@@ -74,6 +74,7 @@ void Score::Update(int timer)
 	}
 	for (int i = 0; i < 2; i++)
 	{
+		times[i] = 0;
 		if (time == 0)
 		{
 			times[0] = timer;
@@ -95,7 +96,7 @@ void Score::Draw() const
 {
 	DrawRotaGraph(240, 460, 1.0, 0.0, font_image[0], TRUE);
 	DrawRotaGraph(440, 460, 1.0, 0.0, font_image[1], TRUE);
-	DrawRotaGraph(30, 460, 1.0, 0.0, font_image[2], TRUE);
+	DrawRotaGraph(30, 460, 0.5, 0.0, font_image[2], TRUE);
 	if (score_size[0] != 0)
 	{
 		for (int i = 0; i < score_size[0]; i++)
@@ -118,9 +119,9 @@ void Score::Draw() const
 	{
 		DrawRotaGraph(502, 460, 1.0, 0.0, number_image[high_scores[0]], TRUE);
 	}
-	for (int i = 0; i < 2; i++)
+	for (int i = 1; i >= 0; i--)
 	{
-		DrawRotaGraph(50 + 12 * i, 460, 1.0, 0.0, number_image[times[i-1]-i], TRUE);
+		DrawRotaGraph(62 - 12 * i, 460, 1.0,0.0, number_image[times[i]], TRUE);
 	}
 }
 

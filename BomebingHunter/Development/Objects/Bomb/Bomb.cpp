@@ -29,7 +29,7 @@ void Bomb::Initialize()
 		}
 	}
 
-	radian = 90 * (3.14/180);
+	radian = 90 * (3.14 / 180);
 
 	box_size = 32.0;
 
@@ -67,6 +67,19 @@ void Bomb::Finalize()
 void Bomb::OnHitCollision(GameObject* hit_object)
 {
 	int ty = hit_object->GetType();
+	if (ty == 1)
+	{
+		if (hit_object->GetDirection().x > 0)
+		{
+			radian = 0;
+			direction.x = 2.0f;
+		}
+		else if (hit_object->GetDirection().x < 0)
+		{
+			radian = 180 * (3.14 / 180);
+			direction.x = -2.0f;
+		}
+	}
 	if (ty != 1 && ty != 2 && ty != 7)
 	{
 		anime_flag = true;
@@ -78,8 +91,20 @@ void Bomb::OnHitCollision(GameObject* hit_object)
 
 void Bomb::Movement()
 {
-	location += direction;
 
+	if (radian < 90 * (3.14 / 180))
+	{
+		radian += 0.5 * (3.14 / 180);
+		direction.x -= 0.01;
+	}
+	else if (radian > 90 * (3.14 / 180))
+	{
+		radian -= 0.5 * (3.14 / 180);
+		direction.x += 0.01;
+	}
+
+
+	location += direction;
 	if (location.y >= 400)
 	{
 		direction = 0.0f;

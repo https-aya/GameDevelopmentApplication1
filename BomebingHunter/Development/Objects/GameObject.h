@@ -43,6 +43,8 @@ public:
 	bool GetDelete() const;
 	//移動方向変更処理
 	void SetDirection(const Vector2D& direction);
+	//移動方向取得処理
+	Vector2D GetDirection() const;
 	//種類変更処理
 	void SetType(const int type);
 	//ショットフラグ取得処理

@@ -126,7 +126,7 @@ void Scene::Update()
 		{
 			CreateObject<Bomb>(objects[0]->GetLocation(), 2, 0.0f);
 		}
-		for (int i = 0; i <= objects.size() - 1; i++)
+		for (int i = 0; i <= objects.size()-1; i++)
 		{
 			if (objects[i]->GetShotFlag() == TRUE)
 			{
@@ -136,7 +136,7 @@ void Scene::Update()
 				CreateObject<EnemyBullet>(objects[i]->GetLocation(), 7, ((P - E) / a));
 			}
 		}
-		for (int i = 0; i <= objects.size() - 1; i++)
+		for (int i = 0; i <= objects.size()-1; i++)
 		{
 			if (objects[i]->GetDelete() == TRUE)
 			{
