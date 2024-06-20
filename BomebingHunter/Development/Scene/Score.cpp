@@ -9,12 +9,15 @@ Score::Score() :  score(0),high_score(0)
 		scores[i] = NULL;
 		high_scores[i] = NULL;
 	}
+	number_image[10] = NULL;
 	for (int i = 0; i < 2; i++)
 	{
 		font_image[i] = NULL;
 		score_size[i] = NULL;
 		times[i] = NULL;
+		fly_text[i] = NULL;
 	}
+	
 }
 
 Score::~Score()
@@ -34,11 +37,12 @@ void Score::Initialize()
 	number_image[7] = LoadGraph("Resource/Images/Score/7.png");
 	number_image[8] = LoadGraph("Resource/Images/Score/8.png");
 	number_image[9] = LoadGraph("Resource/Images/Score/9.png");
+	number_image[10] = LoadGraph("Resource/Images/FlyText/-.png");
 	font_image[0] = LoadGraph("Resource/Images/Score/font-21.png");
 	font_image[1] = LoadGraph("Resource/Images/Score/hs.png");
 	font_image[2] = LoadGraph("Resource/Images/TimeLimit/timer-03.png");
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 11; i++)
 	{
 		if (number_image[i] == -1)
 		{
@@ -135,6 +139,49 @@ void Score::Finalize()
 	for (int i = 0; i < 2; i++)
 	{
 		DeleteGraph(font_image[i]);
+	}
+}
+
+void Score::DrawFlyText(GameObject* hit_object)
+{
+	int type = hit_object->GetType();
+	int score = hit_object->GetSca();
+	if (type != 1 && type != 2 && type != 7)
+	{
+		if (score < 0)
+		{
+			fly_text[0] = number_image[10];
+			score *= -1;
+			for (int i = 1; i < 2; i++)
+			{
+				fly_text[i] = 0;
+				if (score < 1)
+				{
+					break;
+				}
+				else
+				{
+					fly_text[i] = score % 10;
+					score = score / 10;
+				}
+			}
+		}
+		else
+		{
+			for (int i = 0; i < 2; i++)
+			{
+				fly_text[i] = 0;
+				if (score < 1)
+				{
+					break;
+				}
+				else
+				{
+					fly_text[i] = score % 10;
+					score = score / 10;
+				}
+			}
+		}
 	}
 }
 

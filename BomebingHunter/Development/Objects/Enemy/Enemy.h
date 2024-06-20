@@ -11,6 +11,8 @@ private:
 	int anime_time;				//どのアニメーションか
 	int shot_count;				//敵弾を打つ間隔
 	int shot_rand;				//敵弾の間隔をランダムにする
+	int alpha;					//画像の透明度
+	bool blend_flag;				//透明化フラグ
 
 public:
 	Enemy();

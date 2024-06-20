@@ -2,7 +2,7 @@
 #include "EnemyBullet.h"
 #include "DxLib.h"
 
-Enemy::Enemy() : animation_count(0), max_animation(0), anime_time(0), shot_count(0),shot_rand(0)
+Enemy::Enemy() : animation_count(0), max_animation(0), anime_time(0), shot_count(0),shot_rand(0),alpha(0),blend_flag(FALSE)
 {
 	for (int i = 0; i < 5; i++)
 	{
@@ -84,6 +84,9 @@ void Enemy::Initialize()
 
 	//初期画像の設定
 	image = animation[0];
+	
+	//透明度の初期値
+	alpha = 255;
 
 	//初期進行方向の設定
 	SetDirection(Vector2D(random, 0.0f));
@@ -92,28 +95,40 @@ void Enemy::Initialize()
 //更新処理
 void Enemy::Update()
 {
-	shot_count++;
+	if (blend_flag == FALSE)
+	{
+		shot_count++;
+
+		if (type != 5)
+		{
+			if (shot_count >= shot_rand)
+			{
+				shot_flag = TRUE;
+				shot_count = 0;
+				shot_rand = (GetRand(2) + 1) * 100;
+			}
+			else
+			{
+				shot_flag = FALSE;
+			}
+		}
+		if (location.x < 0 || location.x > 630)
+		{
+		Finalize();
+		}
+	}
+	else
+	{
+		shot_flag = FALSE;
+	}
 
 	//移動処理
 	Movement();
+
 	//アニメーション制御
 	AnimeControl();
 
-	if (type != 5)
-	{
-		if (shot_count >= shot_rand)
-		{
-			shot_flag = TRUE;
-			shot_count = 0;
-			shot_rand = (GetRand(2) + 1) * 100;
-		}
-		else
-		{
-			shot_flag = FALSE;
-		}
-	}
-	
-	if (location.x < 0 || location.x > 630)
+	if (alpha <= 0)
 	{
 		Finalize();
 	}
@@ -133,7 +148,10 @@ void Enemy::Draw() const
 		flip_flag = TRUE;
 	}
 
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	DrawRotaGraphF(location.x, location.y, 0.5, radian, image, TRUE, flip_flag);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	//親クラスの描画処理を呼び出す
 	__super::Draw();
 }
@@ -146,8 +164,6 @@ void Enemy::Finalize()
 	{
 		DeleteGraph(animation[i]);
 	}
-	box_size = NULL;
-	direction = 0.0f;
 	location = NULL;
 	Delete = TRUE;
 }
@@ -157,7 +173,10 @@ void Enemy::OnHitCollision(GameObject* hit_object)
 {
 	if (hit_object->GetType() == 2)
 	{
-		Finalize();
+		blend_flag = TRUE;
+		box_size = NULL;
+		direction = Vector2D(0.0f,1.0f);
+		sca = 0;
 	}
 }
 
@@ -168,26 +187,33 @@ void Enemy::Movement()
 
 void Enemy::AnimeControl()
 {
-	//アニメーションカウントを加算する
-	animation_count++;
-
-	//60フレーム目に到達したら
-	if (animation_count >= 30)
+	if (blend_flag == TRUE)
 	{
-		//カウントリセット
-		animation_count = 0;
-		anime_time++;
+		alpha-=2;
+	}
+	else
+	{
+		//アニメーションカウントを加算する
+		animation_count++;
 
-		//画像の切り替え
-		if (image == animation[max_animation - 1])
+		//60フレーム目に到達したら
+		if (animation_count >= 30)
 		{
-			anime_time = 0;
-			image = animation[0];
-		}
-		else
-		{
-			image = animation[anime_time];
-		}
+			//カウントリセット
+			animation_count = 0;
+			anime_time++;
 
+			//画像の切り替え
+			if (image == animation[max_animation - 1])
+			{
+				anime_time = 0;
+				image = animation[0];
+			}
+			else
+			{
+				image = animation[anime_time];
+			}
+
+		}
 	}
 }

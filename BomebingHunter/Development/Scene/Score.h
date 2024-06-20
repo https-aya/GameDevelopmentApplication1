@@ -1,15 +1,19 @@
 #pragma once
+
+#include "../Objects/GameObject.h"
+
 class Score
 {
 private:
 	int score;
 	int high_score;
-	int number_image[10];
+	int number_image[11];
 	int font_image[3];
 	int scores[10];
 	int high_scores[10];
 	int times[2];
 	int score_size[2];
+	int fly_text[3];
 
 public:
 	Score();
@@ -19,6 +23,7 @@ public:
 	void Update(int timer);
 	void Draw() const;
 	void Finalize();
+	void DrawFlyText(GameObject* hit_object);
 
 	void SetScore(int scr);
 	int GetScore() const;

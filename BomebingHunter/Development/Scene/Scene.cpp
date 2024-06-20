@@ -71,10 +71,10 @@ void Scene::Update()
 						CreateObject<Enemy>(Vector2D(600.0f, 400.0f), enemy_rand, 0.0f);
 						break;
 					case 4:
-						CreateObject<Enemy>(Vector2D(600.0f, 300.0f), enemy_rand, 0.0f);
+						CreateObject<Enemy>(Vector2D(600.0f, 200.0f + GetRand(100)), enemy_rand, 0.0f);
 						break;
 					case 5:
-						CreateObject<Enemy>(Vector2D(600.0f, 300.0f), enemy_rand, 0.0f);
+						CreateObject<Enemy>(Vector2D(600.0f, 200.0f + GetRand(100)), enemy_rand, 0.0f);
 						break;
 					case 6:
 						CreateObject<Enemy>(Vector2D(600.0f, 400.0f), enemy_rand, 0.0f);
@@ -90,10 +90,10 @@ void Scene::Update()
 						CreateObject<Enemy>(Vector2D(40.0f, 400.0f), enemy_rand, 0.0f);
 						break;
 					case 4:
-						CreateObject<Enemy>(Vector2D(40.0f, 300.0f), enemy_rand, 0.0f);
+						CreateObject<Enemy>(Vector2D(40.0f, 200.0f + GetRand(100)), enemy_rand, 0.0f);
 						break;
 					case 5:
-						CreateObject<Enemy>(Vector2D(40.0f, 300.0f), enemy_rand, 0.0f);
+						CreateObject<Enemy>(Vector2D(40.0f, 200.0f + GetRand(100)), enemy_rand, 0.0f);
 						break;
 					case 6:
 						CreateObject<Enemy>(Vector2D(40.0f, 400.0f), enemy_rand, 0.0f);
@@ -223,7 +223,9 @@ void Scene::HitCheckObject(GameObject* a, GameObject* b)
 		if (a_type != b_type)
 		{
 			if (((a_type == 2 || b_type == 2) && (a_type != 7 && b_type != 7)) || (a_type == 1 && b_type == 7))
-			{
+			{				
+				scores->DrawFlyText(a);
+				scores->DrawFlyText(b);
 				scores->SetScore(a->GetSca());
 				scores->SetScore(b->GetSca());
 			}
