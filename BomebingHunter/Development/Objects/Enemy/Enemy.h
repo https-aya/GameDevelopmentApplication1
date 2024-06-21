@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../GameObject.h"
+#include "../../Scene/Score.h"
 
 class Enemy : public GameObject
 {
@@ -13,6 +14,9 @@ private:
 	int shot_rand;				//“G’e‚ÌŠÔŠu‚ðƒ‰ƒ“ƒ_ƒ€‚É‚·‚é
 	int alpha;					//‰æ‘œ‚Ì“§–¾“x
 	bool blend_flag;				//“§–¾‰»ƒtƒ‰ƒO
+	int sco;
+
+	Score* scores = new Score;
 
 public:
 	Enemy();

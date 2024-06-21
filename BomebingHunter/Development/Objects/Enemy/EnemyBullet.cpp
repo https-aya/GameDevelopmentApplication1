@@ -21,8 +21,6 @@ void EnemyBullet::Initialize()
 	animation[2] = LoadGraph("Resource/Images/EnemyBullet/eff2.png");
 	animation[3] = LoadGraph("Resource/Images/EnemyBullet/eff3.png");
 
-	direction *= 500;
-
 	radian = 0.0;
 	
 	box_size = 16.0f;

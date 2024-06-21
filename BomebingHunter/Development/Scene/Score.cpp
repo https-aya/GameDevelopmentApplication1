@@ -142,47 +142,48 @@ void Score::Finalize()
 	}
 }
 
-void Score::DrawFlyText(GameObject* hit_object)
+void Score::SetFlyText(int ft) 
 {
-	int type = hit_object->GetType();
-	int score = hit_object->GetSca();
-	if (type != 1 && type != 2 && type != 7)
+	int fly = ft;
+
+	if (fly < 0)
 	{
-		if (score < 0)
+		fly *= -1;
+	}
+	for (int i = 0; i < 2; i++)
+	{
+		fly_text[i] = 0;
+		if (fly < 1)
 		{
-			fly_text[0] = number_image[10];
-			score *= -1;
-			for (int i = 1; i < 2; i++)
-			{
-				fly_text[i] = 0;
-				if (score < 1)
-				{
-					break;
-				}
-				else
-				{
-					fly_text[i] = score % 10;
-					score = score / 10;
-				}
-			}
+			break;
 		}
 		else
 		{
-			for (int i = 0; i < 2; i++)
-			{
-				fly_text[i] = 0;
-				if (score < 1)
-				{
-					break;
-				}
-				else
-				{
-					fly_text[i] = score % 10;
-					score = score / 10;
-				}
-			}
+			fly_text[i] = fly % 10;
+			fly = fly / 10;
 		}
 	}
+
+}
+
+void Score::DrawFlyText(Vector2D location, int sco)
+{
+	if (sco < 0)
+	{
+		DrawRotaGraph(location.x + 12, location.y, 1.0, 0.0, number_image[10],TRUE);
+		for (int i = 1; i >= 0; i--)
+		{
+			DrawRotaGraph((location.x + 36) - 12 * i, location.y, 1.0, 0.0, number_image[fly_text[i]], TRUE);
+		}
+	}
+	else
+	{
+		for (int i = 1; i >= 0; i--)
+		{
+			DrawRotaGraph((location.x + 24) - 12 * i, location.y, 1.0, 0.0, number_image[fly_text[i]], TRUE);
+		}
+	}
+	DrawFormatString(location.x + 24, location.y-12, 0x000000, "%d", sco);
 }
 
 void Score::SetScore(int scr)

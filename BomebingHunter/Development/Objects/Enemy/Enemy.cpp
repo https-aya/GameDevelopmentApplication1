@@ -2,7 +2,7 @@
 #include "EnemyBullet.h"
 #include "DxLib.h"
 
-Enemy::Enemy() : animation_count(0), max_animation(0), anime_time(0), shot_count(0),shot_rand(0),alpha(0),blend_flag(FALSE)
+Enemy::Enemy() : animation_count(0), max_animation(0), anime_time(0), shot_count(0),shot_rand(0),alpha(0),blend_flag(FALSE),sco(0)
 {
 	for (int i = 0; i < 5; i++)
 	{
@@ -76,6 +76,8 @@ void Enemy::Initialize()
 		random *= -1;
 	}
 
+	sco = sca;
+
 	//Œü‚«‚ÌÝ’è
 	radian = 0.0;
 
@@ -147,7 +149,7 @@ void Enemy::Draw() const
 	{
 		flip_flag = TRUE;
 	}
-
+	scores->DrawFlyText(location, sco);
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	DrawRotaGraphF(location.x, location.y, 0.5, radian, image, TRUE, flip_flag);
@@ -173,6 +175,7 @@ void Enemy::OnHitCollision(GameObject* hit_object)
 {
 	if (hit_object->GetType() == 2)
 	{
+		scores->SetFlyText(sco);
 		blend_flag = TRUE;
 		box_size = NULL;
 		direction = Vector2D(0.0f,1.0f);
@@ -189,6 +192,7 @@ void Enemy::AnimeControl()
 {
 	if (blend_flag == TRUE)
 	{
+
 		alpha-=2;
 	}
 	else

@@ -5,6 +5,7 @@
 #include "../Objects/Enemy/EnemyBullet.h"
 #include "../Objects/Bomb/Bomb.h"
 #include "../Utility/InputControl.h"
+#include <math.h>
 
 //コンストラクタ
 Scene::Scene() : 
@@ -133,6 +134,7 @@ void Scene::Update()
 				Vector2D P = objects[0]->GetLocation();
 				Vector2D E = objects[i]->GetLocation();
 				float a = ((P.x - E.x) * (P.x - E.x) + (P.y - E.y) * (P.y - E.y));
+				a = sqrt(a);
 				CreateObject<EnemyBullet>(objects[i]->GetLocation(), 7, ((P - E) / a));
 			}
 		}
@@ -192,6 +194,7 @@ void Scene::Finalize()
 {
 
 	scores->Finalize();
+	time_up->Finalize();
 
 	//動的配列が秋なら処理を終了する
 	if (objects.empty())
@@ -208,6 +211,8 @@ void Scene::Finalize()
 
 	//動的配列の開放
 	objects.clear();
+	delete scores;
+	delete time_up;
 }
 
 void Scene::HitCheckObject(GameObject* a, GameObject* b)
@@ -224,8 +229,6 @@ void Scene::HitCheckObject(GameObject* a, GameObject* b)
 		{
 			if (((a_type == 2 || b_type == 2) && (a_type != 7 && b_type != 7)) || (a_type == 1 && b_type == 7))
 			{				
-				scores->DrawFlyText(a);
-				scores->DrawFlyText(b);
 				scores->SetScore(a->GetSca());
 				scores->SetScore(b->GetSca());
 			}
