@@ -149,7 +149,11 @@ void Enemy::Draw() const
 	{
 		flip_flag = TRUE;
 	}
-	scores->DrawFlyText(location, sco);
+
+	if (blend_flag == TRUE)
+	{
+		scores->DrawFlyText(location, sco);
+	}
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	DrawRotaGraphF(location.x, location.y, 0.5, radian, image, TRUE, flip_flag);

@@ -173,17 +173,16 @@ void Score::DrawFlyText(Vector2D location, int sco)
 		DrawRotaGraph(location.x + 12, location.y, 1.0, 0.0, number_image[10],TRUE);
 		for (int i = 1; i >= 0; i--)
 		{
-			DrawRotaGraph((location.x + 36) - 12 * i, location.y, 1.0, 0.0, number_image[fly_text[i]], TRUE);
+			DrawFormatString((location.x + 48) - 12 * i, location.y, 0x000000, "%d", fly_text[i]);
 		}
 	}
 	else
 	{
 		for (int i = 1; i >= 0; i--)
 		{
-			DrawRotaGraph((location.x + 24) - 12 * i, location.y, 1.0, 0.0, number_image[fly_text[i]], TRUE);
+			DrawFormatString((location.x + 48) - 12 * i, location.y, 0x000000, "%d", fly_text[i]);
 		}
 	}
-	DrawFormatString(location.x + 24, location.y-12, 0x000000, "%d", sco);
 }
 
 void Score::SetScore(int scr)
