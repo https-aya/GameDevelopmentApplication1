@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../GameObject.h"
-#include "../../Scene/Score.h"
+#include "../../Scene/FlyText.h"
 
 class Enemy : public GameObject
 {
@@ -16,7 +16,7 @@ private:
 	bool blend_flag;				//“§–¾‰»ƒtƒ‰ƒO
 	int sco;
 
-	Score* scores = new Score;
+	FlyText* fly_text = new FlyText;
 
 public:
 	Enemy();

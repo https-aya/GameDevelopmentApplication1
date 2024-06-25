@@ -13,7 +13,6 @@ private:
 	int high_scores[10];
 	int times[2];
 	int score_size[2];
-	int fly_text[2];
 
 public:
 	Score();
@@ -23,8 +22,7 @@ public:
 	void Update(int timer);
 	void Draw() const;
 	void Finalize();
-	void SetFlyText(int ft);
-	void DrawFlyText(Vector2D location, int sco);
+
 
 	void SetScore(int scr);
 	int GetScore() const;

@@ -38,7 +38,7 @@ private:
 
 	//オブジェクト生成処理
 	template <class T>
-	T* CreateObject(const Vector2D& location,int enemy_type,const Vector2D& direction)
+	T* CreateObject(const Vector2D& location,ObjectType enemy_type,const Vector2D& direction)
 	{
 		//指定したクラスを生成する
 		T* new_instance = new T();

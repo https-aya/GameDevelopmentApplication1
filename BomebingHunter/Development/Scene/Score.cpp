@@ -15,7 +15,6 @@ Score::Score() :  score(0),high_score(0)
 		font_image[i] = NULL;
 		score_size[i] = NULL;
 		times[i] = NULL;
-		fly_text[i] = NULL;
 	}
 	
 }
@@ -139,49 +138,6 @@ void Score::Finalize()
 	for (int i = 0; i < 2; i++)
 	{
 		DeleteGraph(font_image[i]);
-	}
-}
-
-void Score::SetFlyText(int ft) 
-{
-	int fly = ft;
-
-	if (fly < 0)
-	{
-		fly *= -1;
-	}
-	for (int i = 0; i < 2; i++)
-	{
-		fly_text[i] = 0;
-		if (fly < 1)
-		{
-			break;
-		}
-		else
-		{
-			fly_text[i] = fly % 10;
-			fly = fly / 10;
-		}
-	}
-
-}
-
-void Score::DrawFlyText(Vector2D location, int sco)
-{
-	if (sco < 0)
-	{
-		DrawRotaGraph(location.x + 12, location.y, 1.0, 0.0, number_image[10],TRUE);
-		for (int i = 1; i >= 0; i--)
-		{
-			DrawFormatString((location.x + 48) - 12 * i, location.y, 0x000000, "%d", fly_text[i]);
-		}
-	}
-	else
-	{
-		for (int i = 1; i >= 0; i--)
-		{
-			DrawFormatString((location.x + 48) - 12 * i, location.y, 0x000000, "%d", fly_text[i]);
-		}
 	}
 }
 

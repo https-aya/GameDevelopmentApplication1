@@ -60,7 +60,7 @@ void EnemyBullet::Finalize()
 
 void EnemyBullet::OnHitCollision(GameObject* hit_object)
 {
-	if (hit_object->GetType() == 1)
+	if (hit_object->GetType() == ePlayer)
 	{
 		anime_flag = TRUE;
 		box_size = NULL;

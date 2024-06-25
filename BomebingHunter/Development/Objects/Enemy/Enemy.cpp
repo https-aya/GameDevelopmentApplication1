@@ -19,7 +19,7 @@ void Enemy::Initialize()
 {
 	switch (type)
 	{
-	case 3:
+	case eBoxEnemy:
 		animation[0] = LoadGraph("Resource/Images/BoxEnemy/1.png");
 		animation[1] = LoadGraph("Resource/Images/BoxEnemy/2.png");
 		animation[2] = NULL;
@@ -28,7 +28,7 @@ void Enemy::Initialize()
 		box_size = 64.0f;
 		sca = 10;
 		break;
-	case 4:
+	case eFlyEnemy:
 		animation[0] = LoadGraph("Resource/Images/WingEnemy/1.png");
 		animation[1] = LoadGraph("Resource/Images/WingEnemy/2.png");
 		animation[2] = NULL;
@@ -37,7 +37,7 @@ void Enemy::Initialize()
 		box_size = 64.0f;
 		sca = 10;
 		break;
-	case 5:
+	case eHarpy:
 		animation[0] = LoadGraph("Resource/Images/Harpy/1.png");
 		animation[1] = LoadGraph("Resource/Images/Harpy/2.png");
 		animation[2] = NULL;
@@ -46,7 +46,7 @@ void Enemy::Initialize()
 		box_size = 64.0f;
 		sca = -20;
 		break;
-	case 6:
+	case eGoldEnemy:
 		animation[0] = LoadGraph("Resource/Images/GoldEnemy/1.png");
 		animation[1] = LoadGraph("Resource/Images/GoldEnemy/2.png");
 		animation[2] = LoadGraph("Resource/Images/GoldEnemy/3.png");
@@ -69,7 +69,7 @@ void Enemy::Initialize()
 		}
 	}
 	
-	float random = (GetRand(10) + 10.0) / 10;
+	float random = (GetRand(10) + 10.0f) / 10.0f;
 
 	if (location.x >= 50.0f)
 	{
@@ -90,6 +90,8 @@ void Enemy::Initialize()
 	//透明度の初期値
 	alpha = 255;
 
+	fly_text->Initialize();
+
 	//初期進行方向の設定
 	SetDirection(Vector2D(random, 0.0f));
 }
@@ -101,7 +103,7 @@ void Enemy::Update()
 	{
 		shot_count++;
 
-		if (type != 5)
+		if (type == 3)
 		{
 			if (shot_count >= shot_rand)
 			{
@@ -152,7 +154,7 @@ void Enemy::Draw() const
 
 	if (blend_flag == TRUE)
 	{
-		scores->DrawFlyText(location, sco);
+		fly_text->Draw(location, sco);
 	}
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
@@ -177,12 +179,12 @@ void Enemy::Finalize()
 //当たった時の処理
 void Enemy::OnHitCollision(GameObject* hit_object)
 {
-	if (hit_object->GetType() == 2)
+	if (hit_object->GetType() == eBome)
 	{
-		scores->SetFlyText(sco);
+		fly_text->SetFlyText(sco);
 		blend_flag = TRUE;
 		box_size = NULL;
-		direction = Vector2D(0.0f,1.0f);
+		direction = Vector2D(0.0f,0.1f);
 		sca = 0;
 	}
 }

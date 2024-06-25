@@ -24,6 +24,7 @@ Scene::Scene() :
 //デストラクタ
 Scene::~Scene()
 {
+	DeleteGraph(Background);
 	//忘れ防止
 	Finalize();
 }
@@ -32,7 +33,7 @@ Scene::~Scene()
 void Scene::Initialize()
 {
 	//プレイヤーを生成する
-	CreateObject<Player>(Vector2D(320.0f, 50.0f),1, 0.0f);
+	CreateObject<Player>(Vector2D(320.0f, 50.0f),ePlayer, 0.0f);
 	enemy_count = 0;
 	count_time = 1;
 	count_rand = 100;
@@ -68,17 +69,17 @@ void Scene::Update()
 				{
 					switch (enemy_rand)
 					{
+					case 0:
+						CreateObject<Enemy>(Vector2D(600.0f, 400.0f), eBoxEnemy, 0.0f);
+						break;
+					case 1:
+						CreateObject<Enemy>(Vector2D(600.0f, 200.0f + GetRand(100)), eFlyEnemy, 0.0f);
+						break;
+					case 2:
+						CreateObject<Enemy>(Vector2D(600.0f, 200.0f + GetRand(100)), eHarpy, 0.0f);
+						break;
 					case 3:
-						CreateObject<Enemy>(Vector2D(600.0f, 400.0f), enemy_rand, 0.0f);
-						break;
-					case 4:
-						CreateObject<Enemy>(Vector2D(600.0f, 200.0f + GetRand(100)), enemy_rand, 0.0f);
-						break;
-					case 5:
-						CreateObject<Enemy>(Vector2D(600.0f, 200.0f + GetRand(100)), enemy_rand, 0.0f);
-						break;
-					case 6:
-						CreateObject<Enemy>(Vector2D(600.0f, 400.0f), enemy_rand, 0.0f);
+						CreateObject<Enemy>(Vector2D(600.0f, 400.0f), eGoldEnemy, 0.0f);
 						break;
 					}
 
@@ -87,17 +88,17 @@ void Scene::Update()
 				{
 					switch (enemy_rand)
 					{
+					case 0:
+						CreateObject<Enemy>(Vector2D(40.0f, 400.0f), eBoxEnemy, 0.0f);
+						break;
+					case 1:
+						CreateObject<Enemy>(Vector2D(40.0f, 200.0f + GetRand(100)), eFlyEnemy, 0.0f);
+						break;
+					case 2:
+						CreateObject<Enemy>(Vector2D(40.0f, 200.0f + GetRand(100)), eHarpy, 0.0f);
+						break;
 					case 3:
-						CreateObject<Enemy>(Vector2D(40.0f, 400.0f), enemy_rand, 0.0f);
-						break;
-					case 4:
-						CreateObject<Enemy>(Vector2D(40.0f, 200.0f + GetRand(100)), enemy_rand, 0.0f);
-						break;
-					case 5:
-						CreateObject<Enemy>(Vector2D(40.0f, 200.0f + GetRand(100)), enemy_rand, 0.0f);
-						break;
-					case 6:
-						CreateObject<Enemy>(Vector2D(40.0f, 400.0f), enemy_rand, 0.0f);
+						CreateObject<Enemy>(Vector2D(40.0f, 400.0f), eGoldEnemy, 0.0f);
 						break;
 					}
 				}
@@ -105,7 +106,7 @@ void Scene::Update()
 				create_rand = GetRand(1);
 			}
 			count_rand = (GetRand(1) + 1) * 100;
-			enemy_rand = GetRand(3) + 3;
+			enemy_rand = GetRand(3);
 			count_time = 0;
 		}
 		//オブジェクト同士の当たり判定チェック
@@ -120,12 +121,12 @@ void Scene::Update()
 
 		if (InputControl::GetKeyDown(KEY_INPUT_Z))
 		{
-			CreateObject<Bomb>(objects[0]->GetLocation(), 2, 0.0f);
+			CreateObject<Bomb>(objects[0]->GetLocation(), eBome, 0.0f);
 
 		}
 		if (InputControl::GetKey(KEY_INPUT_X))
 		{
-			CreateObject<Bomb>(objects[0]->GetLocation(), 2, 0.0f);
+			CreateObject<Bomb>(objects[0]->GetLocation(), eBome, 0.0f);
 		}
 		for (int i = 0; i <= objects.size()-1; i++)
 		{
@@ -135,7 +136,7 @@ void Scene::Update()
 				Vector2D E = objects[i]->GetLocation();
 				float a = ((P.x - E.x) * (P.x - E.x) + (P.y - E.y) * (P.y - E.y));
 				a = sqrt(a);
-				CreateObject<EnemyBullet>(objects[i]->GetLocation(), 7, ((P - E) / a));
+				CreateObject<EnemyBullet>(objects[i]->GetLocation(), eEnemyBullet, ((P - E) / a));
 			}
 		}
 		for (int i = 0; i <= objects.size()-1; i++)
@@ -223,11 +224,11 @@ void Scene::HitCheckObject(GameObject* a, GameObject* b)
 
 	if ((fabsf(diff.x) < box_size.x) && (fabsf(diff.y) < box_size.y))
 	{
-		int a_type = a->GetType();
-		int b_type = b->GetType();
+		char a_type = a->GetType();
+		char b_type = b->GetType();
 		if (a_type != b_type)
 		{
-			if (((a_type == 2 || b_type == 2) && (a_type != 7 && b_type != 7)) || (a_type == 1 && b_type == 7))
+			if (((a_type == eBome || b_type == eBome) && (a_type != eEnemyBullet && b_type != eEnemyBullet)) || (a_type == ePlayer && b_type == eEnemyBullet))
 			{				
 				scores->SetScore(a->GetSca());
 				scores->SetScore(b->GetSca());

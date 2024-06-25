@@ -9,7 +9,7 @@ GameObject::GameObject() :
 	radian(0.0),
 	image(0),
 	sound(0),
-	type(0),
+	type(),
 	sca(0),
 	Delete(FALSE),
 	shot_flag(FALSE)
@@ -95,7 +95,7 @@ Vector2D GameObject::GetDirection() const
 	return direction;
 }
 
-void GameObject::SetType(const int type)
+void GameObject::SetType(const ObjectType type)
 {
 	this->type = type;
 }

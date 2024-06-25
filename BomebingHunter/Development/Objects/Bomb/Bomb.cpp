@@ -66,8 +66,8 @@ void Bomb::Finalize()
 
 void Bomb::OnHitCollision(GameObject* hit_object)
 {
-	int ty = hit_object->GetType();
-	if (ty == 1)
+	char ty = hit_object->GetType();
+	if (ty == ePlayer)
 	{
 		if (hit_object->GetDirection().x > 0)
 		{
@@ -80,7 +80,7 @@ void Bomb::OnHitCollision(GameObject* hit_object)
 			direction.x = -2.0f;
 		}
 	}
-	if (ty != 1 && ty != 2 && ty != 7)
+	if (ty != ePlayer && ty != eBome && ty != eEnemyBullet)
 	{
 		anime_flag = true;
 		direction = 0.0f;
