@@ -1,12 +1,12 @@
 #include "Player.h"
 #include "../../Utility/InputControl.h"
+#include "../../Utility/ResourceManager.h"
 #include "DxLib.h"
 
 //コンストラクタ
-Player::Player() : animation_count(0),flip_flag(FALSE)
+Player::Player() : animation_count(0),flip_flag(FALSE),animation()
 {
-	animation[0] = NULL;
-	animation[1] = NULL;
+
 }
 
 //デストラクタ
@@ -18,8 +18,12 @@ Player::~Player()
 void Player::Initialize()
 {
 	//画像の読み込み
-	animation[0] = LoadGraph("Resource/Images/Tri-pilot/1.png");
-	animation[1] = LoadGraph("Resource/Images/Tri-pilot/2.png");
+	ResourceManager* rm = ResourceManager::GetInstance();
+	std::vector<int> tmp;
+	tmp = rm->GetImages("Resource/Images/Tri-pilot/1.png");
+	animation.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Tri-pilot/2.png");
+	animation.push_back(tmp[0]);
 
 	//エラーチェック
 	if (animation[0] == -1 || animation[1] == -1)
@@ -60,9 +64,7 @@ void Player::Draw() const
 //終了時処理
 void Player::Finalize()
 {
-	//使用した画像を開放する
-	DeleteGraph(animation[0]);
-	DeleteGraph(animation[1]);
+	animation.clear();
 }
 
 //当たり判定通知処理

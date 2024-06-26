@@ -1,12 +1,9 @@
 #include "Bomb.h"
 #include "DxLib.h"
+#include "../../Utility/ResourceManager.h"
 
-Bomb::Bomb() : anime_flag(false),anime_count(0),anime_num(0)
+Bomb::Bomb() : anime_flag(false),anime_count(0),anime_num(0),animation()
 {
-	for (int i = 0; i < 4; i++)
-	{
-		animation[i] = NULL;
-	}
 }
 
 Bomb :: ~Bomb()
@@ -16,7 +13,10 @@ Bomb :: ~Bomb()
 
 void Bomb::Initialize()
 {
-	animation[0] = LoadGraph("Resource/Images/Bomb/Bomb.png");
+	ResourceManager* rm = ResourceManager::GetInstance();
+	std::vector<int> tmp;
+	tmp = rm->GetImages("Resource/Images/Bomb/Bomb.png");
+
 	animation[1] = LoadGraph("Resource/Images/Blast/1.png");
 	animation[2] = LoadGraph("Resource/Images/Blast/2.png");
 	animation[3] = LoadGraph("Resource/Images/Blast/3.png");
