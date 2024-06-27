@@ -134,9 +134,9 @@ void Scene::Update()
 			{
 				Vector2D P = objects[0]->GetLocation();
 				Vector2D E = objects[i]->GetLocation();
-				float a = ((P.x - E.x) * (P.x - E.x) + (P.y - E.y) * (P.y - E.y));
+				float a = pow((P.x - E.x),2) + pow((P.y - E.y),2);
 				a = sqrtf(a);
-				CreateObject<EnemyBullet>(objects[i]->GetLocation(), eEnemyBullet, ((P - E) / a));
+				CreateObject<EnemyBullet>(objects[i]->GetLocation(), eEnemyBullet, (P - E) / a);
 			}
 		}
 		for (int i = 0; i <= objects.size()-1; i++)
