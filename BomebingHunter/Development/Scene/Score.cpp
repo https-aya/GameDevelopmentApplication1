@@ -1,20 +1,17 @@
 #include "Score.h"
+#include "../Utility/ResourceManager.h"
 #include "DxLib.h"
 
-Score::Score() :  score(0),high_score(0)
+Score::Score() :  score(0),high_score(0),number_image(NULL),font_image(NULL),score_digit_size(0),high_score_digit_size(0),time(0),count_time(0)
 {
 	for (int i = 0; i < 10; i++)
 	{
-		number_image[i] = NULL;
-		scores[i] = NULL;
-		high_scores[i] = NULL;
+		score_digit[i] = NULL;
+		high_score_digit[i] = NULL;
 	}
-	number_image[10] = NULL;
 	for (int i = 0; i < 2; i++)
 	{
-		font_image[i] = NULL;
-		score_size[i] = NULL;
-		times[i] = NULL;
+		time_digit[i] = NULL;
 	}
 	
 }
@@ -26,22 +23,46 @@ Score::~Score()
 
 void Score::Initialize()
 {
-	number_image[0] = LoadGraph("Resource/Images/Score/0.png");
-	number_image[1] = LoadGraph("Resource/Images/Score/1.png");
-	number_image[2] = LoadGraph("Resource/Images/Score/2.png");
-	number_image[3] = LoadGraph("Resource/Images/Score/3.png");
-	number_image[4] = LoadGraph("Resource/Images/Score/4.png");
-	number_image[5] = LoadGraph("Resource/Images/Score/5.png");
-	number_image[6] = LoadGraph("Resource/Images/Score/6.png");
-	number_image[7] = LoadGraph("Resource/Images/Score/7.png");
-	number_image[8] = LoadGraph("Resource/Images/Score/8.png");
-	number_image[9] = LoadGraph("Resource/Images/Score/9.png");
-	number_image[10] = LoadGraph("Resource/Images/FlyText/-.png");
-	font_image[0] = LoadGraph("Resource/Images/Score/font-21.png");
-	font_image[1] = LoadGraph("Resource/Images/Score/hs.png");
-	font_image[2] = LoadGraph("Resource/Images/TimeLimit/timer-03.png");
+	ResourceManager* rm = ResourceManager::GetInstance();
+	std::vector<int> tmp;
+	tmp = rm->GetImages("Resource/Images/Score/0.png");
+	number_image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Score/1.png");
+	number_image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Score/2.png");
+	number_image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Score/3.png");
+	number_image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Score/4.png");
+	number_image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Score/5.png");
+	number_image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Score/6.png");
+	number_image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Score/7.png");
+	number_image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Score/8.png");
+	number_image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Score/9.png");
+	number_image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/FlyText/-.png");
+	number_image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Score/font-21.png");
+	font_image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Score/hs.png");
+	font_image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/TimeLimit/timer-03.png");
+	font_image.push_back(tmp[0]);
 
-	for (int i = 0; i < 11; i++)
+	for (int i = 0; i < font_image.size(); i++)
+	{
+		if (font_image[i] == -1)
+		{
+			throw("フォントイメージ%dがありません", i);
+		}
+	}
+
+	for (int i = 0; i < number_image.size(); i++)
 	{
 		if (number_image[i] == -1)
 		{
@@ -50,18 +71,26 @@ void Score::Initialize()
 	}
 
 	score = 0;
+	time = 60;
 }
 
-void Score::Update(int timer)
+void Score::Update()
 {
-	score_size[0] = 0;
+	count_time++;
+	if (count_time >= FLAME_RATE)
+	{
+		time--;
+		count_time = 0;
+	}
+	score_digit_size = 0;
 	int sco = score;
-	int time = timer;
+	int times = time;
+	//スコアを桁ごとに保存
 	for (int i = 0; i < 10; i++)
 	{
 		if (sco == 0)
 		{
-			scores[0] = sco;
+			score_digit[0] = sco;
 			break;
 		}
 		 if (sco < 1) 
@@ -70,17 +99,18 @@ void Score::Update(int timer)
 		}
 		else
 		{
-			score_size[0]++;
-			scores[i] = sco % 10;
+			score_digit_size++;
+			score_digit[i] = sco % 10;
 			sco = sco / 10;
 		}
 	}
+	//時間を桁ごとに保存
 	for (int i = 0; i < 2; i++)
 	{
-		times[i] = 0;
-		if (time == 0)
+		time_digit[i] = 0;
+		if (times == 0)
 		{
-			times[0] = timer;
+			time_digit[0] = time;
 			break;
 		}
 		if (time < 1)
@@ -89,8 +119,8 @@ void Score::Update(int timer)
 		}
 		else
 		{
-			times[i] = time % 10;
-			time = time / 10;
+			time_digit[i] = times % 10;
+			times = times / 10;
 		}
 	}
 }
@@ -100,31 +130,34 @@ void Score::Draw() const
 	DrawRotaGraph(240, 460, 1.0, 0.0, font_image[0], TRUE);
 	DrawRotaGraph(440, 460, 1.0, 0.0, font_image[1], TRUE);
 	DrawRotaGraph(30, 460, 0.5, 0.0, font_image[2], TRUE);
-	if (score_size[0] != 0)
+	//スコアを画像で描画
+	if (score_digit_size != 0)
 	{
-		for (int i = 0; i < score_size[0]; i++)
+		for (int i = 0; i < score_digit_size; i++)
 		{
-			DrawRotaGraph(280 + 12 * i, 460, 1.0, 0.0, number_image[scores[score_size[0] - i - 1]], TRUE);
+			DrawRotaGraph(280 + 12 * i, 460, 1.0, 0.0, number_image[score_digit[score_digit_size - i - 1]], TRUE);
 		}
 	}
 	else
 	{
-		DrawRotaGraph(292, 460, 1.0, 0.0, number_image[scores[0]], TRUE);
+		DrawRotaGraph(292, 460, 1.0, 0.0, number_image[score_digit[0]], TRUE);
 	}
-	if (score_size[1] != 0)
+	//ハイスコアを画像で描画
+	if (high_score_digit_size != 0)
 	{
-		for (int i = 0; i < score_size[1]; i++)
+		for (int i = 0; i < high_score_digit_size; i++)
 		{
-			DrawRotaGraph(490 + 12 * i, 460, 1.0, 0.0, number_image[high_scores[score_size[1] - i - 1]], TRUE);
+			DrawRotaGraph(490 + 12 * i, 460, 1.0, 0.0, number_image[high_score_digit[high_score_digit_size - i - 1]], TRUE);
 		}
 	}
 	else
 	{
-		DrawRotaGraph(502, 460, 1.0, 0.0, number_image[high_scores[0]], TRUE);
+		DrawRotaGraph(502, 460, 1.0, 0.0, number_image[high_score_digit[0]], TRUE);
 	}
+	//時間を画像で描画
 	for (int i = 1; i >= 0; i--)
 	{
-		DrawRotaGraph(62 - 12 * i, 460, 1.0,0.0, number_image[times[i]], TRUE);
+		DrawRotaGraph(62 - 12 * i, 460, 1.0,0.0, number_image[time_digit[i]], TRUE);
 	}
 }
 
@@ -132,13 +165,10 @@ void Score::Finalize()
 {
 	for (int i = 0; i < 10; i++)
 	{
-		DeleteGraph(number_image[i]);
-		scores[i] = NULL;
+		score_digit[i] = NULL;
 	}
-	for (int i = 0; i < 2; i++)
-	{
-		DeleteGraph(font_image[i]);
-	}
+	number_image.clear();
+	font_image.clear();
 }
 
 void Score::SetScore(int scr)
@@ -160,13 +190,14 @@ void Score::SetHighScore()
 	if (high_score < score)
 	{
 		high_score = score;
-		score_size[1] = 0;
+		high_score_digit_size = 0;
 		int hsco = high_score;
+		//ハイスコアを桁ごとに保存
 		for (int i = 0; i < 10; i++)
 		{
 			if (hsco == 0)
 			{
-				high_scores[0] = hsco;
+				high_score_digit[0] = hsco;
 				break;
 			}
 			if (hsco < 1)
@@ -175,10 +206,15 @@ void Score::SetHighScore()
 			}
 			else
 			{
-				score_size[1]++;
-				high_scores[i] = hsco % 10;
+				high_score_digit_size++;
+				high_score_digit[i] = hsco % 10;
 				hsco = hsco / 10;
 			}
 		}
 	}
+}
+
+int Score::GetTime() const
+{
+	return time;
 }

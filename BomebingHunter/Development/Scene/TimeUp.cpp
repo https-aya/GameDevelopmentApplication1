@@ -1,14 +1,12 @@
 #include "TimeUp.h"
+#include "../Utility/ResourceManager.h"
 #include "DxLib.h"
 #include <chrono>
 #include <thread>
 
-TimeUp::TimeUp() :draw(NULL),count(0)
+TimeUp::TimeUp() :draw(NULL),count(0),image(NULL)
 {
-	for (int i = 0; i < 5; i++)
-	{
-		image[i] = NULL;
-	}
+
 }
 
 TimeUp::~TimeUp()
@@ -17,13 +15,20 @@ TimeUp::~TimeUp()
 
 void TimeUp::Initialize()
 {
-	image[0] = LoadGraph("Resource/Images/Evaluation/BAD.png");
-	image[1] = LoadGraph("Resource/Images/Evaluation/Finish.png");
-	image[2] = LoadGraph("Resource/Images/Evaluation/GOOD.png");
-	image[3] = LoadGraph("Resource/Images/Evaluation/OK.png");
-	image[4] = LoadGraph("Resource/Images/Evaluation/Perfect.png");
+	ResourceManager* rm = ResourceManager::GetInstance();
+	std::vector<int> tmp;
+	tmp = rm->GetImages("Resource/Images/Evaluation/BAD.png");
+	image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Evaluation/Finish.png");
+	image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Evaluation/GOOD.png");
+	image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Evaluation/OK.png");
+	image.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Evaluation/Perfect.png");
+	image.push_back(tmp[0]);
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < image.size(); i++)
 	{
 		if (image[i] == -1)
 		{
@@ -58,7 +63,7 @@ void TimeUp::Update(int sco)
 		{
 			draw = image[0];
 		}
-	}
+	} 
 	if (count < 0)
 	{
 		count = 0;
@@ -72,8 +77,5 @@ void TimeUp::Draw() const
 
 void TimeUp::Finalize()
 {
-	for (int i = 0; i < 5; i++)
-	{
-		DeleteGraph(image[i]);
-	}
+	image.clear();
 }

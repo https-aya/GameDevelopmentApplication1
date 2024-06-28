@@ -15,9 +15,7 @@ Scene::Scene() :
 	count_rand(0), 
 	create_rand(0), 
 	enemy_rand(0),
-	enemy_count(0),
-	high_score(0),
-	time(0)
+	enemy_count(0)
 {
 }
 
@@ -41,15 +39,13 @@ void Scene::Initialize()
 	Background = LoadGraph("Resource/Images/BackGround.png");
 	scores->Initialize();
 	time_up->Initialize();
-	time = 6000;
 }
 
 //更新処理
 void Scene::Update()
 {
-	if (time > 0)
+	if (scores->GetTime() > 0)
 	{
-		time--;
 		count_time++;
 
 		//シーンに存在するオブジェクトの更新処理
@@ -151,7 +147,7 @@ void Scene::Update()
 				objects.erase(objects.begin() + i);
 			}
 		}
-		scores->Update(time/100);
+		scores->Update();
 	}
 	else
 	{
@@ -172,7 +168,7 @@ void Scene::Draw() const
 {
 	//背景画像の描画
 	DrawExtendGraph(0, 0, 640, 480, Background, FALSE);
-	if (time > 0)
+	if (scores->GetTime() > 0)
 	{
 		//シーンに存在するオブジェクトの描画処理
 		for (GameObject* obj : objects)
@@ -187,7 +183,6 @@ void Scene::Draw() const
 	{
 		time_up->Draw();
 	}
-	DrawFormatString(50, 50, 0x000000, "%d", time);
 }
 
 //終了時処理
@@ -230,8 +225,8 @@ void Scene::HitCheckObject(GameObject* a, GameObject* b)
 		{
 			if (((a_type == eBome || b_type == eBome) && (a_type != eEnemyBullet && b_type != eEnemyBullet)) || (a_type == ePlayer && b_type == eEnemyBullet))
 			{				
-				scores->SetScore(a->GetSca());
-				scores->SetScore(b->GetSca());
+				scores->SetScore(a->GetScore());
+				scores->SetScore(b->GetScore());
 			}
 		}
 		a->OnHitCollision(b);

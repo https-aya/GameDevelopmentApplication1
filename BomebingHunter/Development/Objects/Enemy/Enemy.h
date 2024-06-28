@@ -2,19 +2,20 @@
 
 #include "../GameObject.h"
 #include "../../Scene/FlyText.h"
+#include <vector>
 
 class Enemy : public GameObject
 {
 private:
-	int animation[5];			//アニメーション画像
-	int animation_count;		//アニメーション時間
-	int max_animation;			//アニメーションの最大数
-	int anime_time;				//どのアニメーションか
-	int shot_count;				//敵弾を打つ間隔
-	int shot_rand;				//敵弾の間隔をランダムにする
-	int alpha;					//画像の透明度
-	bool blend_flag;				//透明化フラグ
-	int sco;
+	std::vector<int> animation;			//アニメーション画像
+	int animation_count;				//アニメーション時間
+	int max_animation;					//アニメーションの最大数
+	int anime_time;						//どのアニメーションか
+	int shot_count;						//敵弾を打つ間隔
+	int shot_rand;						//敵弾の間隔をランダムにする
+	int alpha;							//画像の透明度
+	bool blend_flag;					//透明化フラグ
+	Vector2D anim_location;
 
 	FlyText* fly_text = new FlyText;
 

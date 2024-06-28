@@ -1,12 +1,10 @@
 #include "EnemyBullet.h"
+#include "../../Utility/ResourceManager.h"
 #include "DxLib.h"
 
-EnemyBullet::EnemyBullet() :anime_flag(FALSE),anime_count(0),anime_num(0)
+EnemyBullet::EnemyBullet() :anime_flag(FALSE),anime_count(0),anime_num(0),animation(NULL)
 {
-	for (int i = 0; i < 4; i++)
-	{
-		animation[i] = NULL;
-	}
+
 }
 
 EnemyBullet::~EnemyBullet()
@@ -16,10 +14,25 @@ EnemyBullet::~EnemyBullet()
 
 void EnemyBullet::Initialize()
 {
-	animation[0] = LoadGraph("Resource/Images/EnemyBullet/1.png");
-	animation[1] = LoadGraph("Resource/Images/EnemyBullet/eff1.png");
-	animation[2] = LoadGraph("Resource/Images/EnemyBullet/eff2.png");
-	animation[3] = LoadGraph("Resource/Images/EnemyBullet/eff3.png");
+	ResourceManager* rm = ResourceManager::GetInstance();
+	std::vector<int> tmp;
+	tmp = rm->GetImages("Resource/Images/EnemyBullet/1.png");
+	animation.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/EnemyBullet/eff1.png");
+	animation.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/EnemyBullet/eff2.png");
+	animation.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/EnemyBullet/eff3.png");
+	animation.push_back(tmp[0]);
+
+	for (int i = 0; i < animation.size(); i++)
+	{
+		if (animation[i] == -1)
+		{
+			throw("“G‚Ì’e‚Ì‰æ‘œ%d‚ª‚ ‚è‚Ü‚¹‚ñ", i);
+		}
+	}
+
 
 	radian = 0.0;
 	
@@ -27,7 +40,7 @@ void EnemyBullet::Initialize()
 
 	image = animation[0];
 
-	sca = -10;
+	score - 20;
 }
 
 void EnemyBullet::Update()
@@ -50,10 +63,7 @@ void EnemyBullet::Draw() const
 
 void EnemyBullet::Finalize()
 {
-	for (int i = 0; i < 4; i++)
-	{
-		DeleteGraph(animation[i]);
-	}
+	animation.clear();
 	location = NULL;
 	Delete = TRUE;
 }

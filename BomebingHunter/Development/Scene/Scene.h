@@ -18,18 +18,24 @@ private:
 	int create_rand;		//生成位置をランダムで決める
 	int enemy_rand;			//生成する敵をランダムで決める
 	int enemy_count;		//敵の生成数
-	int high_score;
-	int time;
+
+	//ローカル変数定義
 	Score* scores = new Score;
 	TimeUp* time_up = new TimeUp;
 
 public:
+	//コンストラクタ
 	Scene();
+	//デストラクタ
 	~Scene();
 
+	//初期化処理
 	void Initialize();
+	//更新処理
 	void Update();
+	//描画処理
 	void Draw() const;
+	//終了時処理
 	void Finalize();
 
 private:

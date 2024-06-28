@@ -1,11 +1,12 @@
-
+#pragma once
 
 #include "../GameObject.h"
+#include <vector>
 
 class EnemyBullet : public GameObject
 {
 private:
-	int animation[4];		//アニメーション画像
+	std::vector<int> animation;		//アニメーション画像
 	bool anime_flag;		//アニメーションするかどうか
 	int anime_count;		//アニメーション時間
 	int anime_num;			//アニメーション番号

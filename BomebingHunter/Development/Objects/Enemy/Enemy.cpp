@@ -1,13 +1,11 @@
 #include "Enemy.h"
 #include "EnemyBullet.h"
+#include "../../Utility/ResourceManager.h"
 #include "DxLib.h"
 
-Enemy::Enemy() : animation_count(0), max_animation(0), anime_time(0), shot_count(0),shot_rand(0),alpha(0),blend_flag(FALSE),sco(0)
+Enemy::Enemy() : animation_count(0), max_animation(0), anime_time(0), shot_count(0),shot_rand(0),alpha(0),blend_flag(FALSE),animation(NULL),anim_location(0.0f)
 {
-	for (int i = 0; i < 5; i++)
-	{
-		animation[i] = NULL;
-	}
+
 }
 
 Enemy::~Enemy()
@@ -17,53 +15,54 @@ Enemy::~Enemy()
 //初期化処理
 void Enemy::Initialize() 
 {
+	ResourceManager* rm = ResourceManager::GetInstance();
+	std::vector<int> tmp;
 	switch (type)
 	{
 	case eBoxEnemy:
-		animation[0] = LoadGraph("Resource/Images/BoxEnemy/1.png");
-		animation[1] = LoadGraph("Resource/Images/BoxEnemy/2.png");
-		animation[2] = NULL;
-		animation[3] = NULL;
-		animation[4] = NULL;
+		tmp = rm->GetImages("Resource/Images/BoxEnemy/1.png");
+		animation.push_back(tmp[0]);
+		tmp = rm->GetImages("Resource/Images/BoxEnemy/2.png");
+		animation.push_back(tmp[0]);
 		box_size = 64.0f;
-		sca = 10;
+		score = 10;
 		break;
 	case eFlyEnemy:
-		animation[0] = LoadGraph("Resource/Images/WingEnemy/1.png");
-		animation[1] = LoadGraph("Resource/Images/WingEnemy/2.png");
-		animation[2] = NULL;
-		animation[3] = NULL;
-		animation[4] = NULL;
+		tmp = rm->GetImages("Resource/Images/WingEnemy/1.png");
+		animation.push_back(tmp[0]);
+		tmp = rm->GetImages("Resource/Images/WingEnemy/2.png");
+		animation.push_back(tmp[0]);
 		box_size = 64.0f;
-		sca = 10;
+		score = 10;
 		break;
 	case eHarpy:
-		animation[0] = LoadGraph("Resource/Images/Harpy/1.png");
-		animation[1] = LoadGraph("Resource/Images/Harpy/2.png");
-		animation[2] = NULL;
-		animation[3] = NULL;
-		animation[4] = NULL;
+		tmp = rm->GetImages("Resource/Images/Harpy/1.png");
+		animation.push_back(tmp[0]);
+		tmp = rm->GetImages("Resource/Images/Harpy/2.png");
+		animation.push_back(tmp[0]);
 		box_size = 64.0f;
-		sca = -20;
+		score = -20;
 		break;
 	case eGoldEnemy:
-		animation[0] = LoadGraph("Resource/Images/GoldEnemy/1.png");
-		animation[1] = LoadGraph("Resource/Images/GoldEnemy/2.png");
-		animation[2] = LoadGraph("Resource/Images/GoldEnemy/3.png");
-		animation[3] = LoadGraph("Resource/Images/GoldEnemy/4.png");
-		animation[4] = LoadGraph("Resource/Images/GoldEnemy/5.png");
+		tmp = rm->GetImages("Resource/Images/GoldEnemy/1.png");
+		animation.push_back(tmp[0]);
+		tmp = rm->GetImages("Resource/Images/GoldEnemy/2.png");
+		animation.push_back(tmp[0]);
+		tmp = rm->GetImages("Resource/Images/GoldEnemy/3.png");
+		animation.push_back(tmp[0]);
+		tmp = rm->GetImages("Resource/Images/GoldEnemy/4.png");
+		animation.push_back(tmp[0]);
+		tmp = rm->GetImages("Resource/Images/GoldEnemy/5.png");
+		animation.push_back(tmp[0]);
 		box_size = 32.0f;
-		sca = 100;
+		score = 100;
 		break;
 	}
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < animation.size(); i++)
 	{
-		if (animation[i] != NULL)
-		{
-			max_animation++;
-		}
-		else if (animation[i] == -1)
+		max_animation++;
+		if (animation[i] == -1)
 		{
 			throw("エネミーの画像がありません\n");
 		}
@@ -75,8 +74,6 @@ void Enemy::Initialize()
 	{
 		random *= -1;
 	}
-
-	sco = sca;
 
 	//向きの設定
 	radian = 0.0;
@@ -103,7 +100,7 @@ void Enemy::Update()
 	{
 		shot_count++;
 
-		if (type == 3)
+		if (type == eBoxEnemy)
 		{
 			if (shot_count >= shot_rand)
 			{
@@ -152,14 +149,21 @@ void Enemy::Draw() const
 		flip_flag = TRUE;
 	}
 
-	if (blend_flag == TRUE)
+	if (blend_flag != FALSE)
 	{
-		fly_text->Draw(location, sco);
+		fly_text->Draw(anim_location, score);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+		DrawRotaGraphF(anim_location.x, anim_location.y, 0.5, radian, image, TRUE, flip_flag);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
+	else
+	{
+		DrawRotaGraphF(location.x, location.y, 0.5, radian, image, TRUE, flip_flag);
+
 	}
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-	DrawRotaGraphF(location.x, location.y, 0.5, radian, image, TRUE, flip_flag);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+
 	//親クラスの描画処理を呼び出す
 	__super::Draw();
 }
@@ -168,11 +172,8 @@ void Enemy::Draw() const
 void Enemy::Finalize()
 {
 	//画像の削除
-	for (int i = 0 ; i < 5 ; i++)
-	{
-		DeleteGraph(animation[i]);
-	}
-	location = NULL;
+	animation.clear();
+	anim_location = NULL;
 	Delete = TRUE;
 }
 
@@ -181,17 +182,30 @@ void Enemy::OnHitCollision(GameObject* hit_object)
 {
 	if (hit_object->GetType() == eBome)
 	{
-		fly_text->SetFlyText(sco);
-		blend_flag = TRUE;
-		box_size = NULL;
-		direction = Vector2D(0.0f,0.1f);
-		sca = 0;
+		if (blend_flag != TRUE)
+		{
+			fly_text->SetFlyText(score);
+			blend_flag = TRUE;
+			box_size = NULL;
+			anim_location = location;
+			direction = Vector2D(0.0f, 0.1f);
+			location = NULL;
+			score = 0;
+		}
 	}
 }
 
 void Enemy::Movement()
 {
-	location += direction;
+	if (blend_flag != TRUE)
+	{
+		location += direction;
+	}
+	else
+	{
+		anim_location += direction;
+	}
+	
 }
 
 void Enemy::AnimeControl()

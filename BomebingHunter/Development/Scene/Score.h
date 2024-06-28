@@ -1,31 +1,47 @@
 #pragma once
 
 #include "../Objects/GameObject.h"
+#include <vector>
+
+#define FLAME_RATE (144)
 
 class Score
 {
 private:
-	int score;
-	int high_score;
-	int number_image[11];
-	int font_image[3];
-	int scores[10];
-	int high_scores[10];
-	int times[2];
-	int score_size[2];
+	int score;							//スコア
+	int high_score;						//ハイスコア
+	std::vector<int> number_image;		//数字の画像
+	std::vector<int> font_image;		//文字の画像
+	int score_digit[10];				//スコアを桁ごとに保存する
+	int high_score_digit[10];			//ハイスコアを桁ごとに保存する
+	int score_digit_size;				//スコアの桁の数
+	int high_score_digit_size;			//ハイスコアの桁数
+	int time_digit[2];					//時間をけたごとに保存する
+	int time;							//時間
+	int count_time;						//時間を減らすタイミングを測る
 
 public:
+	//コンストラクタ
 	Score();
-	~Score();
+	//デストラクタ
+	~Score();		
 
+	//初期化処理
 	void Initialize();
-	void Update(int timer);
-	void Draw() const;
-	void Finalize();
+	//更新処理
+	void Update();	
+	//描画処理
+	void Draw() const;	
+	//終了時処理
+	void Finalize();		
 
-
-	void SetScore(int scr);
-	int GetScore() const;
-	void SetHighScore();
+	//スコア変更処理
+	void SetScore(int scr);	
+	//スコア取得処理
+	int GetScore() const;	
+	//ハイスコア変更処理
+	void SetHighScore();	
+	//時間取得処理
+	int GetTime() const;
 };
 

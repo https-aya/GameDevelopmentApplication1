@@ -28,7 +28,7 @@ protected:
 	ObjectType type;			//プレイヤーか敵かを判断する
 	bool Delete;				//削除フラグ
 	bool shot_flag;				//敵のショットフラグ
-	int sca;					//獲得できるスコア
+	int score;					//加点するスコア
 
 public:
 	GameObject();
@@ -61,5 +61,5 @@ public:
 	//ショットフラグ取得処理
 	bool GetShotFlag() const;
 	//スコア取得処理
-	int GetSca() const;
+	int GetScore() const;
 };

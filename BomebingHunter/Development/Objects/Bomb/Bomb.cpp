@@ -2,7 +2,7 @@
 #include "DxLib.h"
 #include "../../Utility/ResourceManager.h"
 
-Bomb::Bomb() : anime_flag(false),anime_count(0),anime_num(0),animation()
+Bomb::Bomb() : anime_flag(false),anime_count(0),anime_num(0),animation(NULL)
 {
 }
 
@@ -16,12 +16,16 @@ void Bomb::Initialize()
 	ResourceManager* rm = ResourceManager::GetInstance();
 	std::vector<int> tmp;
 	tmp = rm->GetImages("Resource/Images/Bomb/Bomb.png");
+	animation.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Blast/1.png");
+	animation.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Blast/2.png");
+	animation.push_back(tmp[0]);
+	tmp = rm->GetImages("Resource/Images/Blast/3.png");
+	animation.push_back(tmp[0]);
 
-	animation[1] = LoadGraph("Resource/Images/Blast/1.png");
-	animation[2] = LoadGraph("Resource/Images/Blast/2.png");
-	animation[3] = LoadGraph("Resource/Images/Blast/3.png");
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < animation.size(); i++)
 	{
 		if (animation[i] == -1)
 		{
@@ -58,10 +62,7 @@ void Bomb::Finalize()
 {
 	location = NULL;
 	Delete = TRUE;
-	for (int i = 0; i < 4; i++)
-	{
-		DeleteGraph(animation[i]);
-	}
+	animation.clear();
 }
 
 void Bomb::OnHitCollision(GameObject* hit_object)
@@ -95,12 +96,12 @@ void Bomb::Movement()
 	if (radian < 90 * (3.14 / 180))
 	{
 		radian += 0.5 * (3.14 / 180);
-		direction.x -= 0.01;
+		direction.x -= (float)0.01;
 	}
 	else if (radian > 90 * (3.14 / 180))
 	{
 		radian -= 0.5 * (3.14 / 180);
-		direction.x += 0.01;
+		direction.x += (float)0.01;
 	}
 
 
