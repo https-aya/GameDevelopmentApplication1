@@ -176,8 +176,6 @@ void Scene::Draw() const
 			obj->Draw();
 		}
 		scores->Draw();
-		DrawFormatString(300, 450, 0xffffff, "%d", scores->GetScore());
-		DrawFormatString(10, 10, 0x000000, "%d", enemy_count);
 	}
 	else
 	{

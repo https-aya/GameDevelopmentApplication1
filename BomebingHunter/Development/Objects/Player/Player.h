@@ -1,12 +1,11 @@
 #pragma once
 
 #include "../GameObject.h"
-#include <vector>
+
 
 class Player : public GameObject
 {
 private:
-	std::vector<int> animation;			//アニメーション画像
 	int animation_count;		//アニメーション時間
 	int flip_flag;				//反転フラグ
 

@@ -1,12 +1,10 @@
 #pragma once
 
 #include "../GameObject.h"
-#include <vector>
 
 class Bomb : public GameObject
 {
 private:
-	std::vector<int> animation;	//アニメーション画像
 	int anime_count;	//アニメーション時間
 	int anime_num;		//画像の番号
 	bool anime_flag;	//アニメーションするかどうか

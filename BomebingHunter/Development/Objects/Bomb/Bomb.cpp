@@ -1,8 +1,7 @@
 #include "Bomb.h"
 #include "DxLib.h"
-#include "../../Utility/ResourceManager.h"
 
-Bomb::Bomb() : anime_flag(false),anime_count(0),anime_num(0),animation(NULL)
+Bomb::Bomb() : anime_flag(false),anime_count(0),anime_num(0)
 {
 }
 
@@ -13,7 +12,7 @@ Bomb :: ~Bomb()
 
 void Bomb::Initialize()
 {
-	ResourceManager* rm = ResourceManager::GetInstance();
+
 	std::vector<int> tmp;
 	tmp = rm->GetImages("Resource/Images/Bomb/Bomb.png");
 	animation.push_back(tmp[0]);
@@ -54,7 +53,6 @@ void Bomb::Draw() const
 {
 
 	DrawRotaGraphF(location.x, location.y, 0.5, radian, image, TRUE);
-	DrawFormatString(50, 50, 0xffffff, "%d", anime_flag);
 	__super::Draw();
 }
 

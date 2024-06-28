@@ -2,12 +2,10 @@
 
 #include "../GameObject.h"
 #include "../../Scene/FlyText.h"
-#include <vector>
 
 class Enemy : public GameObject
 {
 private:
-	std::vector<int> animation;			//アニメーション画像
 	int animation_count;				//アニメーション時間
 	int max_animation;					//アニメーションの最大数
 	int anime_time;						//どのアニメーションか

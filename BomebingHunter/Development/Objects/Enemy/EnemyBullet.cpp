@@ -1,8 +1,7 @@
 #include "EnemyBullet.h"
-#include "../../Utility/ResourceManager.h"
 #include "DxLib.h"
 
-EnemyBullet::EnemyBullet() :anime_flag(FALSE),anime_count(0),anime_num(0),animation(NULL)
+EnemyBullet::EnemyBullet() :anime_flag(FALSE),anime_count(0),anime_num(0)
 {
 
 }
@@ -14,7 +13,6 @@ EnemyBullet::~EnemyBullet()
 
 void EnemyBullet::Initialize()
 {
-	ResourceManager* rm = ResourceManager::GetInstance();
 	std::vector<int> tmp;
 	tmp = rm->GetImages("Resource/Images/EnemyBullet/1.png");
 	animation.push_back(tmp[0]);

@@ -1,9 +1,8 @@
 #include "Enemy.h"
 #include "EnemyBullet.h"
-#include "../../Utility/ResourceManager.h"
 #include "DxLib.h"
 
-Enemy::Enemy() : animation_count(0), max_animation(0), anime_time(0), shot_count(0),shot_rand(0),alpha(0),blend_flag(FALSE),animation(NULL),anim_location(0.0f)
+Enemy::Enemy() : animation_count(0), max_animation(0), anime_time(0), shot_count(0),shot_rand(0),alpha(0),blend_flag(FALSE),anim_location(0.0f)
 {
 
 }
@@ -15,7 +14,7 @@ Enemy::~Enemy()
 //èâä˙âªèàóù
 void Enemy::Initialize() 
 {
-	ResourceManager* rm = ResourceManager::GetInstance();
+
 	std::vector<int> tmp;
 	switch (type)
 	{
@@ -151,7 +150,7 @@ void Enemy::Draw() const
 
 	if (blend_flag != FALSE)
 	{
-		fly_text->Draw(anim_location, score);
+		fly_text->Draw(anim_location);
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 		DrawRotaGraphF(anim_location.x, anim_location.y, 0.5, radian, image, TRUE, flip_flag);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);

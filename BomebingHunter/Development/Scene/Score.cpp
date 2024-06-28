@@ -23,6 +23,46 @@ Score::~Score()
 
 void Score::Initialize()
 {
+	//ランキングデータの読み込み
+	FILE* fp = nullptr;
+
+	//ファイルオープン
+	errno_t result = fopen_s(&fp, "Resource/dat/High_Score.csv", "r");
+
+	//エラーチェック
+	if (result != 0)
+	{
+		throw("Resource/dat/High_Score.csvが開けませんでした\n");
+	}
+
+	//対象ファイルから読み込む
+	fscanf_s(fp, "%10d,\n", &high_score, 7);
+
+	//ファイルクローズ
+	fclose(fp);
+
+	high_score_digit_size = 0;
+	int hsco = high_score;
+	//ハイスコアを桁ごとに保存
+	for (int i = 0; i < 10; i++)
+	{
+		if (hsco == 0)
+		{
+			high_score_digit[0] = hsco;
+			break;
+		}
+		if (hsco < 1)
+		{
+			break;
+		}
+		else
+		{
+			high_score_digit_size++;
+			high_score_digit[i] = hsco % 10;
+			hsco = hsco / 10;
+		}
+	}
+
 	ResourceManager* rm = ResourceManager::GetInstance();
 	std::vector<int> tmp;
 	tmp = rm->GetImages("Resource/Images/Score/0.png");
@@ -82,6 +122,7 @@ void Score::Update()
 		time--;
 		count_time = 0;
 	}
+
 	score_digit_size = 0;
 	int sco = score;
 	int times = time;
@@ -190,28 +231,28 @@ void Score::SetHighScore()
 	if (high_score < score)
 	{
 		high_score = score;
-		high_score_digit_size = 0;
-		int hsco = high_score;
-		//ハイスコアを桁ごとに保存
-		for (int i = 0; i < 10; i++)
+		//ランキンデータの書き込み
+		FILE* fp = nullptr;
+
+		//ファイルオープン
+		errno_t result = fopen_s(&fp, "Resource/dat/High_Score.csv", "w");
+
+		//エラーチェック
+		if (result != 0)
 		{
-			if (hsco == 0)
-			{
-				high_score_digit[0] = hsco;
-				break;
-			}
-			if (hsco < 1)
-			{
-				break;
-			}
-			else
-			{
-				high_score_digit_size++;
-				high_score_digit[i] = hsco % 10;
-				hsco = hsco / 10;
-			}
+			throw("Resource/dat/High_Score.csvが開けませんでした\n");
 		}
+
+		//対象ファイルに書き込み
+		fprintf(fp, "%d,\n", high_score);
+
+
+		//ファイルクローズ
+		fclose(fp);
+		
+
 	}
+
 }
 
 int Score::GetTime() const

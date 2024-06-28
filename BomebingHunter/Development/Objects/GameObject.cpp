@@ -12,7 +12,8 @@ GameObject::GameObject() :
 	type(),
 	Delete(FALSE),
 	shot_flag(FALSE),
-	score(0)
+	score(0), 
+	animation(NULL)
 {
 }
 

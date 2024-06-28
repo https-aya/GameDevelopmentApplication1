@@ -1,10 +1,9 @@
 #include "Player.h"
 #include "../../Utility/InputControl.h"
-#include "../../Utility/ResourceManager.h"
 #include "DxLib.h"
 
 //コンストラクタ
-Player::Player() : animation_count(0),flip_flag(FALSE),animation()
+Player::Player() : animation_count(0),flip_flag(FALSE)
 {
 
 }
@@ -18,7 +17,6 @@ Player::~Player()
 void Player::Initialize()
 {
 	//画像の読み込み
-	ResourceManager* rm = ResourceManager::GetInstance();
 	std::vector<int> tmp;
 	tmp = rm->GetImages("Resource/Images/Tri-pilot/1.png");
 	animation.push_back(tmp[0]);

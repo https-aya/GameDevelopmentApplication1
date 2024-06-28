@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../Utility/Vector2D.h"
+#include "../Utility/ResourceManager.h"
+#include <vector>
 
 #define D_PIVOT_CENTER		//座標の原点を画像の中心にする
 
@@ -29,6 +31,9 @@ protected:
 	bool Delete;				//削除フラグ
 	bool shot_flag;				//敵のショットフラグ
 	int score;					//加点するスコア
+	std::vector<int> animation;			//アニメーション画像
+
+	ResourceManager* rm = ResourceManager::GetInstance();
 
 public:
 	GameObject();

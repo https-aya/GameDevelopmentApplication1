@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../Objects/GameObject.h"
 #include <vector>
 
 #define FLAME_RATE (144)
