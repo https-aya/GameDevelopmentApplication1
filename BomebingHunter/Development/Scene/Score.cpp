@@ -2,7 +2,7 @@
 #include "../Utility/ResourceManager.h"
 #include "DxLib.h"
 
-Score::Score() :  score(0),high_score(0),number_image(NULL),font_image(NULL),score_digit_size(0),high_score_digit_size(0),time(0),count_time(0)
+Score::Score() :  score(0),high_score(0),number_image(),font_image(),score_digit_size(0),high_score_digit_size(0),time(0),count_time(0)
 {
 	for (int i = 0; i < 10; i++)
 	{
@@ -18,7 +18,7 @@ Score::Score() :  score(0),high_score(0),number_image(NULL),font_image(NULL),sco
 
 Score::~Score()
 {
-	Finalize();
+
 }
 
 void Score::Initialize()
@@ -36,7 +36,7 @@ void Score::Initialize()
 	}
 
 	//対象ファイルから読み込む
-	fscanf_s(fp, "%10d,\n", &high_score, 7);
+	fscanf_s(fp, "%10d,\n", &high_score);
 
 	//ファイルクローズ
 	fclose(fp);
@@ -208,6 +208,7 @@ void Score::Finalize()
 	{
 		score_digit[i] = NULL;
 	}
+	//動的配列の開放
 	number_image.clear();
 	font_image.clear();
 }

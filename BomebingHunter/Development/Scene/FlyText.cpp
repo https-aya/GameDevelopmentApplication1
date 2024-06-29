@@ -55,6 +55,7 @@ void FlyText::Initialize()
 void FlyText::SetFlyText(int ft)
 {
 	score = ft;
+	//Œ…‚²‚Æ‚É•Û‘¶
 	if (ft != 0)
 	{
 		if (ft < 0)
@@ -103,5 +104,6 @@ void FlyText::Draw(Vector2D location) const
 
 void FlyText::Finalize()
 {
+	//“®“I”z—ñ‚ÌŠJ•ú
 	number_image.clear();
 }

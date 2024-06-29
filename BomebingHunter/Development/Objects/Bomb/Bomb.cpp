@@ -1,7 +1,7 @@
 #include "Bomb.h"
 #include "DxLib.h"
 
-Bomb::Bomb() : anime_flag(false),anime_count(0),anime_num(0)
+Bomb::Bomb() : anime_flag(false),anime_count(0),anime_num(0),sound(), anim_location(0.0f)
 {
 }
 
@@ -22,7 +22,8 @@ void Bomb::Initialize()
 	animation.push_back(tmp[0]);
 	tmp = rm->GetImages("Resource/Images/Blast/3.png");
 	animation.push_back(tmp[0]);
-
+	tmp = rm->GetSounds("Resource/Sounds/explosion.wav");
+	sound = tmp[0];
 
 	for (int i = 0; i < animation.size(); i++)
 	{
@@ -30,6 +31,11 @@ void Bomb::Initialize()
 		{
 			throw("ボムの画像%dがありません",i);
 		}
+	}
+
+	if (sound == -1)
+	{
+		throw("explosionのサウンドがありません");
 	}
 
 	radian = 90 * (3.14 / 180);
@@ -51,9 +57,14 @@ void Bomb::Update()
 
 void Bomb::Draw() const
 {
-
-	DrawRotaGraphF(location.x, location.y, 0.5, radian, image, TRUE);
-	__super::Draw();
+	if (anime_flag == FALSE)
+	{
+		DrawRotaGraphF(location.x, location.y, 0.5, radian, image, TRUE);
+	}
+	else
+	{
+		DrawRotaGraphF(anim_location.x, anim_location.y, 0.5, radian, image, TRUE);
+	}
 }
 
 void Bomb::Finalize()
@@ -61,6 +72,7 @@ void Bomb::Finalize()
 	location = NULL;
 	Delete = TRUE;
 	animation.clear();
+	DeleteSoundMem(sound);
 }
 
 void Bomb::OnHitCollision(GameObject* hit_object)
@@ -102,12 +114,18 @@ void Bomb::Movement()
 		direction.x += (float)0.01;
 	}
 
-
-	location += direction;
+	if (anime_flag == FALSE)
+	{
+		location += direction;
+	}
+	
 	if (location.y >= 400)
 	{
+		PlaySoundMem(sound, DX_PLAYTYPE_BACK, TRUE);
+		anim_location = location;
+		location = NULL;
 		direction = 0.0f;
-		anime_flag = true;
+		anime_flag = TRUE;
 		box_size = NULL;
 
 	}
@@ -133,6 +151,5 @@ void Bomb::AnimeControl()
 
 			anime_count = 0;
 		}
-
 	}
 }

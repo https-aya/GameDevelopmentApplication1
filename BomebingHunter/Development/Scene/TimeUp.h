@@ -6,6 +6,7 @@ class TimeUp
 {
 private:
 	std::vector<int> image;			//評価の画像
+	std::vector<int> sound;			//評価の音源
 	int draw;						//表示する画像
 	int count;						//画像切り替え用のカウント
 

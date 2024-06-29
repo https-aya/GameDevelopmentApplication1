@@ -5,9 +5,11 @@
 class Bomb : public GameObject
 {
 private:
+	int sound;	//音源
 	int anime_count;	//アニメーション時間
 	int anime_num;		//画像の番号
 	bool anime_flag;	//アニメーションするかどうか
+	Vector2D anim_location;	//アニメーション時の座標
 
 public:
 	Bomb();

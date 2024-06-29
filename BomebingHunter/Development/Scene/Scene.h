@@ -6,13 +6,15 @@
 #include "Score.h"
 #include "TimeUp.h"
 
+#define MAX_ENEMY (6)	//‰æ–Ê“à‚Å¶¬‚·‚é“G‚ÌÅ‘å”
+
 class Scene
 {
 private:
 	std::vector<GameObject*> objects;
 private:
-	//”wŒi‰æ‘œ
-	int Background;
+	std::vector<int> sound;				//‰¹Œ¹
+	int Background;			//”wŒi‰æ‘œ
 	int count_time;			//¶¬ŠÔŠu‚ÌƒJƒEƒ“ƒg
 	int count_rand;			//ƒ‰ƒ“ƒ_ƒ€‚Å¶¬ŠÔŠu‚ğŒˆ‚ß‚é
 	int create_rand;		//¶¬ˆÊ’u‚ğƒ‰ƒ“ƒ_ƒ€‚ÅŒˆ‚ß‚é

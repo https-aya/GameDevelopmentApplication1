@@ -23,6 +23,8 @@ void Enemy::Initialize()
 		animation.push_back(tmp[0]);
 		tmp = rm->GetImages("Resource/Images/BoxEnemy/2.png");
 		animation.push_back(tmp[0]);
+		tmp = rm->GetSounds("Resource/Sounds/Boss_gahee.wav");
+		sound.push_back(tmp[0]);
 		box_size = 64.0f;
 		score = 10;
 		break;
@@ -31,6 +33,8 @@ void Enemy::Initialize()
 		animation.push_back(tmp[0]);
 		tmp = rm->GetImages("Resource/Images/WingEnemy/2.png");
 		animation.push_back(tmp[0]);
+		tmp = rm->GetSounds("Resource/Sounds/teki_gahee.wav");
+		sound.push_back(tmp[0]);
 		box_size = 64.0f;
 		score = 10;
 		break;
@@ -39,6 +43,8 @@ void Enemy::Initialize()
 		animation.push_back(tmp[0]);
 		tmp = rm->GetImages("Resource/Images/Harpy/2.png");
 		animation.push_back(tmp[0]);
+		tmp = rm->GetSounds("Resource/Sounds/pokan.wav");
+		sound.push_back(tmp[0]);
 		box_size = 64.0f;
 		score = -20;
 		break;
@@ -53,10 +59,15 @@ void Enemy::Initialize()
 		animation.push_back(tmp[0]);
 		tmp = rm->GetImages("Resource/Images/GoldEnemy/5.png");
 		animation.push_back(tmp[0]);
+		tmp = rm->GetSounds("Resource/Sounds/arrows_perfect03_short.wav");
+		sound.push_back(tmp[0]);
 		box_size = 32.0f;
 		score = 100;
 		break;
 	}
+
+	tmp = rm->GetSounds("Resource/Sounds/explosion.wav");
+	sound.push_back(tmp[0]);
 
 	for (int i = 0; i < animation.size(); i++)
 	{
@@ -64,6 +75,13 @@ void Enemy::Initialize()
 		if (animation[i] == -1)
 		{
 			throw("エネミーの画像がありません\n");
+		}
+	}
+	for (int i = 0; i < sound.size(); i++)
+	{
+		if (sound[i] == -1)
+		{
+			throw("エネミー(%c)のサウンドがありません", type);
 		}
 	}
 	
@@ -183,6 +201,8 @@ void Enemy::OnHitCollision(GameObject* hit_object)
 	{
 		if (blend_flag != TRUE)
 		{
+			PlaySoundMem(sound[0], DX_PLAYTYPE_BACK, TRUE);
+			PlaySoundMem(sound[1], DX_PLAYTYPE_BACK, TRUE);
 			fly_text->SetFlyText(score);
 			blend_flag = TRUE;
 			box_size = NULL;

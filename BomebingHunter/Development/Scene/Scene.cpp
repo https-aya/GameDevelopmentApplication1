@@ -5,6 +5,7 @@
 #include "../Objects/Enemy/EnemyBullet.h"
 #include "../Objects/Bomb/Bomb.h"
 #include "../Utility/InputControl.h"
+#include "../Utility/ResourceManager.h"
 #include <math.h>
 
 //コンストラクタ
@@ -15,14 +16,16 @@ Scene::Scene() :
 	count_rand(0), 
 	create_rand(0), 
 	enemy_rand(0),
-	enemy_count(0)
+	enemy_count(0),
+	sound()
 {
 }
 
 //デストラクタ
 Scene::~Scene()
 {
-	DeleteGraph(Background);
+	delete scores;
+	delete time_up;
 	//忘れ防止
 	Finalize();
 }
@@ -30,15 +33,33 @@ Scene::~Scene()
 //初期化処理
 void Scene::Initialize()
 {
+	ResourceManager* rm = ResourceManager::GetInstance();
+ 	scores->Initialize();
+	time_up->Initialize();
 	//プレイヤーを生成する
 	CreateObject<Player>(Vector2D(320.0f, 50.0f),ePlayer, 0.0f);
+	std::vector<int> tmp;
 	enemy_count = 0;
 	count_time = 1;
 	count_rand = 100;
 	enemy_rand = 3;
 	Background = LoadGraph("Resource/Images/BackGround.png");
-	scores->Initialize();
-	time_up->Initialize();
+	tmp = rm->GetSounds("Resource/Sounds/Evaluation/BGM_arrows.wav");
+	sound.push_back(tmp[0]);
+	tmp = rm->GetSounds("Resource/Sounds/pan.wav");
+	sound.push_back(tmp[0]);
+
+	if (Background == -1)
+	{
+		throw("背景画像が見つかりません");
+	}
+	for (int i = 0; i < sound.size(); i++)
+	{
+		if (sound[i] == -1)
+		{
+			throw("ゲーム中BGMが見つかりません");
+		}
+	}
 }
 
 //更新処理
@@ -47,19 +68,20 @@ void Scene::Update()
 	if (scores->GetTime() > 0)
 	{
 		count_time++;
-
+		if (CheckSoundMem(sound[0]) != 1)
+		{
+			PlaySoundMem(sound[0], DX_PLAYTYPE_LOOP);
+		}
+		
 		//シーンに存在するオブジェクトの更新処理
 		for (GameObject* obj : objects)
 		{
-			//	Vector2D i=obj->GetScale();		
-			//	if (i.x != NULL && i.y != NULL)
-			//	{
 			obj->Update();
-			//	}
 		}
 		if (count_time >= count_rand)
 		{
-			if (enemy_count < 6)
+			//画面内で生成する敵の最大数
+			if (enemy_count < MAX_ENEMY)
 			{
 				if (create_rand == 0)
 				{
@@ -115,15 +137,15 @@ void Scene::Update()
 			}
 		}
 
+		//zキーが押されたら爆弾を落とす
 		if (InputControl::GetKeyDown(KEY_INPUT_Z))
 		{
+			PlaySoundMem(sound[1], DX_PLAYTYPE_BACK, TRUE);
 			CreateObject<Bomb>(objects[0]->GetLocation(), eBome, 0.0f);
 
 		}
-		if (InputControl::GetKey(KEY_INPUT_X))
-		{
-			CreateObject<Bomb>(objects[0]->GetLocation(), eBome, 0.0f);
-		}
+
+		//敵が弾を打つ
 		for (int i = 0; i <= objects.size()-1; i++)
 		{
 			if (objects[i]->GetShotFlag() == TRUE)
@@ -135,12 +157,13 @@ void Scene::Update()
 				CreateObject<EnemyBullet>(objects[i]->GetLocation(), eEnemyBullet, (P - E) / a);
 			}
 		}
+		//削除処理
 		for (int i = 0; i <= objects.size()-1; i++)
 		{
 			if (objects[i]->GetDelete() == TRUE)
 			{
 				int type = objects[i]->GetType();
-				if (type != 1 && type != 2 && type != 7)
+				if (type != ePlayer && type != eBome && type != eEnemyBullet)
 				{
 					enemy_count--;
 				}
@@ -151,8 +174,10 @@ void Scene::Update()
 	}
 	else
 	{
+		StopSoundMem(sound[0]);
 		scores->SetHighScore();
 		time_up->Update(scores->GetScore());
+		//リトライ機能
 		if (InputControl::GetKeyDown(KEY_INPUT_SPACE))
 		{
 			Finalize();
@@ -205,8 +230,9 @@ void Scene::Finalize()
 
 	//動的配列の開放
 	objects.clear();
-	delete scores;
-	delete time_up;
+	sound.clear();
+	//画像の削除
+	DeleteGraph(Background);
 }
 
 void Scene::HitCheckObject(GameObject* a, GameObject* b)

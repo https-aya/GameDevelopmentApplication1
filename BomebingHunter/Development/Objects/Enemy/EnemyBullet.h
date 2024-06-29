@@ -5,6 +5,7 @@
 class EnemyBullet : public GameObject
 {
 private:
+	int sound;				//音源
 	bool anime_flag;		//アニメーションするかどうか
 	int anime_count;		//アニメーション時間
 	int anime_num;			//アニメーション番号
