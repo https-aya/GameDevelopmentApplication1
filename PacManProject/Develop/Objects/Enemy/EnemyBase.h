@@ -15,6 +15,7 @@ class EnemyBase : public GameObject
 protected:
 	std::vector<int> Animation;
 	std::vector<int> MoveAnimation;
+
 public:
 	EnemyBase();
 	virtual ~EnemyBase();
