@@ -2,7 +2,7 @@
 #include "../../Utility/ResourceManager.h"
 #include "DxLib.h"
 
-EnemyBase::EnemyBase()
+EnemyBase::EnemyBase() : animation(),eyeanimation(),enemy_state(), now_direction(), next_direction(), animation_count(NULL), animation_time(NULL)
 {
 }
 
@@ -26,11 +26,6 @@ void EnemyBase::Draw() const
 }
 
 void EnemyBase::Finalize()
-{
-
-}
-
-void EnemyBase::Movement(float delta_second)
 {
 
 }

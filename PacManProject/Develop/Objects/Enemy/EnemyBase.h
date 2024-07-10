@@ -3,15 +3,9 @@
 #include "../GameObject.h"
 
 
-enum eEnemyType {
-	Akabe,
-	Pinky,
-	Aosuke,
-	Guzuta,
-};
-
 enum eEnemyState 
 {
+	IDLE,
 	ATTACK,
 	PATOROL,
 	IZIKE,
@@ -32,9 +26,8 @@ private:
 	};
 
 protected:
-	std::vector<int> Animation;
-	std::vector<int> MoveAnimation;
-	eEnemyType enemy_type;
+	std::vector<int> animation;
+	std::vector<int> eyeanimation;
 	eEnemyState enemy_state;
 	eEnemyDirectionState now_direction;
 	eEnemyDirectionState next_direction;
@@ -51,6 +44,5 @@ public:
 	virtual void Finalize();
 
 private:
-	virtual void Movement(float delta_second);
 	virtual void AnimationControl(float delta_second);
 };
