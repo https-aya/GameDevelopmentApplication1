@@ -26,6 +26,6 @@ void Akabe::Initialize()
 	collision.hit_object_type.push_back(eObjectType::wall);
 	collision.radius = (D_OBJECT_SIZE - 1.0f) / 2.0f;
 
-	enemy_state = IDLE;
+	enemy_state = eIDLE;
 	z_layer = 6;
 }
