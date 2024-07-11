@@ -11,7 +11,7 @@ public:
 	~Akabe();
 
 	void Initialize();
-	void Update();
+	eEnemyType Update();
 	void Draw() const;
 	void Finalize();
 
