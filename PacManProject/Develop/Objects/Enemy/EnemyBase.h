@@ -1,13 +1,13 @@
 ﻿#pragma once
 
 #include "../GameObject.h"
-
+#include "Enemy.h"
 
 enum eEnemyState 
 {
 	eIDLE,
 	eATTACK,
-	ePATOROL,
+	ePATROL,
 	eIZIKE,
 	eESCAPE,
 };
@@ -43,6 +43,9 @@ protected:
 	float animation_time;
 
 
+private:
+	std::vector<Enemy*> enemy;
+
 public:
 	EnemyBase();
 	virtual ~EnemyBase();
@@ -54,4 +57,27 @@ public:
 
 private:
 	virtual void AnimationControl(float delta_second);
+
+	template <class T>
+	T* CreateObject()
+	{
+		//指定したクラスを生成する
+		T* new_instance = new T();
+
+		//エラーチェック
+		if (new_object == nullptr)
+		{
+			delete new_instance;
+			throw std::string("ゲームオブジェクトが生成できませんでした");
+		}
+
+		//初期化処理
+		new_object->Initialize();
+
+		//オブジェクトリストに追加
+		enemy.push_back(new_object);
+
+		//インスタンスのポインタを返却
+		return new_instance;
+	}
 };

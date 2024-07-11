@@ -1,9 +1,8 @@
 #include "EnemyBase.h"
 #include "../../Utility/ResourceManager.h"
-#include "Akabe.h"
 #include "DxLib.h"
 
-EnemyBase::EnemyBase() : animation(), eyeanimation(), enemy_type(), enemy_state(), now_direction(), next_direction(), animation_count(NULL), animation_time(NULL)
+EnemyBase::EnemyBase() : animation(), eyeanimation(), enemy_type(), enemy_state(), now_direction(), next_direction(), animation_count(NULL), animation_time(NULL), enemy()
 {
 }
 
@@ -29,21 +28,23 @@ void EnemyBase::Initialize()
 		enemy_type = GUZUTA;
 		break;
 	}
-	
+	CreateObject<Enemy>();
 }
 
 void EnemyBase::Update(float)
 {
-	switch (enemy_type)
+	for (Enemy* obj : enemy)
 	{
-	case AKABE:
-		
+		obj->Update();
 	}
 }
 
 void EnemyBase::Draw(const Vector2D& screen_offset) const
 {
-
+	for (Enemy* obj : enemy)
+	{
+		obj->Draw(screen_offset);
+	}
 }
 
 void EnemyBase::Finalize()

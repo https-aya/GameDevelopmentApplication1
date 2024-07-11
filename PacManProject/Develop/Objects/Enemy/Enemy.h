@@ -2,17 +2,17 @@
 
 #include "EnemyBase.h"
 
-class Akabe : public EnemyBase
+class Enemy : public EnemyBase
 {
 private:
 
 public:
-	Akabe();
-	~Akabe();
+	Enemy();
+	~Enemy();
 
 	void Initialize();
-	eEnemyType Update();
-	void Draw() const;
+	void Update();
+	void Draw(const Vector2D& screen_offset) const;
 	void Finalize();
 
 private:
