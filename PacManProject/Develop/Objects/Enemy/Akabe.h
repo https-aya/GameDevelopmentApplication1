@@ -2,13 +2,13 @@
 
 #include "EnemyBase.h"
 
-class Enemy : public EnemyBase
+class Akabe : public EnemyBase
 {
 private:
 
 public:
-	Enemy();
-	~Enemy();
+	Akabe();
+	~Akabe();
 
 	void Initialize();
 	void Update();
@@ -21,6 +21,6 @@ private:
 	void PatrolMove();
 	void IzikeMove();
 	void EscapeMove();
-	void AnimationControl(float);
+	void AnimationControl(float second);
 };
 

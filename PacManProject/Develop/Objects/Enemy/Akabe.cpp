@@ -1,18 +1,18 @@
-#include "Enemy.h"
+#include "Akabe.h"
 #include "../../Utility/ResourceManager.h"
 #include "DxLib.h"
 
-Enemy::Enemy()
+Akabe::Akabe()
 {
 
 }
 
-Enemy::~Enemy()
+Akabe::~Akabe()
 {
 
 }
 
-void Enemy::Initialize()
+void Akabe::Initialize()
 {
 	// アニメーション画像の読み込み
 	ResourceManager* rm = ResourceManager::GetInstance();
@@ -38,13 +38,15 @@ void Enemy::Initialize()
 	case AOSUKE:
 		image = animation[4];
 		break;
+	case GUZUTA:
+		image = animation[6];
 	}
 
 	enemy_state = eIDLE;
 	z_layer = 6;
 }
 
-void Enemy::Update()
+void Akabe::Update()
 {
 	switch (enemy_state)
 	{
@@ -66,8 +68,44 @@ void Enemy::Update()
 	}
 }
 
-void Enemy::Draw(const Vector2D& screen_offset) const
+void Akabe::Draw(const Vector2D& screen_offset) const
 {
 	Vector2D graph_location = this->location + screen_offset;
 	DrawRotaGraphF(graph_location.x, graph_location.y, 1.0, 0.0, image, TRUE);
+}
+
+void Akabe::Finalize()
+{
+	animation.clear();
+	eyeanimation.clear();
+}
+
+void Akabe::IdleMove()
+{
+	
+}
+
+void Akabe::AttackMove()
+{
+
+}
+
+void Akabe::PatrolMove()
+{
+
+}
+
+void Akabe::IzikeMove()
+{
+
+}
+
+void Akabe::EscapeMove()
+{
+
+}
+
+void Akabe::AnimationControl(float second)
+{
+
 }
