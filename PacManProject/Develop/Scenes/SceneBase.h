@@ -205,12 +205,13 @@ public:
 			throw std::string("ゲームオブジェクトが生成できませんでした");
 			return nullptr;
 		}
+		// オブジェクトの初期化
+		new_object->Initialize();
 		// シーン情報の設定
 		new_object->SetOwnerScene(this);
 		// 位置情報の設定
 		new_object->SetLocation(generate_location);
-		// オブジェクトの初期化
-		new_object->Initialize();
+
 		// 生成オブジェクトリストの末尾に格納する
 		create_list.push_back(new_object);
 		// 生成したゲームオブジェクトのポインタを返す

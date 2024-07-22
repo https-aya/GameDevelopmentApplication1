@@ -2,13 +2,13 @@
 
 #include "EnemyBase.h"
 
-class Akabe : public EnemyBase
+class Guzuta : public EnemyBase
 {
 private:
 
 public:
-	Akabe();
-	~Akabe();
+	Guzuta();
+	~Guzuta();
 
 	virtual void Initialize() override;
 
