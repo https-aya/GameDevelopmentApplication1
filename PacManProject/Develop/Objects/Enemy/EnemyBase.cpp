@@ -27,21 +27,7 @@ EnemyBase::~EnemyBase()
 
 void EnemyBase::Initialize()
 {
-	switch (enemy_type)
-	{
-	case AKABE:
-		Akabe::Initialize;
-		break;
-	case PINKY:
-		Pinky::Initialize;
-		break;
-	case AOSUKE:
-		Aosuke::Initialize;
-		break;
-	case GUZUTA:
-		Guzuta::Initialize;
-		break;
-	}
+	
 }
 
 void EnemyBase::Update(float delta_second)
@@ -64,21 +50,47 @@ void EnemyBase::AnimationControl(float delta_second)
 
 }
 
-void EnemyBase::ChangeEnemyType(int location)
+void EnemyBase::Movement(float delta_second)
 {
-	switch (location)
-	{
-	case 13:
-		enemy_type = eEnemyType::AKABE;
-		break;
-	case 14:
-		enemy_type = eEnemyType::PINKY;
-		break;
-	case 15:
-		enemy_type = eEnemyType::AOSUKE;
-		break;
-	case 17:
-		enemy_type = eEnemyType::GUZUTA;
-		break;
-	}
+
+}
+
+void EnemyBase::IdolMovement(float delta_second)
+{
+
+}
+
+void EnemyBase::PatorolMove(float delta_second)
+{
+
+}
+
+void EnemyBase::IzikeMove(float delta_second)
+{
+
+}
+
+void EnemyBase::EscapeMove(float delta_second)
+{
+
+}
+
+void EnemyBase::AttackMove(float delta_second)
+{
+
+}
+
+void EnemyBase::OnHitCollision(GameObjectBase* hit_object)
+{
+
+}
+
+eEnemyState EnemyBase::GetEnemyState()
+{
+	return  this->enemy_state;
+}
+
+void EnemyBase::ChangeEnemyState(eEnemyState state)
+{
+	this->enemy_state = state;
 }

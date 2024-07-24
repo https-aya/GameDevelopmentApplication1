@@ -71,5 +71,6 @@ public:
 	void OnHitCollision(GameObjectBase* hit_object) override;
 	eEnemyState GetEnemyState();
 	void ChangeEnemyState(eEnemyState state);
-	void ChangeEnemyType(int location);
+	void SetEnemytype(int);
+	void SetPlayer(GameObjectBase* object);
 };

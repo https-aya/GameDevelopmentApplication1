@@ -204,13 +204,13 @@ public:
 			// 例外テキストを通知
 			throw std::string("ゲームオブジェクトが生成できませんでした");
 			return nullptr;
-		}
+		}	
+		// 位置情報の設定
+		new_object->SetLocation(generate_location);
 		// オブジェクトの初期化
 		new_object->Initialize();
 		// シーン情報の設定
 		new_object->SetOwnerScene(this);
-		// 位置情報の設定
-		new_object->SetLocation(generate_location);
 
 		// 生成オブジェクトリストの末尾に格納する
 		create_list.push_back(new_object);

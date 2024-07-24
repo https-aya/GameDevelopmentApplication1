@@ -28,3 +28,8 @@ void Akabe::Initialize()
 
 }
 
+void Akabe::AttackMove(float delta_second)
+{
+
+}
+
