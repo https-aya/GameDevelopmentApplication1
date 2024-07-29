@@ -34,6 +34,7 @@ private:
 protected:
 	std::vector<int> animation;
 	std::vector<int> eyeanimation;
+
 	Vector2D velocity;
 	eEnemyType enemy_type;
 	eEnemyState enemy_state;
@@ -72,5 +73,5 @@ public:
 	eEnemyState GetEnemyState();
 	void ChangeEnemyState(eEnemyState state);
 	void SetEnemytype(int);
-	void SetPlayer(GameObjectBase* object);
+	void SetPlayer(Player* object);
 };
