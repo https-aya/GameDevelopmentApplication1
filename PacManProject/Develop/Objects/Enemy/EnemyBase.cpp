@@ -129,10 +129,27 @@ void EnemyBase::AnimationControl(float delta_second)
 
 void EnemyBase::Movement(float delta_second)
 {
-
+	switch (enemy_state)
+	{
+	case eIDLE:
+		IdolMove(delta_second);
+		break;
+	case ePATROL:
+		PatorolMove(delta_second);
+		break;
+	case eATTACK:
+		AttackMove(delta_second);
+		break;
+	case eESCAPE:
+		EscapeMove(delta_second);
+		break;
+	case eIZIKE:
+		IzikeMove(delta_second);
+		break;
+	}
 }
 
-void EnemyBase::IdolMovement(float delta_second)
+void EnemyBase::IdolMove(float delta_second)
 {
 
 }

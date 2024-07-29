@@ -10,6 +10,7 @@ private:
 	int back_ground_sound;		// BGM
 	bool pause_flag;			// 一時停止フラグ
 	int enemy_count;
+	class EnemyBase* enemy[4];
 
 public:
 	InGameScene();

@@ -60,7 +60,7 @@ public:
 private:
 	virtual void AnimationControl(float delta_second);
 	virtual void Movement(float delta_second);
-	virtual void IdolMovement(float delta_second);
+	virtual void IdolMove(float delta_second);
 	virtual void PatorolMove(float delta_second);
 	virtual void IzikeMove(float delta_second);
 	virtual void EscapeMove(float delta_second);
