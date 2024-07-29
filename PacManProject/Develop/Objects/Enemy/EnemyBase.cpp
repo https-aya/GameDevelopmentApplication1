@@ -18,6 +18,7 @@ EnemyBase::EnemyBase()
 	, flash_count(0)
 	, izike_time(0.0f)
 	, player_date(nullptr)
+	, animation_time(0.0f)
 {
 }
 
@@ -38,34 +39,35 @@ void EnemyBase::Initialize()
 	collision.hit_object_type.push_back(eObjectType::player);
 	collision.hit_object_type.push_back(eObjectType::wall);
 	collision.radius = (D_OBJECT_SIZE - 1.0f) / 2.0f;
-	switch (enemy_type)
-	{
-	case AKABE:
-		image = animation[0];
-		break;
-	case PINKY:
-		image = animation[2];
-		break;
-	case AOSUKE:
-		image = animation[4];
-		break;
-	case GUZUTA:
-		image = animation[6];
-		break;
-	default:
-		break;
-	}
 }
 
 void EnemyBase::Update(float delta_second)
 {
-
+	AnimationControl(delta_second);
 }
 
 void EnemyBase::Draw(const Vector2D& screen_offset) const
 {
 	// 親クラスの描画処理を呼び出す
 	__super::Draw(screen_offset);
+	int eye = 0;
+	switch (now_direction)
+	{
+	case UP:
+		eye = eyeanimation[0];
+		break;
+	case RIGHT:
+		eye = eyeanimation[1];
+		break;
+	case DOWN:
+		eye = eyeanimation[2];
+		break;
+	case LEFT:
+		eye = eyeanimation[3];
+		break;
+	}
+	Vector2D graph_location = this->location + screen_offset;
+	DrawRotaGraphF(graph_location.x, graph_location.y, 1.0, 0.0, eye, TRUE);
 }
 
 void EnemyBase::Finalize()
@@ -75,7 +77,54 @@ void EnemyBase::Finalize()
 
 void EnemyBase::AnimationControl(float delta_second)
 {
-
+	animation_time += delta_second;
+	if (animation_time >= (1.0f / 8.0f))
+	{
+		animation_time = 0.0f;
+		switch (enemy_type)
+		{
+		case AKABE:
+			if (image == animation[0])
+			{
+				image = animation[1];
+			}
+			else
+			{
+				image = animation[0];
+			}
+			break;
+		case PINKY:
+			if (image == animation[2])
+			{
+				image = animation[3];
+			}
+			else
+			{
+				image = animation[2];
+			}
+			break;
+		case AOSUKE:
+			if (image == animation[4])
+			{
+				image = animation[5];
+			}
+			else
+			{
+				image = animation[4];
+			}
+			break;
+		case GUZUTA:
+			if (image == animation[6])
+			{
+				image = animation[7];
+			}
+			else
+			{
+				image = animation[6];
+			}
+			break;
+		}
+	}
 }
 
 void EnemyBase::Movement(float delta_second)
@@ -129,15 +178,23 @@ void EnemyBase::SetEnemytype(int count)
 	{
 	case 0:
 		enemy_type = eEnemyType::AKABE;
+		image = animation[0];
+		now_direction = eEnemyDirectionState::LEFT;
 		break;
 	case 1:
-		enemy_type = eEnemyType::PINKY;
+		enemy_type = eEnemyType::AOSUKE;
+		image = animation[4];
+		now_direction = eEnemyDirectionState::UP;
 		break;
 	case 2:
-		enemy_type = eEnemyType::AOSUKE;
+		enemy_type = eEnemyType::GUZUTA;
+		image = animation[6];
+		now_direction = eEnemyDirectionState::UP;
 		break;
 	case 3:
-		enemy_type = eEnemyType::GUZUTA;
+		enemy_type = eEnemyType::PINKY;
+		image = animation[2];
+		now_direction = eEnemyDirectionState::DOWN;
 		break;
 	default:
 		break;

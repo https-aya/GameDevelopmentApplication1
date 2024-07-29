@@ -41,11 +41,11 @@ protected:
 	eEnemyDirectionState now_direction;
 	class Player* player_date;
 
-
 private:
 	float world_time;
 	int flash_count;
 	float izike_time;
+	float animation_time;
 
 public:
 	EnemyBase();

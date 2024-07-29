@@ -15,6 +15,7 @@ Akabe::~Akabe()
 void Akabe::Initialize()
 {
 	image = animation[0];
+	z_layer = 6;
 }
 
 void Akabe::AttackMove(float delta_second)
