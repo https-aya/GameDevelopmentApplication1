@@ -69,7 +69,7 @@ protected:
 	virtual void AttackMove(float delta_second);
 
 public:
-	void OnHitCollision(GameObjectBase* hit_object) override;
+	virtual void OnHitCollision(GameObjectBase* hit_object) override;
 	eEnemyState GetEnemyState();
 	void ChangeEnemyState(eEnemyState state);
 	void SetEnemytype(int);

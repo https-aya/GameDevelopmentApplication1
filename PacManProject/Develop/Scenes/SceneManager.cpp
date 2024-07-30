@@ -75,7 +75,7 @@ void SceneManager::Run()
 		input->Update();
 		
 
-		// フレームレートの制御
+		// フレームレートの制御 
 		FreamControl();
 
 		// シーンの更新

@@ -7,7 +7,9 @@
 #include "Aosuke.h"
 #include "Guzuta.h"
 
-EnemyBase::EnemyBase() 
+#define ENEMY_SPEED (45.0f)
+
+EnemyBase::EnemyBase()
 	: animation()
 	, eyeanimation()
 	, velocity(0.0f)
@@ -43,6 +45,7 @@ void EnemyBase::Initialize()
 
 void EnemyBase::Update(float delta_second)
 {
+	Movement(delta_second);
 	AnimationControl(delta_second);
 }
 
@@ -156,7 +159,62 @@ void EnemyBase::IdolMove(float delta_second)
 
 void EnemyBase::PatorolMove(float delta_second)
 {
+	Vector2D point = 0.0f;
 
+	switch (enemy_type)
+	{
+	case AKABE:
+		point = Vector2D(640.0f, 25.0f);
+		break;
+	case PINKY:
+		point = Vector2D(32.0f, 25.0f);
+		break;
+	case AOSUKE:
+		point = Vector2D(640.0f, 839.0f);
+		break;
+	case GUZUTA:
+		point = Vector2D(32.0f, 839.0f);
+		break;
+	}
+
+	Vector2D diff = point - location;
+	if (diff.x >= 10)
+	{
+		now_direction = eEnemyDirectionState::RIGHT;
+	}
+	else if(diff.x <= 8)
+	{
+		now_direction = eEnemyDirectionState::LEFT;
+	}
+	else if (diff.y <= 10)
+	{
+		now_direction = eEnemyDirectionState::UP;
+	}
+	else if (diff.y >= 8)
+	{
+		now_direction = eEnemyDirectionState::DOWN;
+	}
+
+	switch (now_direction)
+	{
+	case eEnemyDirectionState::UP:
+		velocity.y = -2.0f;
+		break;
+	case eEnemyDirectionState::DOWN:
+		velocity.y = 2.0f;
+		break;
+	case eEnemyDirectionState::LEFT:
+		velocity.x = -2.0f;
+		break;
+	case eEnemyDirectionState::RIGHT:
+		velocity.x = 2.0f;
+		break;
+	default:
+		velocity = 0.0f;
+		break;
+	}
+	// 移動量 * 速さ * 時間 で移動先を決定する
+	location += velocity * ENEMY_SPEED * delta_second;
 }
 
 void EnemyBase::IzikeMove(float delta_second)
@@ -176,7 +234,27 @@ void EnemyBase::AttackMove(float delta_second)
 
 void EnemyBase::OnHitCollision(GameObjectBase* hit_object)
 {
+	// 当たった、オブジェクトが壁だったら
+	if (hit_object->GetCollision().object_type == eObjectType::wall)
+	{
+		// 当たり判定情報を取得して、カプセルがある位置を求める
+		CapsuleCollision hc = hit_object->GetCollision();
+		hc.point[0] += hit_object->GetLocation();
+		hc.point[1] += hit_object->GetLocation();
 
+		// 最近傍点を求める
+		Vector2D near_point = NearPointCheck(hc, this->location);
+
+		// Enemyからnear_pointへの方向ベクトルを取得
+		Vector2D dv2 = near_point - this->location;
+		Vector2D dv = this->location - near_point;
+
+		// めり込んだ差分
+		float diff = (this->GetCollision().radius + hc.radius) - dv.Length();
+
+		// diffの分だけ戻る
+		location += dv.Normalize() * (diff * 10);
+	}
 }
 
 eEnemyState EnemyBase::GetEnemyState()
@@ -197,6 +275,7 @@ void EnemyBase::SetEnemytype(int count)
 		enemy_type = eEnemyType::AKABE;
 		image = animation[0];
 		now_direction = eEnemyDirectionState::LEFT;
+		enemy_state = eEnemyState::ePATROL;
 		break;
 	case 1:
 		enemy_type = eEnemyType::AOSUKE;
