@@ -133,7 +133,7 @@ public:
 		}
 
 		// 現在のシーン情報を返却する
-		return GetNowSceneType();
+ 		return GetNowSceneType();
 	}
 
 	/// <summary>
@@ -144,7 +144,7 @@ public:
 		// オブジェクトリスト内のオブジェクトを描画する
 		for(GameObjectBase* obj : object_list)
 		{
-			obj->Draw(screen_offset);
+			obj->Draw(screen_offset,0);
 		}
 	}
 

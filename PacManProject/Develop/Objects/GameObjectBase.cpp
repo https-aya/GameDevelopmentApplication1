@@ -38,7 +38,7 @@ void GameObjectBase::Update(float delta_second)
 /// 描画処理
 /// </summary>
 /// <param name="screen_offset">オフセット値</param>
-void GameObjectBase::Draw(const Vector2D& screen_offset) const
+void GameObjectBase::Draw(const Vector2D& screen_offset , Vector2D loc) const
 {
 	// オフセット値を基に画像の描画を行う
 	Vector2D graph_location = this->location + screen_offset;

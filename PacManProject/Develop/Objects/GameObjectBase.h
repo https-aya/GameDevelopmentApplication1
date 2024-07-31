@@ -42,7 +42,7 @@ public:
 	/// 描画処理
 	/// </summary>
 	/// <param name="screen_offset">オフセット値</param>
-	virtual void Draw(const Vector2D& screen_offset) const;
+	virtual void Draw(const Vector2D& screen_offset, Vector2D loc) const;
 	/// <summary>
 	/// 終了時処理
 	/// </summary>

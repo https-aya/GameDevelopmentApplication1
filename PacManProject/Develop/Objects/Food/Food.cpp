@@ -27,7 +27,7 @@ void Food::Initialize()
 	z_layer = 1;
 }
 
-void Food::Draw(const Vector2D& screen_offset) const
+void Food::Draw(const Vector2D& screen_offset, Vector2D loc) const
 {
 	// オフセット値を基に画像の描画を行う
 	Vector2D graph_location = this->location + screen_offset;

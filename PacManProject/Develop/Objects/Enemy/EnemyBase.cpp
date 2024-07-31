@@ -1,11 +1,7 @@
 #include "EnemyBase.h"
 #include "../../Utility/ResourceManager.h"
+#include "Factory/EnemyTypeFactory.h"
 #include "DxLib.h"
-
-#include "Akabe.h"
-#include "Pinky.h"
-#include "Aosuke.h"
-#include "Guzuta.h"
 
 #define ENEMY_SPEED (45.0f)
 
@@ -30,17 +26,7 @@ EnemyBase::~EnemyBase()
 
 void EnemyBase::Initialize()
 {
-	// アニメーション画像の読み込み
-	ResourceManager* rm = ResourceManager::GetInstance();
-	animation = rm->GetImages("Resource/Images/monster.png", 20, 20, 1, 32, 32);
-	eyeanimation = rm->GetImages("Resource/Images/eyes.png", 4, 4, 1, 32, 32);
-
-	// 当たり判定の設定
-	collision.is_blocking = true;
-	collision.object_type = eObjectType::enemy;
-	collision.hit_object_type.push_back(eObjectType::player);
-	collision.hit_object_type.push_back(eObjectType::wall);
-	collision.radius = (D_OBJECT_SIZE - 1.0f) / 2.0f;
+	
 }
 
 void EnemyBase::Update(float delta_second)
@@ -49,28 +35,9 @@ void EnemyBase::Update(float delta_second)
 	AnimationControl(delta_second);
 }
 
-void EnemyBase::Draw(const Vector2D& screen_offset) const
+void EnemyBase::Draw(const Vector2D& screen_offset, Vector2D loc) const
 {
-	// 親クラスの描画処理を呼び出す
-	__super::Draw(screen_offset);
-	int eye = 0;
-	switch (now_direction)
-	{
-	case UP:
-		eye = eyeanimation[0];
-		break;
-	case RIGHT:
-		eye = eyeanimation[1];
-		break;
-	case DOWN:
-		eye = eyeanimation[2];
-		break;
-	case LEFT:
-		eye = eyeanimation[3];
-		break;
-	}
-	Vector2D graph_location = this->location + screen_offset;
-	DrawRotaGraphF(graph_location.x, graph_location.y, 1.0, 0.0, eye, TRUE);
+	enemy_type->Draw(screen_offset , this->location);
 }
 
 void EnemyBase::Finalize()
@@ -83,7 +50,7 @@ void EnemyBase::AnimationControl(float delta_second)
 	animation_time += delta_second;
 	if (animation_time >= (1.0f / 8.0f))
 	{
-		animation_time = 0.0f;
+		/*animation_time = 0.0f;
 		switch (enemy_type)
 		{
 		case AKABE:
@@ -125,8 +92,8 @@ void EnemyBase::AnimationControl(float delta_second)
 			{
 				image = animation[6];
 			}
-			break;
-		}
+			break;*/
+		/*}*/
 	}
 }
 
@@ -161,21 +128,7 @@ void EnemyBase::PatorolMove(float delta_second)
 {
 	Vector2D point = 0.0f;
 
-	switch (enemy_type)
-	{
-	case AKABE:
-		point = Vector2D(640.0f, 25.0f);
-		break;
-	case PINKY:
-		point = Vector2D(32.0f, 25.0f);
-		break;
-	case AOSUKE:
-		point = Vector2D(640.0f, 839.0f);
-		break;
-	case GUZUTA:
-		point = Vector2D(32.0f, 839.0f);
-		break;
-	}
+	
 
 	Vector2D diff = point - location;
 	if (diff.x >= 10)
@@ -234,27 +187,7 @@ void EnemyBase::AttackMove(float delta_second)
 
 void EnemyBase::OnHitCollision(GameObjectBase* hit_object)
 {
-	// 当たった、オブジェクトが壁だったら
-	if (hit_object->GetCollision().object_type == eObjectType::wall)
-	{
-		// 当たり判定情報を取得して、カプセルがある位置を求める
-		CapsuleCollision hc = hit_object->GetCollision();
-		hc.point[0] += hit_object->GetLocation();
-		hc.point[1] += hit_object->GetLocation();
 
-		// 最近傍点を求める
-		Vector2D near_point = NearPointCheck(hc, this->location);
-
-		// Enemyからnear_pointへの方向ベクトルを取得
-		Vector2D dv2 = near_point - this->location;
-		Vector2D dv = this->location - near_point;
-
-		// めり込んだ差分
-		float diff = (this->GetCollision().radius + hc.radius) - dv.Length();
-
-		// diffの分だけ戻る
-		location += dv.Normalize() * (diff * 10);
-	}
 }
 
 eEnemyState EnemyBase::GetEnemyState()
@@ -272,24 +205,21 @@ void EnemyBase::SetEnemytype(int count)
 	switch (count)
 	{
 	case 0:
-		enemy_type = eEnemyType::AKABE;
-		image = animation[0];
+		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::AKABE);
 		now_direction = eEnemyDirectionState::LEFT;
 		enemy_state = eEnemyState::ePATROL;
 		break;
 	case 1:
-		enemy_type = eEnemyType::AOSUKE;
-		image = animation[4];
+		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::AOSUKE);
 		now_direction = eEnemyDirectionState::UP;
 		break;
 	case 2:
-		enemy_type = eEnemyType::GUZUTA;
-		image = animation[6];
+		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::GUZUTA);
 		now_direction = eEnemyDirectionState::UP;
 		break;
 	case 3:
-		enemy_type = eEnemyType::PINKY;
-		image = animation[2];
+		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::PINKY);
+
 		now_direction = eEnemyDirectionState::DOWN;
 		break;
 	default:

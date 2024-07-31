@@ -89,10 +89,10 @@ void Player::Update(float delta_second)
 	}
 }
 
-void Player::Draw(const Vector2D& screen_offset) const
+void Player::Draw(const Vector2D& screen_offset, Vector2D loc) const
 {
 	// 親クラスの描画処理を呼び出す
-	__super::Draw(screen_offset);
+	__super::Draw(screen_offset,this->location);
 }
 
 void Player::Finalize()

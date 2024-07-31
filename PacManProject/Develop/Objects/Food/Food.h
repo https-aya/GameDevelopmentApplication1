@@ -12,7 +12,7 @@ public:
 	virtual ~Food();
 
 	virtual void Initialize() override;
-	virtual void Draw(const Vector2D& screen_offset) const override;
+	virtual void Draw(const Vector2D& screen_offset, Vector2D loc) const override;
 
 	/// <summary>
 	/// 当たり判定通知処理

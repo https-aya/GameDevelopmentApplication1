@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "../GameObject.h"
+#include "Enum/EnemyType.h"
 
 enum eEnemyState 
 {
@@ -10,15 +11,6 @@ enum eEnemyState
 	eIZIKE,
 	eESCAPE,
 };
-
-enum eEnemyType
-{
-	AKABE,
-	AOSUKE,
-	PINKY,
-	GUZUTA,
-};
-
 
 class EnemyBase : public GameObject
 {
@@ -36,7 +28,7 @@ protected:
 	std::vector<int> eyeanimation;
 
 	Vector2D velocity;
-	eEnemyType enemy_type;
+	class GameObjectBase* enemy_type;
 	eEnemyState enemy_state;
 	eEnemyDirectionState now_direction;
 	class Player* player_date;
@@ -53,7 +45,7 @@ public:
 
 	virtual void Initialize() override;
 	virtual void Update(float delta_second) override;
-	virtual void Draw(const Vector2D& screen_offset) const override;
+	virtual void Draw(const Vector2D& screen_offset, Vector2D loc) const override;
 	virtual void Finalize() override;
 
 

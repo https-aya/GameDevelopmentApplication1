@@ -40,7 +40,7 @@ void PowerFood::Update(float delta_second)
 	}
 }
 
-void PowerFood::Draw(const Vector2D& screen_offset) const
+void PowerFood::Draw(const Vector2D& screen_offset, Vector2D loc) const
 {
 	if (is_disp)
 	{
