@@ -28,14 +28,12 @@ void Pinky::Initialize()
 	z_layer = 6;
 }
 
-void Pinky::Draw(const Vector2D& screen_offset, Vector2D loc) const
-{
-	// オフセット値を基に画像の描画を行う
-	Vector2D graph_location = loc + screen_offset;
-	DrawRotaGraphF(graph_location.x, graph_location.y, 1.0, 0.0, image, TRUE);
-}
-
 void Pinky::AttackMove(float delta_second)
 {
 
+}
+
+int Pinky::GetImage() const
+{
+	return this->image;
 }

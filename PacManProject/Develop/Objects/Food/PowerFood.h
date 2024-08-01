@@ -15,7 +15,7 @@ public:
 
 	virtual void Initialize() override;
 	virtual void Update(float delta_second) override;
-	virtual void Draw(const Vector2D& screen_offset, Vector2D loc) const override;
+	virtual void Draw(const Vector2D& screen_offset) const override;
 
 	/// <summary>
 	/// 当たり判定通知処理

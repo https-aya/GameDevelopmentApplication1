@@ -28,15 +28,14 @@ void Akabe::Initialize()
 	z_layer = 6;
 }
 
-void Akabe::Draw(const Vector2D& screen_offset , Vector2D loc) const
-{
-	// オフセット値を基に画像の描画を行う
-	Vector2D graph_location = loc + screen_offset;
-	DrawRotaGraphF(graph_location.x, graph_location.y, 1.0, 0.0, image, TRUE);
-}
+
 
 void Akabe::AttackMove(float delta_second)
 {
 
 }
 
+int Akabe::GetImage() const
+{
+	return this->image;
+}

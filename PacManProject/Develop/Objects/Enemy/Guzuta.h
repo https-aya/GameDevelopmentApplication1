@@ -11,9 +11,9 @@ public:
 	~Guzuta();
 
 	virtual void Initialize() override;
-	void Draw(const Vector2D& screen_offset, Vector2D loc) const;
 
 private:
 	virtual void AttackMove(float delta_second) override;
+	virtual int GetImage() const override;
 };
 

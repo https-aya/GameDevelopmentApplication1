@@ -9,7 +9,7 @@ public:
 	virtual ~Wall();
 
 	virtual void Initialize() override;
-	virtual void Draw(const Vector2D& screen_offset, Vector2D loc) const override;
+	virtual void Draw(const Vector2D& screen_offset) const override;
 
 public:
 	// 壁データの設定

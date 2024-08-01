@@ -35,9 +35,9 @@ void EnemyBase::Update(float delta_second)
 	AnimationControl(delta_second);
 }
 
-void EnemyBase::Draw(const Vector2D& screen_offset, Vector2D loc) const
+void EnemyBase::Draw(const Vector2D& screen_offset) const
 {
-	enemy_type->Draw(screen_offset , this->location);
+	__super::Draw(screen_offset);
 }
 
 void EnemyBase::Finalize()
@@ -50,8 +50,8 @@ void EnemyBase::AnimationControl(float delta_second)
 	animation_time += delta_second;
 	if (animation_time >= (1.0f / 8.0f))
 	{
-		/*animation_time = 0.0f;
-		switch (enemy_type)
+		animation_time = 0.0f;
+		switch (image)
 		{
 		case AKABE:
 			if (image == animation[0])
@@ -92,8 +92,8 @@ void EnemyBase::AnimationControl(float delta_second)
 			{
 				image = animation[6];
 			}
-			break;*/
-		/*}*/
+			break;
+		}
 	}
 }
 
@@ -225,9 +225,16 @@ void EnemyBase::SetEnemytype(int count)
 	default:
 		break;
 	}
+	image = enemy_type->GetImage();
 }
 
 void EnemyBase::SetPlayer(Player* object)
 {
 	this->player_date = object;
+}
+
+int EnemyBase::GetImage() const
+{
+	return this->image;
+
 }

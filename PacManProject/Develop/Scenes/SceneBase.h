@@ -144,7 +144,7 @@ public:
 		// オブジェクトリスト内のオブジェクトを描画する
 		for(GameObjectBase* obj : object_list)
 		{
-			obj->Draw(screen_offset,0);
+			obj->Draw(screen_offset);
 		}
 	}
 

@@ -21,7 +21,7 @@ void Wall::Initialize()
 	collision.radius = D_OBJECT_SIZE / 2.0f;
 }
 
-void Wall::Draw(const Vector2D& screen_offset, Vector2D loc) const
+void Wall::Draw(const Vector2D& screen_offset) const
 {
 
 }
