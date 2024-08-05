@@ -91,6 +91,4 @@ public:
 	/// </summary>
 	/// <returns>可動性情報</returns>
 	const eMobilityType GetMobility() const;
-
-	virtual int GetImage() const;
 };

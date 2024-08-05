@@ -14,6 +14,5 @@ public:
 
 private:
 	virtual void AttackMove(float delta_second) override;
-	virtual int GetImage() const override;
 };
 

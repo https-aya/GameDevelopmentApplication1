@@ -28,7 +28,8 @@ protected:
 	std::vector<int> eyeanimation;
 
 	Vector2D velocity;
-	class GameObjectBase* enemy_type;
+	eEnemyType enemy_type;
+	class EnemyBase* enemy;
 	eEnemyState enemy_state;
 	eEnemyDirectionState now_direction;
 	class Player* player_date;
@@ -58,7 +59,6 @@ private:
 	virtual void EscapeMove(float delta_second);
 
 protected:
-	virtual int GetImage() const override;
 	virtual void AttackMove(float delta_second);
 
 public:
@@ -67,4 +67,5 @@ public:
 	void ChangeEnemyState(eEnemyState state);
 	void SetEnemytype(int);
 	void SetPlayer(Player* object);
+	eEnemyType GetEnemytype() const;
 };

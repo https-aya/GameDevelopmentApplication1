@@ -115,8 +115,3 @@ const eMobilityType GameObjectBase::GetMobility() const
 {
 	return mobility;
 }
-
-int GameObjectBase::GetImage() const
-{
-	return this->image;
-}
