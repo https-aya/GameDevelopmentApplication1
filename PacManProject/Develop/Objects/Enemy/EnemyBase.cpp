@@ -141,26 +141,26 @@ void EnemyBase::IdolMove(float delta_second)
 void EnemyBase::PatorolMove(float delta_second)
 {
 	Vector2D point = 0.0f;
+	std::map<eAdjacentDirection, ePanelID> ret = {
+		{ eAdjacentDirection::UP, ePanelID::NONE },
+		{ eAdjacentDirection::DOWN, ePanelID::NONE },
+		{ eAdjacentDirection::LEFT, ePanelID::NONE },
+		{ eAdjacentDirection::RIGHT, ePanelID::NONE }
+	};
+
+	ret = StageData::GetAdjacentPanelData(this->location);
 
 	Vector2D diff = point - location;
-	if (diff.x >= 10)
+	if (ret[eAdjacentDirection::RIGHT] != ePanelID::WALL)
 	{
 		now_direction = eEnemyDirectionState::RIGHT;
 	}
-	else if(diff.x <= 8)
-	{
-		now_direction = eEnemyDirectionState::LEFT;
-	}
-	else if (diff.y <= 10)
-	{
-		now_direction = eEnemyDirectionState::UP;
-	}
-	else if (diff.y >= 8)
+	else if (ret[eAdjacentDirection::DOWN] != ePanelID::WALL)
 	{
 		now_direction = eEnemyDirectionState::DOWN;
 	}
 
-	StageData::GetAdjacentPanelData
+
 
 	switch (now_direction)
 	{
