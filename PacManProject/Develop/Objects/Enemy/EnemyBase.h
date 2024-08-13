@@ -1,7 +1,9 @@
 ﻿#pragma once
 
 #include "../GameObject.h"
+#include "../Player/Player.h"
 #include "Enum/EnemyType.h"
+
 
 enum eEnemyState 
 {
@@ -32,13 +34,16 @@ protected:
 	class EnemyBase* enemy;
 	eEnemyState enemy_state;
 	eEnemyDirectionState now_direction;
-	class Player* player_date;
+	class Player* player;
 
 private:
 	float world_time;
 	int flash_count;
 	float izike_time;
 	float animation_time;
+	int animation_count;
+	int animation_num;
+	float move_count;
 
 public:
 	EnemyBase();

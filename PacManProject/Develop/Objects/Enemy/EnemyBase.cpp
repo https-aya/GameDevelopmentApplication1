@@ -1,6 +1,5 @@
 #include "EnemyBase.h"
-#include "../../Utility/ResourceManager.h"
-#include "../../Utility/StageData.h"
+#include "../../Utility/ResourceManager.h" 
 #include "Factory/EnemyTypeFactory.h"
 #include "DxLib.h"
 
@@ -17,8 +16,11 @@ EnemyBase::EnemyBase()
 	, world_time(0.0f)
 	, flash_count(0)
 	, izike_time(0.0f)
-	, player_date(nullptr)
+	, player(nullptr)
 	, animation_time(0.0f)
+	, animation_count()
+	, animation_num()
+	, move_count(0.0f)
 {
 }
 
@@ -41,17 +43,46 @@ void EnemyBase::Initialize()
 	collision.radius = (D_OBJECT_SIZE - 1.0f) / 2.0f;
 	// â¬ìÆê´ÇÃê›íË
 	mobility = eMobilityType::Movable;
+	z_layer = 6;
 }
 
 void EnemyBase::Update(float delta_second)
 {
 	Movement(delta_second);
 	AnimationControl(delta_second);
+	if (player->GetPowerUp() == true)
+	{
+		enemy_state = eEnemyState::eIZIKE;
+	}
 }
 
 void EnemyBase::Draw(const Vector2D& screen_offset) const
 {
-	__super::Draw(screen_offset);
+	int eye_image = NULL;
+	switch (now_direction)
+	{
+	case eEnemyDirectionState::UP:
+		eye_image = eyeanimation[0];
+		break;
+	case eEnemyDirectionState::RIGHT:
+		eye_image = eyeanimation[1];
+		break;
+	case eEnemyDirectionState::DOWN:
+		eye_image = eyeanimation[2];
+		break;
+	case eEnemyDirectionState::LEFT:
+		eye_image = eyeanimation[3];
+		break;
+	}
+	if (enemy_state != eEnemyState::eESCAPE)
+	{
+		__super::Draw(screen_offset);
+	}
+	if (enemy_state != eEnemyState::eIZIKE)
+	{
+		Vector2D graph_location = this->location + screen_offset;
+		DrawRotaGraphF(graph_location.x, graph_location.y, 1.0, 0.0, eye_image, TRUE);
+	}
 }
 
 void EnemyBase::Finalize()
@@ -64,49 +95,19 @@ void EnemyBase::AnimationControl(float delta_second)
 	animation_time += delta_second;
 	if (animation_time >= (1.0f / 8.0f))
 	{
-		animation_time = 0.0f;
-		switch (enemy->GetEnemytype())
+		animation_count += 1;
+		if (animation_count >= 2)
 		{
-		case AKABE:
-			if (image == animation[0])
-			{
-				image = animation[1];
-			}
-			else
-			{
-				image = animation[0];
-			}
-			break;
-		case AOSUKE:
-			if (image == animation[4])
-			{
-				image = animation[5];
-			}
-			else
-			{
-				image = animation[4];
-			}
-			break;
-		case PINKY:
-			if (image == animation[2])
-			{
-				image = animation[3];
-			}
-			else
-			{
-				image = animation[2];
-			}
-			break;
-		case GUZUTA:
-			if (image == animation[6])
-			{
-				image = animation[7];
-			}
-			else
-			{
-				image = animation[6];
-			}
-			break;
+			animation_count = 0;
+		}
+		animation_time = 0.0f;
+		if (enemy_state == eEnemyState::eIZIKE)
+		{
+			image = animation[16 + animation_count];
+		}
+		else 
+		{
+			image = animation[animation_num + animation_count];
 		}
 	}
 }
@@ -135,12 +136,63 @@ void EnemyBase::Movement(float delta_second)
 
 void EnemyBase::IdolMove(float delta_second)
 {
+	std::map<eAdjacentDirection, ePanelID> ret = {
+		{ eAdjacentDirection::UP, ePanelID::NONE },
+		{ eAdjacentDirection::DOWN, ePanelID::NONE }
+	};
+	ret = StageData::GetAdjacentPanelData(this->location);
 
+	move_count += delta_second;
+	if (move_count >= (1.0f / 2.0f))
+	{
+		if (ret[eAdjacentDirection::UP] != WALL)
+		{
+			now_direction = eEnemyDirectionState::UP;
+		}
+		else if(ret[eAdjacentDirection::DOWN] != WALL)
+		{
+			now_direction = eEnemyDirectionState::DOWN;
+		}
+		move_count = 0;
+	}
+
+	switch (now_direction)
+	{
+	case eEnemyDirectionState::UP:
+		velocity.y = -2.0f;
+		break;
+	case eEnemyDirectionState::DOWN:
+		velocity.y = 2.0f;
+		break;
+	default:
+		velocity = 0.0f;
+		break;
+	}
+	// à⁄ìÆó  * ë¨Ç≥ * éûä‘ Ç≈à⁄ìÆêÊÇåàíËÇ∑ÇÈ
+	location += velocity * ENEMY_SPEED * delta_second;
 }
 
 void EnemyBase::PatorolMove(float delta_second)
 {
 	Vector2D point = 0.0f;
+	switch (enemy_type)
+	{
+	case eEnemyType::AKABE:
+		point = Vector2D(600.0f, 120.0f);
+		break;
+	case eEnemyType::PINKY:
+		point = Vector2D(100.0f, 120.0f);
+		break;
+	case eEnemyType::AOSUKE:
+		point = Vector2D(100.0f, 800.0f);
+		break;
+	case eEnemyType::GUZUTA:
+		point = Vector2D(600.0f, 800.0f);
+		break;
+	}
+		
+	//DrawCircleAA(point.x, point.y, 5.0, 4, 0x000000, 1);
+
 	std::map<eAdjacentDirection, ePanelID> ret = {
 		{ eAdjacentDirection::UP, ePanelID::NONE },
 		{ eAdjacentDirection::DOWN, ePanelID::NONE },
@@ -151,30 +203,21 @@ void EnemyBase::PatorolMove(float delta_second)
 	ret = StageData::GetAdjacentPanelData(this->location);
 
 	Vector2D diff = point - location;
-	if (ret[eAdjacentDirection::RIGHT] != ePanelID::WALL)
-	{
-		now_direction = eEnemyDirectionState::RIGHT;
-	}
-	else if (ret[eAdjacentDirection::DOWN] != ePanelID::WALL)
-	{
-		now_direction = eEnemyDirectionState::DOWN;
-	}
-
-
+	
 
 	switch (now_direction)
 	{
 	case eEnemyDirectionState::UP:
-		velocity.y = -1.0f;
+		velocity.y = -2.0f;
 		break;
 	case eEnemyDirectionState::DOWN:
-		velocity.y = 1.0f;
+		velocity.y = 2.0f;
 		break;
 	case eEnemyDirectionState::LEFT:
-		velocity.x = -1.0f;
+		velocity.x = -2.0f;
 		break;
 	case eEnemyDirectionState::RIGHT:
-		velocity.x = 1.0f;
+		velocity.x = 2.0f;
 		break;
 	default:
 		velocity = 0.0f;
@@ -241,32 +284,40 @@ void EnemyBase::SetEnemytype(int count)
 	case 0:
 		enemy = EnemyTypeFactory::Get((*this), eEnemyType::AKABE);
 		now_direction = eEnemyDirectionState::LEFT;
-		image = animation[0];
+		enemy_type = enemy->GetEnemytype();
+		animation_num = 0;
 		enemy_state = eEnemyState::ePATROL;
 		break;
 	case 1:
 		enemy = EnemyTypeFactory::Get((*this), eEnemyType::AOSUKE);
 		now_direction = eEnemyDirectionState::UP;
-		image = animation[4];
+		enemy_type = enemy->GetEnemytype();
+		animation_num = 4;
+		enemy_state = eEnemyState::eIDLE;
 		break;
 	case 2:
 		enemy = EnemyTypeFactory::Get((*this), eEnemyType::GUZUTA);
 		now_direction = eEnemyDirectionState::UP;
-		image = animation[6];
+		enemy_type = enemy->GetEnemytype();
+		animation_num = 6;
+		enemy_state = eEnemyState::eIDLE;
 		break;
 	case 3:
 		enemy = EnemyTypeFactory::Get((*this), eEnemyType::PINKY);
 		now_direction = eEnemyDirectionState::DOWN;
-		image = animation[2];
+		enemy_type = enemy->GetEnemytype();
+		animation_num = 2;
+		enemy_state = eEnemyState::eIDLE;
 		break;
 	default:
 		break;
 	}
+	image = animation[animation_num];
 }
 
 void EnemyBase::SetPlayer(Player* object)
 {
-	this->player_date = object;
+	this->player = object;
 }
 
 eEnemyType EnemyBase::GetEnemytype() const

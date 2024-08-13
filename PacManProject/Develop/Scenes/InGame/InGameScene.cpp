@@ -16,7 +16,10 @@ InGameScene::InGameScene()
 	, pause_flag(false)
 	, enemy_count(NULL)
 {
-
+	for (int i = 0; i < 4; i++)
+	{
+		enemy[i] = NULL;
+	}
 }
 
 InGameScene::~InGameScene()
@@ -39,7 +42,7 @@ void InGameScene::Initialize()
 	// BGMの読み込み
 	back_ground_sound = rm->GetSounds("Resource/Sounds/start-music.mp3");
 
-	PlaySoundMem(back_ground_sound, DX_PLAYTYPE_BACK);
+	//PlaySoundMem(back_ground_sound, DX_PLAYTYPE_BACK);
 }
 
 eSceneType InGameScene::Update(const float& delta_second)
