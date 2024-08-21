@@ -12,6 +12,7 @@ EnemyBase::EnemyBase()
 	, enemy_type()
 	, enemy()
 	, enemy_state()
+	, hold_state()
 	, now_direction()
 	, world_time(0.0f)
 	, flash_count(0)
@@ -52,8 +53,29 @@ void EnemyBase::Update(float delta_second)
 	AnimationControl(delta_second);
 	if (player->GetPowerUp() == true)
 	{
+		if (izike_time <= 0.0f)
+		{
+			hold_state = enemy_state;
+		}
 		enemy_state = eEnemyState::eIZIKE;
+		izike_time += delta_second;
+		if (izike_time >= 7.0f && flash_count == 0)
+		{
+			flash_count = 1;
+		}
+		if (izike_time >= 8.0f)
+		{
+			player->SetPowerDown();
+			izike_time = 0.0f;
+			flash_count = 0;
+		}
+		
 	}
+	else
+	{
+		enemy_state = hold_state;
+	}
+
 }
 
 void EnemyBase::Draw(const Vector2D& screen_offset) const
@@ -103,7 +125,20 @@ void EnemyBase::AnimationControl(float delta_second)
 		animation_time = 0.0f;
 		if (enemy_state == eEnemyState::eIZIKE)
 		{
-			image = animation[16 + animation_count];
+			switch (flash_count)
+			{	
+			case 1:
+				flash_count += 1;
+			case 0:
+				image = animation[16 + animation_count];
+				break;
+			case 2:
+				image = animation[18 + animation_count];
+				flash_count += -1;
+				break;
+			}
+			
+
 		}
 		else 
 		{
@@ -178,20 +213,20 @@ void EnemyBase::PatorolMove(float delta_second)
 	switch (enemy_type)
 	{
 	case eEnemyType::AKABE:
-		point = Vector2D(600.0f, 120.0f);
+		point = Vector2D(510.0f, 120.0f);
 		break;
 	case eEnemyType::PINKY:
 		point = Vector2D(100.0f, 120.0f);
 		break;
 	case eEnemyType::AOSUKE:
-		point = Vector2D(100.0f, 800.0f);
+		point = Vector2D(100.0f, 900.0f);
 		break;
 	case eEnemyType::GUZUTA:
-		point = Vector2D(600.0f, 800.0f);
+		point = Vector2D(600.0f, 900.0f);
 		break;
 	}
 		
-	//DrawCircleAA(point.x, point.y, 5.0, 4, 0x000000, 1);
+	DrawCircleAA(point.x, point.y, 10.0, 4, 0x000000, 1);
 
 	std::map<eAdjacentDirection, ePanelID> ret = {
 		{ eAdjacentDirection::UP, ePanelID::NONE },
@@ -202,7 +237,28 @@ void EnemyBase::PatorolMove(float delta_second)
 
 	ret = StageData::GetAdjacentPanelData(this->location);
 
-	Vector2D diff = point - location;
+	if (point.y < location.y)
+	{
+		if (ret[eAdjacentDirection::UP] != WALL)
+		{
+			now_direction = eEnemyDirectionState::UP;
+		}
+		else
+		{
+			if (point.x < location.x)
+			{
+				now_direction = eEnemyDirectionState::LEFT;
+			}
+			else
+			{
+				now_direction = eEnemyDirectionState::RIGHT;
+			}
+		}
+	}
+	else
+	{
+		now_direction = eEnemyDirectionState::DOWN;
+	}
 	
 
 	switch (now_direction)
@@ -239,7 +295,7 @@ void EnemyBase::EscapeMove(float delta_second)
 
 void EnemyBase::AttackMove(float delta_second)
 {
-
+	enemy->AttackMove(delta_second);
 }
 
 void EnemyBase::OnHitCollision(GameObjectBase* hit_object)
@@ -286,28 +342,28 @@ void EnemyBase::SetEnemytype(int count)
 		now_direction = eEnemyDirectionState::LEFT;
 		enemy_type = enemy->GetEnemytype();
 		animation_num = 0;
-		enemy_state = eEnemyState::ePATROL;
+		hold_state = eEnemyState::ePATROL;
 		break;
 	case 1:
 		enemy = EnemyTypeFactory::Get((*this), eEnemyType::AOSUKE);
 		now_direction = eEnemyDirectionState::UP;
 		enemy_type = enemy->GetEnemytype();
 		animation_num = 4;
-		enemy_state = eEnemyState::eIDLE;
+		hold_state = eEnemyState::eIDLE;
 		break;
 	case 2:
 		enemy = EnemyTypeFactory::Get((*this), eEnemyType::GUZUTA);
 		now_direction = eEnemyDirectionState::UP;
 		enemy_type = enemy->GetEnemytype();
 		animation_num = 6;
-		enemy_state = eEnemyState::eIDLE;
+		hold_state = eEnemyState::eIDLE;
 		break;
 	case 3:
 		enemy = EnemyTypeFactory::Get((*this), eEnemyType::PINKY);
 		now_direction = eEnemyDirectionState::DOWN;
 		enemy_type = enemy->GetEnemytype();
 		animation_num = 2;
-		enemy_state = eEnemyState::eIDLE;
+		hold_state = eEnemyState::eIDLE;
 		break;
 	default:
 		break;

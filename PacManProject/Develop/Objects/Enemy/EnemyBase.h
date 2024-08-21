@@ -33,6 +33,7 @@ protected:
 	eEnemyType enemy_type;
 	class EnemyBase* enemy;
 	eEnemyState enemy_state;
+	eEnemyState hold_state;
 	eEnemyDirectionState now_direction;
 	class Player* player;
 
