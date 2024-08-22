@@ -13,6 +13,6 @@ public:
 	virtual void Initialize() override;
 
 private:
-	virtual void AttackMove(float delta_second) override;
+	virtual void AttackMove(float delta_second, Player* playerdate) override;
 };
 

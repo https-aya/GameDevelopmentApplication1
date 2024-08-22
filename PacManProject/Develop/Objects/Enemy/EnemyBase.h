@@ -14,10 +14,12 @@ enum eEnemyState
 	eESCAPE,
 };
 
+
+
 class EnemyBase : public GameObject
 {
 private:
-	enum eEnemyDirectionState : unsigned char
+enum eEnemyDirectionState : unsigned char
 	{
 		UP,
 		RIGHT,
@@ -65,7 +67,7 @@ private:
 	virtual void EscapeMove(float delta_second);
 
 protected:
-	virtual void AttackMove(float delta_second);
+	virtual void AttackMove(float delta_second , Player* playerdate);
 
 public:
 	virtual void OnHitCollision(GameObjectBase* hit_object) override;

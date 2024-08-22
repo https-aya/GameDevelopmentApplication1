@@ -17,7 +17,7 @@ void Aosuke::Initialize()
 	enemy_type = eEnemyType::AOSUKE;
 }
 
-void Aosuke::AttackMove(float delta_second)
+void Aosuke::AttackMove(float delta_second, Player* playerdate)
 {
 
 }

@@ -158,7 +158,7 @@ void EnemyBase::Movement(float delta_second)
 		PatorolMove(delta_second);
 		break;
 	case eATTACK:
-		AttackMove(delta_second);
+		AttackMove(delta_second, player);
 		break;
 	case eESCAPE:
 		EscapeMove(delta_second);
@@ -167,6 +167,7 @@ void EnemyBase::Movement(float delta_second)
 		IzikeMove(delta_second);
 		break;
 	}
+
 }
 
 void EnemyBase::IdolMove(float delta_second)
@@ -225,9 +226,7 @@ void EnemyBase::PatorolMove(float delta_second)
 		point = Vector2D(600.0f, 900.0f);
 		break;
 	}
-		
-	DrawCircleAA(point.x, point.y, 10.0, 4, 0x000000, 1);
-
+	
 	std::map<eAdjacentDirection, ePanelID> ret = {
 		{ eAdjacentDirection::UP, ePanelID::NONE },
 		{ eAdjacentDirection::DOWN, ePanelID::NONE },
@@ -259,7 +258,35 @@ void EnemyBase::PatorolMove(float delta_second)
 	{
 		now_direction = eEnemyDirectionState::DOWN;
 	}
+}
+
+void EnemyBase::IzikeMove(float delta_second)
+{
+
+}
+
+void EnemyBase::EscapeMove(float delta_second)
+{
+
+}
+
+void EnemyBase::AttackMove(float delta_second, Player* playerdate)
+{
+	//enemy->AttackMove(delta_second,playerdate);
+
+	std::map<eAdjacentDirection, ePanelID> ret = {
+		{ eAdjacentDirection::UP, ePanelID::NONE },
+		{ eAdjacentDirection::DOWN, ePanelID::NONE },
+		{ eAdjacentDirection::LEFT, ePanelID::NONE },
+		{ eAdjacentDirection::RIGHT, ePanelID::NONE }
+	};
+
+	ret = StageData::GetAdjacentPanelData(this->location);
+
 	
+	Vector2D diff = player->GetLocation() - this->location;
+
+
 
 	switch (now_direction)
 	{
@@ -281,21 +308,6 @@ void EnemyBase::PatorolMove(float delta_second)
 	}
 	// ˆÚ“®—Ê * ‘¬‚³ * ŽžŠÔ ‚ÅˆÚ“®æ‚ðŒˆ’è‚·‚é
 	location += velocity * ENEMY_SPEED * delta_second;
-}
-
-void EnemyBase::IzikeMove(float delta_second)
-{
-
-}
-
-void EnemyBase::EscapeMove(float delta_second)
-{
-
-}
-
-void EnemyBase::AttackMove(float delta_second)
-{
-	enemy->AttackMove(delta_second);
 }
 
 void EnemyBase::OnHitCollision(GameObjectBase* hit_object)
@@ -342,7 +354,7 @@ void EnemyBase::SetEnemytype(int count)
 		now_direction = eEnemyDirectionState::LEFT;
 		enemy_type = enemy->GetEnemytype();
 		animation_num = 0;
-		hold_state = eEnemyState::ePATROL;
+		hold_state = eEnemyState::eATTACK;
 		break;
 	case 1:
 		enemy = EnemyTypeFactory::Get((*this), eEnemyType::AOSUKE);
