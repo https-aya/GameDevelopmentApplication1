@@ -38,11 +38,12 @@ protected:
 	eEnemyState hold_state;
 	eEnemyDirectionState now_direction;
 	class Player* player;
+	int eye_image;
 	int x;
 	int y;
 	int hx;
 	int hy;
-	
+	char j;
 
 private:
 	float world_time;
@@ -52,9 +53,10 @@ private:
 	int animation_count;
 	int animation_num;
 	float move_count;
+	int life;
 
 public:	
-	char j;
+
 	EnemyBase();
 	virtual ~EnemyBase();
 

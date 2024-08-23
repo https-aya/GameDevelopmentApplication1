@@ -14,6 +14,7 @@ EnemyBase::EnemyBase()
 	, enemy_state()
 	, hold_state()
 	, now_direction()
+	, eye_image()
 	, world_time(0.0f)
 	, flash_count(0)
 	, izike_time(0.0f)
@@ -22,6 +23,7 @@ EnemyBase::EnemyBase()
 	, animation_count()
 	, animation_num()
 	, move_count(0.0f)
+	, life()
 {
 }
 
@@ -54,7 +56,7 @@ void EnemyBase::Update(float delta_second)
 	y = location.y / D_OBJECT_SIZE;
 	Movement(delta_second);
 	AnimationControl(delta_second);
-	if (player->GetPowerUp() == true)
+	if (player->GetPowerUp() == true && life == 0)
 	{
 		if (izike_time <= 0.0f)
 		{
@@ -71,6 +73,7 @@ void EnemyBase::Update(float delta_second)
 			player->SetPowerDown();
 			izike_time = 0.0f;
 			flash_count = 0;
+			life = 0;
 		}
 		
 	}
@@ -78,12 +81,6 @@ void EnemyBase::Update(float delta_second)
 	{
 		enemy_state = hold_state;
 	}
-
-}
-
-void EnemyBase::Draw(const Vector2D& screen_offset) const
-{
-	int eye_image = NULL;
 	switch (now_direction)
 	{
 	case eEnemyDirectionState::UP:
@@ -99,6 +96,10 @@ void EnemyBase::Draw(const Vector2D& screen_offset) const
 		eye_image = eyeanimation[3];
 		break;
 	}
+}
+
+void EnemyBase::Draw(const Vector2D& screen_offset) const
+{
 	if (enemy_state != eEnemyState::eESCAPE)
 	{
 		__super::Draw(screen_offset);
@@ -160,8 +161,6 @@ void EnemyBase::AnimationControl(float delta_second)
 				flash_count += -1;
 				break;
 			}
-			
-
 		}
 		else 
 		{
@@ -424,30 +423,33 @@ void EnemyBase::OnHitCollision(GameObjectBase* hit_object)
 	
 
 	// 当たった、オブジェクトが壁だったら
-	if (StageData::GetPanelData(obj_loc) == WALL)
+
+	if (hit_object->GetCollision().object_type == eObjectType::wall)
 	{
-		if (hit_object->GetCollision().object_type == eObjectType::wall)
-		{
-			// 当たり判定情報を取得して、カプセルがある位置を求める
-			CapsuleCollision hc = hit_object->GetCollision();
-			hc.point[0] += hit_object->GetLocation();
-			hc.point[1] += hit_object->GetLocation();
+		// 当たり判定情報を取得して、カプセルがある位置を求める
+		CapsuleCollision hc = hit_object->GetCollision();
+		hc.point[0] += hit_object->GetLocation();
+		hc.point[1] += hit_object->GetLocation();
 
-			// 最近傍点を求める
-			Vector2D near_point = NearPointCheck(hc, this->location);
+		// 最近傍点を求める
+		Vector2D near_point = NearPointCheck(hc, this->location);
 
-			// Playerからnear_pointへの方向ベクトルを取得
-			Vector2D dv2 = near_point - this->location;
-			Vector2D dv = this->location - near_point;
+		// Playerからnear_pointへの方向ベクトルを取得
+		Vector2D dv2 = near_point - this->location;
+		Vector2D dv = this->location - near_point;
 
-			// めり込んだ差分
-			float diff = (this->GetCollision().radius + hc.radius) - dv.Length();
+		// めり込んだ差分
+		float diff = (this->GetCollision().radius + hc.radius) - dv.Length();
 
-			// diffの分だけ戻る
-			location += dv.Normalize() * diff;
-		}
+		// diffの分だけ戻る
+		location += dv.Normalize() * diff;
 	}
 	
+	if (hit_object->GetCollision().object_type == eObjectType::player && enemy_state == eEnemyState::eIZIKE)
+	{
+		life = 1;
+		enemy_state = eEnemyState::eESCAPE;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+	}
 }
 
 eEnemyState EnemyBase::GetEnemyState()
