@@ -38,6 +38,11 @@ protected:
 	eEnemyState hold_state;
 	eEnemyDirectionState now_direction;
 	class Player* player;
+	int x;
+	int y;
+	int hx;
+	int hy;
+	
 
 private:
 	float world_time;
@@ -48,7 +53,8 @@ private:
 	int animation_num;
 	float move_count;
 
-public:
+public:	
+	char j;
 	EnemyBase();
 	virtual ~EnemyBase();
 
@@ -65,6 +71,7 @@ private:
 	virtual void PatorolMove(float delta_second);
 	virtual void IzikeMove(float delta_second);
 	virtual void EscapeMove(float delta_second);
+	virtual void EscMonsterRoom(float delta_second);
 
 protected:
 	virtual void AttackMove(float delta_second , Player* playerdate);

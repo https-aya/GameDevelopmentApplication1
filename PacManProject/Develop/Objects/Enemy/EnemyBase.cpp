@@ -49,6 +49,9 @@ void EnemyBase::Initialize()
 
 void EnemyBase::Update(float delta_second)
 {
+
+	x = location.x / D_OBJECT_SIZE;
+	y = location.y / D_OBJECT_SIZE;
 	Movement(delta_second);
 	AnimationControl(delta_second);
 	if (player->GetPowerUp() == true)
@@ -104,6 +107,26 @@ void EnemyBase::Draw(const Vector2D& screen_offset) const
 	{
 		Vector2D graph_location = this->location + screen_offset;
 		DrawRotaGraphF(graph_location.x, graph_location.y, 1.0, 0.0, eye_image, TRUE);
+	}
+
+	ePanelID i = StageData::GetPanelData(Vector2D(hx, hy));
+
+	switch (enemy_type)
+	{
+	case AKABE:
+		DrawFormatString(50, 50, 0xff0000, "%d,%d,%d,%d,%c", x, y,hx,hy,j);
+		break;
+	case AOSUKE:
+		DrawFormatString(350, 50, 0x0000ff, "%d,%d,%d,%d,%c", x, y,hx,hy,j);
+		break;
+	case PINKY:
+		DrawFormatString(200, 50, 0xffc0cb, "%d,%d,%d,%d,%c", x, y,hx,hy,j);
+		break;
+	case GUZUTA:
+		DrawFormatString(500, 50, 0xee7800, "%d,%d,%d,%d,%c", x, y,hx,hy,j);
+		break;
+	default:
+		break;
 	}
 }
 
@@ -167,7 +190,30 @@ void EnemyBase::Movement(float delta_second)
 		IzikeMove(delta_second);
 		break;
 	}
-
+	switch (now_direction)
+	{
+	case eEnemyDirectionState::UP:
+		velocity.y = -2.0f;
+		velocity.x = 0.0f;
+		break;
+	case eEnemyDirectionState::DOWN:
+		velocity.y = 2.0f;
+		velocity.x = 0.0f;
+		break;
+	case eEnemyDirectionState::LEFT:
+		velocity.x = -2.0f;
+		velocity.y = 0.0f;
+		break;
+	case eEnemyDirectionState::RIGHT:
+		velocity.x = 2.0f;
+		velocity.y = 0.0f;
+		break;
+	default:
+		velocity = 0.0f;
+		break;
+	}
+	// 移動量 * 速さ * 時間 で移動先を決定する
+	location += velocity * ENEMY_SPEED * delta_second;
 }
 
 void EnemyBase::IdolMove(float delta_second)
@@ -192,20 +238,32 @@ void EnemyBase::IdolMove(float delta_second)
 		move_count = 0;
 	}
 
-	switch (now_direction)
+	switch (enemy_type)
 	{
-	case eEnemyDirectionState::UP:
-		velocity.y = -2.0f;
+	case AKABE:
+		ChangeEnemyState(eATTACK);
 		break;
-	case eEnemyDirectionState::DOWN:
-		velocity.y = 2.0f;
+	case PINKY:
+		if (player->GetFoodCount() >= 5)
+		{
+			EscMonsterRoom(delta_second);
+		}
+		break;
+	case AOSUKE:
+		if (player->GetFoodCount() >= 30)
+		{
+			EscMonsterRoom(delta_second);
+		}
+		break;
+	case GUZUTA:
+		if (player->GetFoodCount() >= 55)
+		{
+			EscMonsterRoom(delta_second);
+		}
 		break;
 	default:
-		velocity = 0.0f;
 		break;
 	}
-	// 移動量 * 速さ * 時間 で移動先を決定する
-	location += velocity * ENEMY_SPEED * delta_second;
 }
 
 void EnemyBase::PatorolMove(float delta_second)
@@ -270,6 +328,77 @@ void EnemyBase::EscapeMove(float delta_second)
 
 }
 
+void EnemyBase::EscMonsterRoom(float delta_second)
+{
+	std::vector<std::vector<ePanelID>> data;
+
+	data = StageData::GetAll();
+	int px,py;
+	int gx, gy;
+
+	for (py = 0 ;py < 31; py++)
+	{
+		for (px = 0; px < 28; px++)
+		{
+			if (data[py][px] == ePanelID::GATE)
+			{
+				gx = px;
+				gy = py;
+			}
+		}
+	}
+
+	ePanelID ret;
+	ret = StageData::GetPanelData(this->location);
+	switch (ret)
+	{
+	case WALL:
+		j = 'W';
+		break;
+	case BRANCH:
+		j = 'B';
+		break;
+	case GATE:
+		j = 'G';
+		break;
+	case NONE:
+		j = 'N';
+		break;
+	default:
+		j = 'D';
+		break;
+	}
+	hx = gx;
+	hy = gy;
+
+	float gloc_x = (gx + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
+	float gloc_y = (gy + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
+
+
+	mobility = eMobilityType::Stationary;
+	if (gloc_x + 1.0f > location.x && gloc_x - 1.0f < location.x)
+	{	
+		this->now_direction = eEnemyDirectionState::UP;
+
+	}
+	else if(gloc_y != location.y)
+	{
+		if (gloc_x < location.x)
+		{
+			this->now_direction = eEnemyDirectionState::LEFT;
+		}
+		else
+		{
+			this->now_direction = eEnemyDirectionState::RIGHT;
+		}		
+	}
+	if (ret == GATE)
+	{
+		mobility = eMobilityType::Movable;
+		ChangeEnemyState(eATTACK);
+	}
+}
+
 void EnemyBase::AttackMove(float delta_second, Player* playerdate)
 {
 	//enemy->AttackMove(delta_second,playerdate);
@@ -286,53 +415,39 @@ void EnemyBase::AttackMove(float delta_second, Player* playerdate)
 	
 	Vector2D diff = player->GetLocation() - this->location;
 
-
-
-	switch (now_direction)
-	{
-	case eEnemyDirectionState::UP:
-		velocity.y = -2.0f;
-		break;
-	case eEnemyDirectionState::DOWN:
-		velocity.y = 2.0f;
-		break;
-	case eEnemyDirectionState::LEFT:
-		velocity.x = -2.0f;
-		break;
-	case eEnemyDirectionState::RIGHT:
-		velocity.x = 2.0f;
-		break;
-	default:
-		velocity = 0.0f;
-		break;
-	}
-	// 移動量 * 速さ * 時間 で移動先を決定する
-	location += velocity * ENEMY_SPEED * delta_second;
 }
 
 void EnemyBase::OnHitCollision(GameObjectBase* hit_object)
 {
+	Vector2D obj_loc = hit_object->GetLocation();
+
+	
+
 	// 当たった、オブジェクトが壁だったら
-	if (hit_object->GetCollision().object_type == eObjectType::wall)
+	if (StageData::GetPanelData(obj_loc) == WALL)
 	{
-		// 当たり判定情報を取得して、カプセルがある位置を求める
-		CapsuleCollision hc = hit_object->GetCollision();
-		hc.point[0] += hit_object->GetLocation();
-		hc.point[1] += hit_object->GetLocation();
+		if (hit_object->GetCollision().object_type == eObjectType::wall)
+		{
+			// 当たり判定情報を取得して、カプセルがある位置を求める
+			CapsuleCollision hc = hit_object->GetCollision();
+			hc.point[0] += hit_object->GetLocation();
+			hc.point[1] += hit_object->GetLocation();
 
-		// 最近傍点を求める
-		Vector2D near_point = NearPointCheck(hc, this->location);
+			// 最近傍点を求める
+			Vector2D near_point = NearPointCheck(hc, this->location);
 
-		// Playerからnear_pointへの方向ベクトルを取得
-		Vector2D dv2 = near_point - this->location;
-		Vector2D dv = this->location - near_point;
+			// Playerからnear_pointへの方向ベクトルを取得
+			Vector2D dv2 = near_point - this->location;
+			Vector2D dv = this->location - near_point;
 
-		// めり込んだ差分
-		float diff = (this->GetCollision().radius + hc.radius) - dv.Length();
+			// めり込んだ差分
+			float diff = (this->GetCollision().radius + hc.radius) - dv.Length();
 
-		// diffの分だけ戻る
-		location += dv.Normalize() * diff;
+			// diffの分だけ戻る
+			location += dv.Normalize() * diff;
+		}
 	}
+	
 }
 
 eEnemyState EnemyBase::GetEnemyState()
@@ -342,7 +457,7 @@ eEnemyState EnemyBase::GetEnemyState()
 
 void EnemyBase::ChangeEnemyState(eEnemyState state)
 {
-	this->enemy_state = state;
+	this->hold_state = state;
 }
 
 void EnemyBase::SetEnemytype(int count)
@@ -354,33 +469,30 @@ void EnemyBase::SetEnemytype(int count)
 		now_direction = eEnemyDirectionState::LEFT;
 		enemy_type = enemy->GetEnemytype();
 		animation_num = 0;
-		hold_state = eEnemyState::eATTACK;
 		break;
 	case 1:
 		enemy = EnemyTypeFactory::Get((*this), eEnemyType::AOSUKE);
 		now_direction = eEnemyDirectionState::UP;
 		enemy_type = enemy->GetEnemytype();
 		animation_num = 4;
-		hold_state = eEnemyState::eIDLE;
 		break;
 	case 2:
 		enemy = EnemyTypeFactory::Get((*this), eEnemyType::GUZUTA);
 		now_direction = eEnemyDirectionState::UP;
 		enemy_type = enemy->GetEnemytype();
 		animation_num = 6;
-		hold_state = eEnemyState::eIDLE;
 		break;
 	case 3:
 		enemy = EnemyTypeFactory::Get((*this), eEnemyType::PINKY);
 		now_direction = eEnemyDirectionState::DOWN;
 		enemy_type = enemy->GetEnemytype();
 		animation_num = 2;
-		hold_state = eEnemyState::eIDLE;
 		break;
 	default:
 		break;
 	}
 	image = animation[animation_num];
+	hold_state = eEnemyState::eIDLE;
 }
 
 void EnemyBase::SetPlayer(Player* object)
