@@ -2,17 +2,8 @@
 
 #include "../GameObject.h"
 #include "../Player/Player.h"
-#include "Enum/EnemyType.h"
 
 
-enum eEnemyState 
-{
-	eIDLE,
-	eATTACK,
-	ePATROL,
-	eIZIKE,
-	eESCAPE,
-};
 
 
 
@@ -32,8 +23,7 @@ protected:
 	std::vector<int> eyeanimation;
 
 	Vector2D velocity;
-	eEnemyType enemy_type;
-	class EnemyBase* enemy;
+	class EnemyTypeBase* enemy_type;
 	eEnemyState enemy_state;
 	eEnemyState hold_state;
 	eEnemyDirectionState now_direction;
@@ -64,19 +54,6 @@ public:
 	virtual void Update(float delta_second) override;
 	virtual void Draw(const Vector2D& screen_offset) const override;
 	virtual void Finalize() override;
-
-
-private:
-	virtual void AnimationControl(float delta_second);
-	virtual void Movement(float delta_second);
-	virtual void IdolMove(float delta_second);
-	virtual void PatorolMove(float delta_second);
-	virtual void IzikeMove(float delta_second);
-	virtual void EscapeMove(float delta_second);
-	virtual void EscMonsterRoom(float delta_second);
-
-protected:
-	virtual void AttackMove(float delta_second , Player* playerdate);
 
 public:
 	virtual void OnHitCollision(GameObjectBase* hit_object) override;

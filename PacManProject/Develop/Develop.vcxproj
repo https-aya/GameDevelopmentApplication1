@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Objects\Enemy\EnemyTypeBase.cpp" />
     <ClCompile Include="Objects\Enemy\Factory\EnemyTypeFactory.cpp" />
     <ClCompile Include="Objects\Enemy\Guzuta.cpp" />
     <ClCompile Include="Objects\Enemy\Aosuke.cpp" />
@@ -157,6 +158,8 @@
     <ClCompile Include="Utility\Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Objects\Enemy\EnemyTypeBase.h" />
+    <ClInclude Include="Objects\Enemy\Enum\EnemyState.h" />
     <ClInclude Include="Objects\Enemy\Factory\EnemyTypeFactory.h" />
     <ClInclude Include="Objects\Enemy\Enum\EnemyType.h" />
     <ClInclude Include="Objects\Enemy\Guzuta.h" />

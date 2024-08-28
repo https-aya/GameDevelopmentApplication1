@@ -3,6 +3,7 @@
 #include "DxLib.h"
 
 Guzuta::Guzuta(class EnemyBase* e)
+	:EnemyTypeBase(e)
 {
 
 }
@@ -14,7 +15,7 @@ Guzuta::~Guzuta()
 
 void Guzuta::Initialize()
 {
-	enemy_type = eEnemyType::GUZUTA;
+
 }
 
 void Guzuta::AttackMove(float delta_second, Player* playerdate)

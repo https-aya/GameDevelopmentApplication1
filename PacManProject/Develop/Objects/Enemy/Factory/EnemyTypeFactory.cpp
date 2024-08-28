@@ -28,7 +28,7 @@ void EnemyTypeFactory::Finalize()
 	delete instance->guzuta;
 }
 
-EnemyBase* EnemyTypeFactory::Get(EnemyBase& enemy, eEnemyType type)
+EnemyTypeBase* EnemyTypeFactory::Get(EnemyBase& enemy, eEnemyType type)
 {
 	if (instance == nullptr)
 	{
@@ -36,7 +36,7 @@ EnemyBase* EnemyTypeFactory::Get(EnemyBase& enemy, eEnemyType type)
 		instance->Initialize(enemy);
 	}
 
-	EnemyBase* ret = nullptr;
+	EnemyTypeBase* ret = nullptr;
 	switch (type)
 	{
 	case eEnemyType::AKABE:

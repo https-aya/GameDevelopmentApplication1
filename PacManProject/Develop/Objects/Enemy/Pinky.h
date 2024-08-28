@@ -1,8 +1,8 @@
 #pragma once
 
-#include "EnemyBase.h"
+#include "EnemyTypeBase.h"
 
-class Pinky : public EnemyBase
+class Pinky : public EnemyTypeBase
 {
 private:
 

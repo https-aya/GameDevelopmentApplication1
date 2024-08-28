@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Enum/EnemyType.h"
+#include "../EnemyTypeBase.h"
 
 class EnemyTypeFactory
 {
@@ -23,7 +24,7 @@ private:
 	void Initialize(class EnemyBase& enemy);
 
 public:
-	static EnemyBase* Get(class EnemyBase& enemy, eEnemyType type);
+	static EnemyTypeBase* Get(class EnemyBase& enemy, eEnemyType type);
 	static void Finalize();
 };
 

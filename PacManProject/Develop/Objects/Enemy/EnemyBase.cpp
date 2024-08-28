@@ -10,7 +10,6 @@ EnemyBase::EnemyBase()
 	, eyeanimation()
 	, velocity(0.0f)
 	, enemy_type()
-	, enemy()
 	, enemy_state()
 	, hold_state()
 	, now_direction()
@@ -51,11 +50,9 @@ void EnemyBase::Initialize()
 
 void EnemyBase::Update(float delta_second)
 {
-
+	enemy_type->Update(delta_second);
 	x = location.x / D_OBJECT_SIZE;
 	y = location.y / D_OBJECT_SIZE;
-	Movement(delta_second);
-	AnimationControl(delta_second);
 	if (player->GetPowerUp() == true && life == 0)
 	{
 		if (izike_time <= 0.0f)
@@ -112,61 +109,12 @@ void EnemyBase::Draw(const Vector2D& screen_offset) const
 
 	ePanelID i = StageData::GetPanelData(Vector2D(hx, hy));
 
-	switch (enemy_type)
-	{
-	case AKABE:
-		DrawFormatString(50, 50, 0xff0000, "%d,%d,%d,%d,%c", x, y,hx,hy,j);
-		break;
-	case AOSUKE:
-		DrawFormatString(350, 50, 0x0000ff, "%d,%d,%d,%d,%c", x, y,hx,hy,j);
-		break;
-	case PINKY:
-		DrawFormatString(200, 50, 0xffc0cb, "%d,%d,%d,%d,%c", x, y,hx,hy,j);
-		break;
-	case GUZUTA:
-		DrawFormatString(500, 50, 0xee7800, "%d,%d,%d,%d,%c", x, y,hx,hy,j);
-		break;
-	default:
-		break;
-	}
+	enemy_type->Draw(screen_offset);
 }
 
 void EnemyBase::Finalize()
 {
 
-}
-
-void EnemyBase::AnimationControl(float delta_second)
-{
-	animation_time += delta_second;
-	if (animation_time >= (1.0f / 8.0f))
-	{
-		animation_count += 1;
-		if (animation_count >= 2)
-		{
-			animation_count = 0;
-		}
-		animation_time = 0.0f;
-		if (enemy_state == eEnemyState::eIZIKE)
-		{
-			switch (flash_count)
-			{	
-			case 1:
-				flash_count += 1;
-			case 0:
-				image = animation[16 + animation_count];
-				break;
-			case 2:
-				image = animation[18 + animation_count];
-				flash_count += -1;
-				break;
-			}
-		}
-		else 
-		{
-			image = animation[animation_num + animation_count];
-		}
-	}
 }
 
 void EnemyBase::Movement(float delta_second)
@@ -237,38 +185,38 @@ void EnemyBase::IdolMove(float delta_second)
 		move_count = 0;
 	}
 
-	switch (enemy_type)
-	{
-	case AKABE:
-		ChangeEnemyState(eATTACK);
-		break;
-	case PINKY:
-		if (player->GetFoodCount() >= 5)
-		{
-			EscMonsterRoom(delta_second);
-		}
-		break;
-	case AOSUKE:
-		if (player->GetFoodCount() >= 30)
-		{
-			EscMonsterRoom(delta_second);
-		}
-		break;
-	case GUZUTA:
-		if (player->GetFoodCount() >= 55)
-		{
-			EscMonsterRoom(delta_second);
-		}
-		break;
-	default:
-		break;
-	}
+	//switch (enemy_type)
+	//{
+	//case AKABE:
+	//	ChangeEnemyState(eATTACK);
+	//	break;
+	//case PINKY:
+	//	if (player->GetFoodCount() >= 5)
+	//	{
+	//		EscMonsterRoom(delta_second);
+	//	}
+	//	break;
+	//case AOSUKE:
+	//	if (player->GetFoodCount() >= 30)
+	//	{
+	//		EscMonsterRoom(delta_second);
+	//	}
+	//	break;
+	//case GUZUTA:
+	//	if (player->GetFoodCount() >= 55)
+	//	{
+	//		EscMonsterRoom(delta_second);
+	//	}
+	//	break;
+	//default:
+	//	break;
+	//}
 }
 
 void EnemyBase::PatorolMove(float delta_second)
 {
 	Vector2D point = 0.0f;
-	switch (enemy_type)
+	/*switch (enemy_type)
 	{
 	case eEnemyType::AKABE:
 		point = Vector2D(510.0f, 120.0f);
@@ -282,7 +230,7 @@ void EnemyBase::PatorolMove(float delta_second)
 	case eEnemyType::GUZUTA:
 		point = Vector2D(600.0f, 900.0f);
 		break;
-	}
+	}*/
 	
 	std::map<eAdjacentDirection, ePanelID> ret = {
 		{ eAdjacentDirection::UP, ePanelID::NONE },
@@ -467,27 +415,23 @@ void EnemyBase::SetEnemytype(int count)
 	switch (count)
 	{
 	case 0:
-		enemy = EnemyTypeFactory::Get((*this), eEnemyType::AKABE);
+		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::AKABE);
 		now_direction = eEnemyDirectionState::LEFT;
-		enemy_type = enemy->GetEnemytype();
 		animation_num = 0;
 		break;
 	case 1:
-		enemy = EnemyTypeFactory::Get((*this), eEnemyType::AOSUKE);
+		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::AOSUKE);
 		now_direction = eEnemyDirectionState::UP;
-		enemy_type = enemy->GetEnemytype();
 		animation_num = 4;
 		break;
 	case 2:
-		enemy = EnemyTypeFactory::Get((*this), eEnemyType::GUZUTA);
+		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::GUZUTA);
 		now_direction = eEnemyDirectionState::UP;
-		enemy_type = enemy->GetEnemytype();
 		animation_num = 6;
 		break;
 	case 3:
-		enemy = EnemyTypeFactory::Get((*this), eEnemyType::PINKY);
+		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::PINKY);
 		now_direction = eEnemyDirectionState::DOWN;
-		enemy_type = enemy->GetEnemytype();
 		animation_num = 2;
 		break;
 	default:
@@ -504,5 +448,5 @@ void EnemyBase::SetPlayer(Player* object)
 
 eEnemyType EnemyBase::GetEnemytype() const
 {
-	return this->enemy_type;
+	
 }

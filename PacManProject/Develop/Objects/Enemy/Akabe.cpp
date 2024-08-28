@@ -3,6 +3,7 @@
 #include "DxLib.h"
 
 Akabe::Akabe(class EnemyBase* e)
+	:EnemyTypeBase(e)
 {
 
 }
@@ -14,7 +15,7 @@ Akabe::~Akabe()
 
 void Akabe::Initialize()
 {	
-	enemy_type = eEnemyType::AKABE;
+
 }
 
 void Akabe::AttackMove(float delta_second, Player* playerdate)
