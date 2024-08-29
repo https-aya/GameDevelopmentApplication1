@@ -1,6 +1,12 @@
 #include "EnemyTypeBase.h"
 #include "../../Utility/ResourceManager.h" 
+#include "EnemyBase.h"
 #include "DxLib.h"
+
+EnemyTypeBase::EnemyTypeBase(class EnemyBase* e) : enemy(e)
+{
+
+}
 
 void EnemyTypeBase::Initialize()
 {
@@ -9,10 +15,25 @@ void EnemyTypeBase::Initialize()
 	eyeanimation = rm->GetImages("Resource/Images/eyes.png", 4, 4, 1, 32, 32);
 }
 
-void EnemyTypeBase::Update(float delta_second)
+void EnemyTypeBase::Update(float delta_second ,eEnemyState state)
 {
+	enemy_state = state;
 	Movement(delta_second);
 	AnimationControl(delta_second);
+}
+
+void EnemyTypeBase::Draw(const Vector2D& screen_offset) const
+{
+	if (enemy_state != eEnemyState::eESCAPE)
+	{
+		Vector2D graph_location = this->enemy->GetLocation() + screen_offset;
+		DrawRotaGraphF(graph_location.x, graph_location.y, 1.0, 0.0, eye_image, TRUE);
+	}
+	if (enemy_state != eEnemyState::eIZIKE)
+	{
+		Vector2D graph_location = this->enemy->GetLocation() + screen_offset;
+		DrawRotaGraphF(graph_location.x, graph_location.y, 1.0, 0.0, eye_image, TRUE);
+	}
 }
 
 void EnemyTypeBase::AnimationControl(float delta_second)
@@ -45,5 +66,27 @@ void EnemyTypeBase::AnimationControl(float delta_second)
 		{
 			image = animation[animation_num + animation_count];
 		}
+	}
+}
+
+void EnemyTypeBase::Movement(float delta_second)
+{
+	switch (enemy_state)
+	{
+	case eIDLE:
+		IdolMove(delta_second);
+		break;
+	case ePATROL:
+		PatorolMove(delta_second);
+		break;
+	case eATTACK:
+		AttackMove(delta_second, player);
+		break;
+	case eESCAPE:
+		EscapeMove(delta_second);
+		break;
+	case eIZIKE:
+		IzikeMove(delta_second);
+		break;
 	}
 }

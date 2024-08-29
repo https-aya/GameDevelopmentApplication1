@@ -50,7 +50,7 @@ void EnemyBase::Initialize()
 
 void EnemyBase::Update(float delta_second)
 {
-	enemy_type->Update(delta_second);
+	enemy_type->Update(delta_second,enemy_state);
 	x = location.x / D_OBJECT_SIZE;
 	y = location.y / D_OBJECT_SIZE;
 	if (player->GetPowerUp() == true && life == 0)
@@ -117,73 +117,73 @@ void EnemyBase::Finalize()
 
 }
 
-void EnemyBase::Movement(float delta_second)
-{
-	switch (enemy_state)
-	{
-	case eIDLE:
-		IdolMove(delta_second);
-		break;
-	case ePATROL:
-		PatorolMove(delta_second);
-		break;
-	case eATTACK:
-		AttackMove(delta_second, player);
-		break;
-	case eESCAPE:
-		EscapeMove(delta_second);
-		break;
-	case eIZIKE:
-		IzikeMove(delta_second);
-		break;
-	}
-	switch (now_direction)
-	{
-	case eEnemyDirectionState::UP:
-		velocity.y = -2.0f;
-		velocity.x = 0.0f;
-		break;
-	case eEnemyDirectionState::DOWN:
-		velocity.y = 2.0f;
-		velocity.x = 0.0f;
-		break;
-	case eEnemyDirectionState::LEFT:
-		velocity.x = -2.0f;
-		velocity.y = 0.0f;
-		break;
-	case eEnemyDirectionState::RIGHT:
-		velocity.x = 2.0f;
-		velocity.y = 0.0f;
-		break;
-	default:
-		velocity = 0.0f;
-		break;
-	}
-	// à⁄ìÆó  * ë¨Ç≥ * éûä‘ Ç≈à⁄ìÆêÊÇåàíËÇ∑ÇÈ
-	location += velocity * ENEMY_SPEED * delta_second;
-}
+//void EnemyBase::Movement(float delta_second)
+//{
+//	switch (enemy_state)
+//	{
+//	case eIDLE:
+//		IdolMove(delta_second);
+//		break;
+//	case ePATROL:
+//		PatorolMove(delta_second);
+//		break;
+//	case eATTACK:
+//		AttackMove(delta_second, player);
+//		break;
+//	case eESCAPE:
+//		EscapeMove(delta_second);
+//		break;
+//	case eIZIKE:
+//		IzikeMove(delta_second);
+//		break;
+//	}
+//	switch (now_direction)
+//	{
+//	case eEnemyDirectionState::UP:
+//		velocity.y = -2.0f;
+//		velocity.x = 0.0f;
+//		break;
+//	case eEnemyDirectionState::DOWN:
+//		velocity.y = 2.0f;
+//		velocity.x = 0.0f;
+//		break;
+//	case eEnemyDirectionState::LEFT:
+//		velocity.x = -2.0f;
+//		velocity.y = 0.0f;
+//		break;
+//	case eEnemyDirectionState::RIGHT:
+//		velocity.x = 2.0f;
+//		velocity.y = 0.0f;
+//		break;
+//	default:
+//		velocity = 0.0f;
+//		break;
+//	}
+//	// à⁄ìÆó  * ë¨Ç≥ * éûä‘ Ç≈à⁄ìÆêÊÇåàíËÇ∑ÇÈ
+//	location += velocity * ENEMY_SPEED * delta_second;
+//}
 
-void EnemyBase::IdolMove(float delta_second)
-{
-	std::map<eAdjacentDirection, ePanelID> ret = {
-		{ eAdjacentDirection::UP, ePanelID::NONE },
-		{ eAdjacentDirection::DOWN, ePanelID::NONE }
-	};
-	ret = StageData::GetAdjacentPanelData(this->location);
-
-	move_count += delta_second;
-	if (move_count >= (1.0f / 2.0f))
-	{
-		if (ret[eAdjacentDirection::UP] != WALL)
-		{
-			now_direction = eEnemyDirectionState::UP;
-		}
-		else if(ret[eAdjacentDirection::DOWN] != WALL)
-		{
-			now_direction = eEnemyDirectionState::DOWN;
-		}
-		move_count = 0;
-	}
+//void EnemyBase::IdolMove(float delta_second)
+//{
+//	std::map<eAdjacentDirection, ePanelID> ret = {
+//		{ eAdjacentDirection::UP, ePanelID::NONE },
+//		{ eAdjacentDirection::DOWN, ePanelID::NONE }
+//	};
+//	ret = StageData::GetAdjacentPanelData(this->location);
+//
+//	move_count += delta_second;
+//	if (move_count >= (1.0f / 2.0f))
+//	{
+//		if (ret[eAdjacentDirection::UP] != WALL)
+//		{
+//			now_direction = eEnemyDirectionState::UP;
+//		}
+//		else if(ret[eAdjacentDirection::DOWN] != WALL)
+//		{
+//			now_direction = eEnemyDirectionState::DOWN;
+//		}
+//		move_count = 0;
+//	}
 
 	//switch (enemy_type)
 	//{
@@ -211,158 +211,158 @@ void EnemyBase::IdolMove(float delta_second)
 	//default:
 	//	break;
 	//}
-}
+//}
 
-void EnemyBase::PatorolMove(float delta_second)
-{
-	Vector2D point = 0.0f;
-	/*switch (enemy_type)
-	{
-	case eEnemyType::AKABE:
-		point = Vector2D(510.0f, 120.0f);
-		break;
-	case eEnemyType::PINKY:
-		point = Vector2D(100.0f, 120.0f);
-		break;
-	case eEnemyType::AOSUKE:
-		point = Vector2D(100.0f, 900.0f);
-		break;
-	case eEnemyType::GUZUTA:
-		point = Vector2D(600.0f, 900.0f);
-		break;
-	}*/
-	
-	std::map<eAdjacentDirection, ePanelID> ret = {
-		{ eAdjacentDirection::UP, ePanelID::NONE },
-		{ eAdjacentDirection::DOWN, ePanelID::NONE },
-		{ eAdjacentDirection::LEFT, ePanelID::NONE },
-		{ eAdjacentDirection::RIGHT, ePanelID::NONE }
-	};
+//void EnemyBase::PatorolMove(float delta_second)
+//{
+//	Vector2D point = 0.0f;
+//	/*switch (enemy_type)
+//	{
+//	case eEnemyType::AKABE:
+//		point = Vector2D(510.0f, 120.0f);
+//		break;
+//	case eEnemyType::PINKY:
+//		point = Vector2D(100.0f, 120.0f);
+//		break;
+//	case eEnemyType::AOSUKE:
+//		point = Vector2D(100.0f, 900.0f);
+//		break;
+//	case eEnemyType::GUZUTA:
+//		point = Vector2D(600.0f, 900.0f);
+//		break;
+//	}*/
+//	
+//	std::map<eAdjacentDirection, ePanelID> ret = {
+//		{ eAdjacentDirection::UP, ePanelID::NONE },
+//		{ eAdjacentDirection::DOWN, ePanelID::NONE },
+//		{ eAdjacentDirection::LEFT, ePanelID::NONE },
+//		{ eAdjacentDirection::RIGHT, ePanelID::NONE }
+//	};
+//
+//	ret = StageData::GetAdjacentPanelData(this->location);
+//
+//	if (point.y < location.y)
+//	{
+//		if (ret[eAdjacentDirection::UP] != WALL)
+//		{
+//			now_direction = eEnemyDirectionState::UP;
+//		}
+//		else
+//		{
+//			if (point.x < location.x)
+//			{
+//				now_direction = eEnemyDirectionState::LEFT;
+//			}
+//			else
+//			{
+//				now_direction = eEnemyDirectionState::RIGHT;
+//			}
+//		}
+//	}
+//	else
+//	{
+//		now_direction = eEnemyDirectionState::DOWN;
+//	}
+//}
 
-	ret = StageData::GetAdjacentPanelData(this->location);
+//void EnemyBase::IzikeMove(float delta_second)
+//{
+//
+//}
+//
+//void EnemyBase::EscapeMove(float delta_second)
+//{
+//
+//}
 
-	if (point.y < location.y)
-	{
-		if (ret[eAdjacentDirection::UP] != WALL)
-		{
-			now_direction = eEnemyDirectionState::UP;
-		}
-		else
-		{
-			if (point.x < location.x)
-			{
-				now_direction = eEnemyDirectionState::LEFT;
-			}
-			else
-			{
-				now_direction = eEnemyDirectionState::RIGHT;
-			}
-		}
-	}
-	else
-	{
-		now_direction = eEnemyDirectionState::DOWN;
-	}
-}
+//void EnemyBase::EscMonsterRoom(float delta_second)
+//{
+//	std::vector<std::vector<ePanelID>> data;
+//
+//	data = StageData::GetAll();
+//	int px,py;
+//	int gx, gy;
+//
+//	for (py = 0 ;py < 31; py++)
+//	{
+//		for (px = 0; px < 28; px++)
+//		{
+//			if (data[py][px] == ePanelID::GATE)
+//			{
+//				gx = px;
+//				gy = py;
+//			}
+//		}
+//	}
+//
+//	ePanelID ret;
+//	ret = StageData::GetPanelData(this->location);
+//	switch (ret)
+//	{
+//	case WALL:
+//		j = 'W';
+//		break;
+//	case BRANCH:
+//		j = 'B';
+//		break;
+//	case GATE:
+//		j = 'G';
+//		break;
+//	case NONE:
+//		j = 'N';
+//		break;
+//	default:
+//		j = 'D';
+//		break;
+//	}
+//	hx = gx;
+//	hy = gy;
+//
+//	float gloc_x = (gx + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
+//	float gloc_y = (gy + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
+//
+//
+//	mobility = eMobilityType::Stationary;
+//	if (gloc_x + 1.0f > location.x && gloc_x - 1.0f < location.x)
+//	{	
+//		this->now_direction = eEnemyDirectionState::UP;
+//
+//	}
+//	else if(gloc_y != location.y)
+//	{
+//		if (gloc_x < location.x)
+//		{
+//			this->now_direction = eEnemyDirectionState::LEFT;
+//		}
+//		else
+//		{
+//			this->now_direction = eEnemyDirectionState::RIGHT;
+//		}		
+//	}
+//	if (ret == GATE)
+//	{
+//		mobility = eMobilityType::Movable;
+//		ChangeEnemyState(eATTACK);
+//	}
+//}
 
-void EnemyBase::IzikeMove(float delta_second)
-{
-
-}
-
-void EnemyBase::EscapeMove(float delta_second)
-{
-
-}
-
-void EnemyBase::EscMonsterRoom(float delta_second)
-{
-	std::vector<std::vector<ePanelID>> data;
-
-	data = StageData::GetAll();
-	int px,py;
-	int gx, gy;
-
-	for (py = 0 ;py < 31; py++)
-	{
-		for (px = 0; px < 28; px++)
-		{
-			if (data[py][px] == ePanelID::GATE)
-			{
-				gx = px;
-				gy = py;
-			}
-		}
-	}
-
-	ePanelID ret;
-	ret = StageData::GetPanelData(this->location);
-	switch (ret)
-	{
-	case WALL:
-		j = 'W';
-		break;
-	case BRANCH:
-		j = 'B';
-		break;
-	case GATE:
-		j = 'G';
-		break;
-	case NONE:
-		j = 'N';
-		break;
-	default:
-		j = 'D';
-		break;
-	}
-	hx = gx;
-	hy = gy;
-
-	float gloc_x = (gx + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
-	float gloc_y = (gy + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
-
-
-	mobility = eMobilityType::Stationary;
-	if (gloc_x + 1.0f > location.x && gloc_x - 1.0f < location.x)
-	{	
-		this->now_direction = eEnemyDirectionState::UP;
-
-	}
-	else if(gloc_y != location.y)
-	{
-		if (gloc_x < location.x)
-		{
-			this->now_direction = eEnemyDirectionState::LEFT;
-		}
-		else
-		{
-			this->now_direction = eEnemyDirectionState::RIGHT;
-		}		
-	}
-	if (ret == GATE)
-	{
-		mobility = eMobilityType::Movable;
-		ChangeEnemyState(eATTACK);
-	}
-}
-
-void EnemyBase::AttackMove(float delta_second, Player* playerdate)
-{
-	//enemy->AttackMove(delta_second,playerdate);
-
-	std::map<eAdjacentDirection, ePanelID> ret = {
-		{ eAdjacentDirection::UP, ePanelID::NONE },
-		{ eAdjacentDirection::DOWN, ePanelID::NONE },
-		{ eAdjacentDirection::LEFT, ePanelID::NONE },
-		{ eAdjacentDirection::RIGHT, ePanelID::NONE }
-	};
-
-	ret = StageData::GetAdjacentPanelData(this->location);
-
-	
-	Vector2D diff = player->GetLocation() - this->location;
-
-}
+//void EnemyBase::AttackMove(float delta_second, Player* playerdate)
+//{
+//	//enemy->AttackMove(delta_second,playerdate);
+//
+//	std::map<eAdjacentDirection, ePanelID> ret = {
+//		{ eAdjacentDirection::UP, ePanelID::NONE },
+//		{ eAdjacentDirection::DOWN, ePanelID::NONE },
+//		{ eAdjacentDirection::LEFT, ePanelID::NONE },
+//		{ eAdjacentDirection::RIGHT, ePanelID::NONE }
+//	};
+//
+//	ret = StageData::GetAdjacentPanelData(this->location);
+//
+//	
+//	Vector2D diff = player->GetLocation() - this->location;
+//
+//}
 
 void EnemyBase::OnHitCollision(GameObjectBase* hit_object)
 {

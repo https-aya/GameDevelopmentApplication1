@@ -38,17 +38,8 @@ private:
 	int life;
 
 public:
-	EnemyTypeBase(class EnemyBase* e) : 
-		enemy(e)
-		, animation()
-		, eyeanimation()
-		, enemy_state()
-		, hold_state()
-		, now_direction()
-		, eye_image()
-	{
-	
-	}
+	EnemyTypeBase(class EnemyBase* e);
+
 	virtual ~EnemyTypeBase() = default;
 
 public:
@@ -56,7 +47,7 @@ public:
 	virtual void Initialize();
 
 	//XVˆ—
-	virtual void Update(float delta_second );
+	virtual void Update(float delta_second ,eEnemyState state);
 
 	//•`‰æˆ—
 	virtual void Draw(const Vector2D& screen_offset) const;
