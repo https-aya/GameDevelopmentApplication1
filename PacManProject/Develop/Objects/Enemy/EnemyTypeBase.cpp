@@ -4,6 +4,9 @@
 #include "DxLib.h"
 
 EnemyTypeBase::EnemyTypeBase(class EnemyBase* e) : enemy(e)
+, animation()
+, eyeanimation()
+, image()
 {
 
 }
@@ -15,25 +18,48 @@ void EnemyTypeBase::Initialize()
 	eyeanimation = rm->GetImages("Resource/Images/eyes.png", 4, 4, 1, 32, 32);
 }
 
-void EnemyTypeBase::Update(float delta_second ,eEnemyState state)
+void EnemyTypeBase::Update(float delta_second ,eEnemyState state, class EnemyBase* e)
 {
+	enemy = e;
+	player = enemy->GetPlayer();
 	enemy_state = state;
 	Movement(delta_second);
 	AnimationControl(delta_second);
+	if (enemy_state == eEnemyState::eIZIKE)
+	{
+		izike_time += delta_second;
+		if (izike_time >= 7.0f && flash_count == 0)
+		{
+			flash_count = 1;
+		}
+		if (izike_time >= 8.0f)
+		{
+			player->SetPowerDown();
+			izike_time = 0.0f;
+			flash_count = 0;
+			enemy->SetLife(2);
+		}
+	}
 }
 
 void EnemyTypeBase::Draw(const Vector2D& screen_offset) const
 {
 	if (enemy_state != eEnemyState::eESCAPE)
 	{
-		Vector2D graph_location = this->enemy->GetLocation() + screen_offset;
-		DrawRotaGraphF(graph_location.x, graph_location.y, 1.0, 0.0, eye_image, TRUE);
+		Vector2D graph_location = enemy->GetLocation() + screen_offset;
+		DrawRotaGraphF(graph_location.x, graph_location.y, 1.0, 0.0, image, TRUE);
 	}
 	if (enemy_state != eEnemyState::eIZIKE)
 	{
-		Vector2D graph_location = this->enemy->GetLocation() + screen_offset;
+		Vector2D graph_location = enemy->GetLocation() + screen_offset;
 		DrawRotaGraphF(graph_location.x, graph_location.y, 1.0, 0.0, eye_image, TRUE);
 	}
+}
+
+void EnemyTypeBase::Finalize()
+{
+	animation.clear();
+	eyeanimation.clear();
 }
 
 void EnemyTypeBase::AnimationControl(float delta_second)
@@ -67,6 +93,21 @@ void EnemyTypeBase::AnimationControl(float delta_second)
 			image = animation[animation_num + animation_count];
 		}
 	}
+	switch (now_direction)
+	{
+	case eEnemyDirectionState::UP:
+		eye_image = eyeanimation[0];
+		break;
+	case eEnemyDirectionState::RIGHT:
+		eye_image = eyeanimation[1];
+		break;
+	case eEnemyDirectionState::DOWN:
+		eye_image = eyeanimation[2];
+		break;
+	case eEnemyDirectionState::LEFT:
+		eye_image = eyeanimation[3];
+		break;
+	}
 }
 
 void EnemyTypeBase::Movement(float delta_second)
@@ -89,4 +130,183 @@ void EnemyTypeBase::Movement(float delta_second)
 		IzikeMove(delta_second);
 		break;
 	}
+		switch (now_direction)
+	{
+	case eEnemyDirectionState::UP:
+		velocity.y = -2.0f;
+		velocity.x = 0.0f;
+		break;
+	case eEnemyDirectionState::DOWN:
+		velocity.y = 2.0f;
+		velocity.x = 0.0f;
+		break;
+	case eEnemyDirectionState::LEFT:
+		velocity.x = -2.0f;
+		velocity.y = 0.0f;
+		break;
+	case eEnemyDirectionState::RIGHT:
+		velocity.x = 2.0f;
+		velocity.y = 0.0f;
+		break;
+	default:
+		velocity = 0.0f;
+		break;
+	}
+	// ˆÚ“®—Ê * ‘¬‚³ * ŽžŠÔ ‚ÅˆÚ“®æ‚ðŒˆ’è‚·‚é
+	enemy->SetVelocity(Vector2D(velocity));
+}
+
+void EnemyTypeBase::IdolMove(float delta_second)
+{
+	ret = StageData::GetAdjacentPanelData(enemy->GetLocation());
+		
+	move_count += delta_second;
+	if (move_count >= (1.0f / 2.0f))
+	{
+		if (ret[eAdjacentDirection::UP] != WALL)
+		{
+			now_direction = eEnemyDirectionState::UP;
+		}
+		else if (ret[eAdjacentDirection::DOWN] != WALL)
+		{
+			now_direction = eEnemyDirectionState::DOWN;
+		}
+		move_count = 0;
+	}
+}
+
+void EnemyTypeBase::PatorolMove(float delta_second)
+{
+	ret = StageData::GetAdjacentPanelData(enemy->GetLocation());
+	ePanelID panel = StageData::GetPanelData(enemy->GetLocation());
+
+	if (panel == ePanelID::BRANCH)
+	{
+		if (ret[eAdjacentDirection::UP] != ePanelID::WALL)
+		{
+			now_direction == eEnemyDirectionState::UP;
+		}	
+		else if (ret[eAdjacentDirection::RIGHT] != ePanelID::WALL)
+		{
+			now_direction == eEnemyDirectionState::RIGHT;
+		}
+		else if (ret[eAdjacentDirection::DOWN] != ePanelID::WALL)
+		{
+			now_direction == eEnemyDirectionState::DOWN;
+		}
+
+		else if (ret[eAdjacentDirection::LEFT] != ePanelID::WALL)
+		{
+			now_direction == eEnemyDirectionState::LEFT;
+		}
+	}
+}
+
+void EnemyTypeBase::IzikeMove(float delta_second)
+{
+
+}
+
+void EnemyTypeBase::EscapeMove(float delta_second)
+{
+	std::vector<std::vector<ePanelID>> data;
+
+	data = StageData::GetAll();
+	int px, py;
+	int gx, gy;
+
+	for (py = 0; py < 31; py++)
+	{
+		for (px = 0; px < 28; px++)
+		{
+			if (data[py][px] == ePanelID::GATE)
+			{
+				gx = px;
+				gy = py;
+			}
+		}
+	}
+
+	ePanelID panel;
+	panel = StageData::GetPanelData(enemy->GetLocation());
+
+	float gloc_x = (gx + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
+	float gloc_y = (gy + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
+
+
+	enemy->SetMobility(eMobilityType::Stationary);
+	if (gloc_x + 1.0f > enemy->GetLocation().x && gloc_x - 1.0f < enemy->GetLocation().x)
+	{
+		this->now_direction = eEnemyDirectionState::UP;
+	}
+	else if (gloc_y != enemy->GetLocation().y)
+	{
+		if (gloc_x < enemy->GetLocation().x)
+		{
+			this->now_direction = eEnemyDirectionState::LEFT;
+		}
+		else
+		{
+			this->now_direction = eEnemyDirectionState::RIGHT;
+		}
+	}
+	if (panel == GATE)
+	{
+		enemy->SetLife(2);
+	}
+}
+
+void EnemyTypeBase::EscMonsterRoom(float delta_second)
+{
+	std::vector<std::vector<ePanelID>> data;
+
+	data = StageData::GetAll();
+	int px,py;
+	int gx, gy;
+
+	for (py = 0 ;py < 31; py++)
+	{
+		for (px = 0; px < 28; px++)
+		{
+			if (data[py][px] == ePanelID::GATE)
+			{
+				gx = px;
+				gy = py;
+			}
+		}
+	}
+
+	ePanelID ret;
+	ret = StageData::GetPanelData(enemy->GetLocation());
+
+	float gloc_x = (gx + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
+	float gloc_y = (gy + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
+
+
+	enemy->SetMobility(eMobilityType::Stationary);
+	if (gloc_x + 1.0f > enemy->GetLocation().x && gloc_x - 1.0f < enemy->GetLocation().x)
+	{	
+		this->now_direction = eEnemyDirectionState::UP;
+	}
+	else if(gloc_y != enemy->GetLocation().y)
+	{
+		if (gloc_x < enemy->GetLocation().x)
+		{
+			this->now_direction = eEnemyDirectionState::LEFT;
+		}
+		else
+		{
+			this->now_direction = eEnemyDirectionState::RIGHT;
+		}		
+	}
+	if (ret == GATE)
+	{
+		enemy->SetMobility(eMobilityType::Movable);
+		enemy->ChangeEnemyState(eATTACK);
+	}
+}
+
+void EnemyTypeBase::AttackMove(float delta_second, Player* playerdate)
+{
+
 }

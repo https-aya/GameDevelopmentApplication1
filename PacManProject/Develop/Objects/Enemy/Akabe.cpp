@@ -17,12 +17,10 @@ Akabe::~Akabe()
 void Akabe::Initialize()
 {	
 	__super::Initialize();
-	image = animation[0];
-}
-
-void Akabe::Draw(const Vector2D& screen_offset) const
-{
-	__super::Draw(screen_offset);
+	animation_num = 0;
+	image = animation[animation_num];
+	eye_image = eyeanimation[0];
+	now_direction = eEnemyDirectionState::RIGHT;
 }
 
 void Akabe::AttackMove(float delta_second, Player* playerdate)

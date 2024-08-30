@@ -6,21 +6,14 @@
 #define ENEMY_SPEED (45.0f)
 
 EnemyBase::EnemyBase()
-	: animation()
-	, eyeanimation()
-	, velocity(0.0f)
+	:velocity(0.0f)
 	, enemy_type()
 	, enemy_state()
 	, hold_state()
-	, now_direction()
-	, eye_image()
 	, world_time(0.0f)
 	, flash_count(0)
 	, izike_time(0.0f)
 	, player(nullptr)
-	, animation_time(0.0f)
-	, animation_count()
-	, animation_num()
 	, move_count(0.0f)
 	, life()
 {
@@ -32,10 +25,6 @@ EnemyBase::~EnemyBase()
 
 void EnemyBase::Initialize()
 {
-
-	ResourceManager* rm = ResourceManager::GetInstance();
-	animation = rm->GetImages("Resource/Images/monster.png", 20, 20, 1, 32, 32);
-	eyeanimation = rm->GetImages("Resource/Images/eyes.png", 4, 4, 1, 32, 32);
 
 	// ìñÇΩÇËîªíËÇÃê›íË
 	collision.is_blocking = true;
@@ -50,168 +39,32 @@ void EnemyBase::Initialize()
 
 void EnemyBase::Update(float delta_second)
 {
-	enemy_type->Update(delta_second,enemy_state);
-	x = location.x / D_OBJECT_SIZE;
-	y = location.y / D_OBJECT_SIZE;
 	if (player->GetPowerUp() == true && life == 0)
 	{
-		if (izike_time <= 0.0f)
+		if (enemy_state!=eEnemyState::eIZIKE)
 		{
 			hold_state = enemy_state;
 		}
 		enemy_state = eEnemyState::eIZIKE;
-		izike_time += delta_second;
-		if (izike_time >= 7.0f && flash_count == 0)
-		{
-			flash_count = 1;
-		}
-		if (izike_time >= 8.0f)
-		{
-			player->SetPowerDown();
-			izike_time = 0.0f;
-			flash_count = 0;
-			life = 0;
-		}
-		
 	}
-	else
+	else if(life == 2)
 	{
 		enemy_state = hold_state;
+		life = 0;
 	}
-	switch (now_direction)
-	{
-	case eEnemyDirectionState::UP:
-		eye_image = eyeanimation[0];
-		break;
-	case eEnemyDirectionState::RIGHT:
-		eye_image = eyeanimation[1];
-		break;
-	case eEnemyDirectionState::DOWN:
-		eye_image = eyeanimation[2];
-		break;
-	case eEnemyDirectionState::LEFT:
-		eye_image = eyeanimation[3];
-		break;
-	}
+	enemy_type->Update(delta_second,enemy_state,(this));
+	location += velocity * ENEMY_SPEED * delta_second;
 }
 
 void EnemyBase::Draw(const Vector2D& screen_offset) const
 {
-	if (enemy_state != eEnemyState::eESCAPE)
-	{
-		__super::Draw(screen_offset);
-	}
-	if (enemy_state != eEnemyState::eIZIKE)
-	{
-		Vector2D graph_location = this->location + screen_offset;
-		DrawRotaGraphF(graph_location.x, graph_location.y, 1.0, 0.0, eye_image, TRUE);
-	}
-
-	ePanelID i = StageData::GetPanelData(Vector2D(hx, hy));
-
 	enemy_type->Draw(screen_offset);
 }
 
 void EnemyBase::Finalize()
 {
-
+	enemy_type->Finalize();
 }
-
-//void EnemyBase::Movement(float delta_second)
-//{
-//	switch (enemy_state)
-//	{
-//	case eIDLE:
-//		IdolMove(delta_second);
-//		break;
-//	case ePATROL:
-//		PatorolMove(delta_second);
-//		break;
-//	case eATTACK:
-//		AttackMove(delta_second, player);
-//		break;
-//	case eESCAPE:
-//		EscapeMove(delta_second);
-//		break;
-//	case eIZIKE:
-//		IzikeMove(delta_second);
-//		break;
-//	}
-//	switch (now_direction)
-//	{
-//	case eEnemyDirectionState::UP:
-//		velocity.y = -2.0f;
-//		velocity.x = 0.0f;
-//		break;
-//	case eEnemyDirectionState::DOWN:
-//		velocity.y = 2.0f;
-//		velocity.x = 0.0f;
-//		break;
-//	case eEnemyDirectionState::LEFT:
-//		velocity.x = -2.0f;
-//		velocity.y = 0.0f;
-//		break;
-//	case eEnemyDirectionState::RIGHT:
-//		velocity.x = 2.0f;
-//		velocity.y = 0.0f;
-//		break;
-//	default:
-//		velocity = 0.0f;
-//		break;
-//	}
-//	// à⁄ìÆó  * ë¨Ç≥ * éûä‘ Ç≈à⁄ìÆêÊÇåàíËÇ∑ÇÈ
-//	location += velocity * ENEMY_SPEED * delta_second;
-//}
-
-//void EnemyBase::IdolMove(float delta_second)
-//{
-//	std::map<eAdjacentDirection, ePanelID> ret = {
-//		{ eAdjacentDirection::UP, ePanelID::NONE },
-//		{ eAdjacentDirection::DOWN, ePanelID::NONE }
-//	};
-//	ret = StageData::GetAdjacentPanelData(this->location);
-//
-//	move_count += delta_second;
-//	if (move_count >= (1.0f / 2.0f))
-//	{
-//		if (ret[eAdjacentDirection::UP] != WALL)
-//		{
-//			now_direction = eEnemyDirectionState::UP;
-//		}
-//		else if(ret[eAdjacentDirection::DOWN] != WALL)
-//		{
-//			now_direction = eEnemyDirectionState::DOWN;
-//		}
-//		move_count = 0;
-//	}
-
-	//switch (enemy_type)
-	//{
-	//case AKABE:
-	//	ChangeEnemyState(eATTACK);
-	//	break;
-	//case PINKY:
-	//	if (player->GetFoodCount() >= 5)
-	//	{
-	//		EscMonsterRoom(delta_second);
-	//	}
-	//	break;
-	//case AOSUKE:
-	//	if (player->GetFoodCount() >= 30)
-	//	{
-	//		EscMonsterRoom(delta_second);
-	//	}
-	//	break;
-	//case GUZUTA:
-	//	if (player->GetFoodCount() >= 55)
-	//	{
-	//		EscMonsterRoom(delta_second);
-	//	}
-	//	break;
-	//default:
-	//	break;
-	//}
-//}
 
 //void EnemyBase::PatorolMove(float delta_second)
 //{
@@ -262,87 +115,6 @@ void EnemyBase::Finalize()
 //	else
 //	{
 //		now_direction = eEnemyDirectionState::DOWN;
-//	}
-//}
-
-//void EnemyBase::IzikeMove(float delta_second)
-//{
-//
-//}
-//
-//void EnemyBase::EscapeMove(float delta_second)
-//{
-//
-//}
-
-//void EnemyBase::EscMonsterRoom(float delta_second)
-//{
-//	std::vector<std::vector<ePanelID>> data;
-//
-//	data = StageData::GetAll();
-//	int px,py;
-//	int gx, gy;
-//
-//	for (py = 0 ;py < 31; py++)
-//	{
-//		for (px = 0; px < 28; px++)
-//		{
-//			if (data[py][px] == ePanelID::GATE)
-//			{
-//				gx = px;
-//				gy = py;
-//			}
-//		}
-//	}
-//
-//	ePanelID ret;
-//	ret = StageData::GetPanelData(this->location);
-//	switch (ret)
-//	{
-//	case WALL:
-//		j = 'W';
-//		break;
-//	case BRANCH:
-//		j = 'B';
-//		break;
-//	case GATE:
-//		j = 'G';
-//		break;
-//	case NONE:
-//		j = 'N';
-//		break;
-//	default:
-//		j = 'D';
-//		break;
-//	}
-//	hx = gx;
-//	hy = gy;
-//
-//	float gloc_x = (gx + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
-//	float gloc_y = (gy + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
-//
-//
-//	mobility = eMobilityType::Stationary;
-//	if (gloc_x + 1.0f > location.x && gloc_x - 1.0f < location.x)
-//	{	
-//		this->now_direction = eEnemyDirectionState::UP;
-//
-//	}
-//	else if(gloc_y != location.y)
-//	{
-//		if (gloc_x < location.x)
-//		{
-//			this->now_direction = eEnemyDirectionState::LEFT;
-//		}
-//		else
-//		{
-//			this->now_direction = eEnemyDirectionState::RIGHT;
-//		}		
-//	}
-//	if (ret == GATE)
-//	{
-//		mobility = eMobilityType::Movable;
-//		ChangeEnemyState(eATTACK);
 //	}
 //}
 
@@ -415,30 +187,26 @@ void EnemyBase::SetEnemytype(int count)
 	switch (count)
 	{
 	case 0:
-		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::AKABE);
-		now_direction = eEnemyDirectionState::LEFT;
-		animation_num = 0;
+		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::AKABE);	
+		hold_state = eEnemyState::ePATROL;
 		break;
 	case 1:
 		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::AOSUKE);
-		now_direction = eEnemyDirectionState::UP;
-		animation_num = 4;
+		hold_state = eEnemyState::eIDLE;
 		break;
 	case 2:
 		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::GUZUTA);
-		now_direction = eEnemyDirectionState::UP;
-		animation_num = 6;
+		hold_state = eEnemyState::eIDLE;
 		break;
 	case 3:
 		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::PINKY);
-		now_direction = eEnemyDirectionState::DOWN;
-		animation_num = 2;
+		hold_state = eEnemyState::eIDLE;
 		break;
 	default:
 		break;
 	}
-	image = animation[animation_num];
-	hold_state = eEnemyState::eIDLE;
+
+
 }
 
 void EnemyBase::SetPlayer(Player* object)
@@ -446,7 +214,22 @@ void EnemyBase::SetPlayer(Player* object)
 	this->player = object;
 }
 
-eEnemyType EnemyBase::GetEnemytype() const
+Player* EnemyBase::GetPlayer()
 {
-	
+	return player;
+}
+
+void EnemyBase::SetVelocity(Vector2D velocity)
+{
+	this->velocity = velocity;
+}
+
+void EnemyBase::SetMobility(eMobilityType mobility)
+{
+	this->mobility = mobility;
+}
+
+void EnemyBase::SetLife(int num)
+{
+	life = num;
 }

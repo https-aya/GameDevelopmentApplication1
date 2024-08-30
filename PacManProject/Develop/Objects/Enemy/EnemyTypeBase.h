@@ -6,7 +6,7 @@
 
 class EnemyTypeBase
 {
-private:
+protected:
 	enum eEnemyDirectionState : unsigned char
 	{
 		UP,
@@ -25,7 +25,15 @@ protected:
 	eEnemyState hold_state;
 	eEnemyDirectionState now_direction;
 	class Player* player;
+	Vector2D velocity;
 	int eye_image;
+	int animation_num;
+	std::map<eAdjacentDirection, ePanelID> ret = {
+				{ eAdjacentDirection::UP, ePanelID::NONE },
+				{ eAdjacentDirection::DOWN, ePanelID::NONE },
+				{ eAdjacentDirection::LEFT, ePanelID::NONE },
+				{ eAdjacentDirection::RIGHT, ePanelID::NONE }
+			};
 
 private:
 	float world_time;
@@ -33,12 +41,12 @@ private:
 	float izike_time;
 	float animation_time;
 	int animation_count;
-	int animation_num;
 	float move_count;
 	int life;
 
 public:
 	EnemyTypeBase(class EnemyBase* e);
+
 
 	virtual ~EnemyTypeBase() = default;
 
@@ -47,7 +55,7 @@ public:
 	virtual void Initialize();
 
 	//XVˆ—
-	virtual void Update(float delta_second ,eEnemyState state);
+	virtual void Update(float delta_second ,eEnemyState state ,class EnemyBase* e);
 
 	//•`‰æˆ—
 	virtual void Draw(const Vector2D& screen_offset) const;
@@ -55,7 +63,7 @@ public:
 	//I—¹ˆ—ŠÖ”
 	virtual void Finalize();
 
-private:
+protected:
 	virtual void AnimationControl(float delta_second);
 	virtual void Movement(float delta_second);
 	virtual void IdolMove(float delta_second);

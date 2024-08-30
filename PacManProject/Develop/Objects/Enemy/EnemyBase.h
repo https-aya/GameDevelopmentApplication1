@@ -2,6 +2,8 @@
 
 #include "../GameObject.h"
 #include "../Player/Player.h"
+#include "Enum/EnemyState.h"
+#include "Enum/EnemyType.h"
 
 
 
@@ -18,30 +20,17 @@ enum eEnemyDirectionState : unsigned char
 		LEFT,
 	};
 
-protected:
-	std::vector<int> animation;
-	std::vector<int> eyeanimation;
-
-	Vector2D velocity;
+private:
 	class EnemyTypeBase* enemy_type;
 	eEnemyState enemy_state;
 	eEnemyState hold_state;
-	eEnemyDirectionState now_direction;
+	Vector2D velocity;
 	class Player* player;
-	int eye_image;
-	int x;
-	int y;
-	int hx;
-	int hy;
-	char j;
 
 private:
 	float world_time;
 	int flash_count;
 	float izike_time;
-	float animation_time;
-	int animation_count;
-	int animation_num;
 	float move_count;
 	int life;
 
@@ -61,5 +50,8 @@ public:
 	void ChangeEnemyState(eEnemyState state);
 	void SetEnemytype(int);
 	void SetPlayer(Player* object);
-	eEnemyType GetEnemytype() const;
+	Player* GetPlayer();
+	void SetVelocity(Vector2D velocity);
+	void SetMobility(eMobilityType mobility);
+	void SetLife(int num);
 };
