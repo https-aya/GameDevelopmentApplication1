@@ -41,6 +41,7 @@ private:
 	ePanelID old_panel;						// 前回パネル情報
 	bool is_power_up;						// パワー餌を食べたか？
 	bool is_destroy;						// 死んだ状態になったか？
+	class EnemyBase* enemy;
 
 	// 移動アニメーションの順番
 	const int animation_num[4] = { 0, 1, 2, 1, };
@@ -89,6 +90,8 @@ public:
 	/// </summary>
 	/// <returns>プレイヤーの状態</returns>
 	bool GetDestroy() const;
+
+	void SetEnemy(class EnemyBase* e);
 
 
 private:

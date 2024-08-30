@@ -3,6 +3,7 @@
 #include "../../Utility/ResourceManager.h"
 #include "DxLib.h"
 #include "../Food/Food.h"
+#include "../Enemy/EnemyBase.h"
 
 #define D_PLAYER_SPEED	(50.0f)
 
@@ -18,7 +19,8 @@ Player::Player() :
 	animation_count(0),
 	old_panel(ePanelID::NONE),
 	is_power_up(false),
-	is_destroy(false)
+	is_destroy(false),
+	enemy()
 {
 
 }
@@ -146,7 +148,7 @@ void Player::OnHitCollision(GameObjectBase* hit_object)
 	// 当たったオブジェクトが敵だったら
 	if(hit_object->GetCollision().object_type == eObjectType::enemy)
 	{
-		if (is_power_up != true)
+		if (is_power_up != true && enemy->GetEnemyState() != eEnemyState::eESCAPE)
 		{
 			player_state = ePlayerState::DIE;
 		}
@@ -191,6 +193,11 @@ void Player::SetPowerDown()
 bool Player::GetDestroy() const
 {
 	return is_destroy;
+}
+
+void Player::SetEnemy(class EnemyBase* e)
+{
+	enemy = e;
 }
 
 /// <summary>
