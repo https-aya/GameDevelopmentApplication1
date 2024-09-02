@@ -3,6 +3,7 @@
 #include "Enum/EnemyState.h"
 #include "../../Utility/Vector2D.h"
 #include "../Player/Player.h"
+#include "EnemyBase.h"
 
 class EnemyTypeBase
 {
@@ -34,6 +35,8 @@ protected:
 				{ eAdjacentDirection::LEFT, ePanelID::NONE },
 				{ eAdjacentDirection::RIGHT, ePanelID::NONE }
 			};
+	ePanelID panel;
+	float move_count;
 
 private:
 	float world_time;
@@ -41,7 +44,6 @@ private:
 	float izike_time;
 	float animation_time;
 	int animation_count;
-	float move_count;
 	int life;
 
 public:
@@ -55,7 +57,7 @@ public:
 	virtual void Initialize();
 
 	//XVˆ—
-	virtual void Update(float delta_second ,eEnemyState state ,class EnemyBase* e);
+	virtual void Update(float delta_second ,class EnemyBase* e);
 
 	//•`‰æˆ—
 	virtual void Draw(const Vector2D& screen_offset) const;

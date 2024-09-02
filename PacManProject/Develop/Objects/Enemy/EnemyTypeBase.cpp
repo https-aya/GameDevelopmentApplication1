@@ -1,6 +1,5 @@
 #include "EnemyTypeBase.h"
 #include "../../Utility/ResourceManager.h" 
-#include "EnemyBase.h"
 #include "DxLib.h"
 
 EnemyTypeBase::EnemyTypeBase(class EnemyBase* e) : enemy(e)
@@ -16,13 +15,14 @@ void EnemyTypeBase::Initialize()
 	ResourceManager* rm = ResourceManager::GetInstance();
 	animation = rm->GetImages("Resource/Images/monster.png", 20, 20, 1, 32, 32);
 	eyeanimation = rm->GetImages("Resource/Images/eyes.png", 4, 4, 1, 32, 32);
+	enemy_state = enemy->GetEnemyState();
 }
 
-void EnemyTypeBase::Update(float delta_second ,eEnemyState state, class EnemyBase* e)
+void EnemyTypeBase::Update(float delta_second , class EnemyBase* e)
 {
 	enemy = e;
 	player = enemy->GetPlayer();
-	enemy_state = state;
+	enemy_state = enemy->GetEnemyState();
 	Movement(delta_second);
 	AnimationControl(delta_second);
 	if (enemy_state == eEnemyState::eIZIKE)
@@ -178,32 +178,14 @@ void EnemyTypeBase::IdolMove(float delta_second)
 void EnemyTypeBase::PatorolMove(float delta_second)
 {
 	ret = StageData::GetAdjacentPanelData(enemy->GetLocation());
-	ePanelID panel = StageData::GetPanelData(enemy->GetLocation());
-
-	if (panel == ePanelID::BRANCH)
-	{
-		if (ret[eAdjacentDirection::UP] != ePanelID::WALL)
-		{
-			now_direction == eEnemyDirectionState::UP;
-		}	
-		else if (ret[eAdjacentDirection::RIGHT] != ePanelID::WALL)
-		{
-			now_direction == eEnemyDirectionState::RIGHT;
-		}
-		else if (ret[eAdjacentDirection::DOWN] != ePanelID::WALL)
-		{
-			now_direction == eEnemyDirectionState::DOWN;
-		}
-
-		else if (ret[eAdjacentDirection::LEFT] != ePanelID::WALL)
-		{
-			now_direction == eEnemyDirectionState::LEFT;
-		}
-	}
+	panel = StageData::GetPanelData(enemy->GetLocation());
 }
 
 void EnemyTypeBase::IzikeMove(float delta_second)
 {
+	ret = StageData::GetAdjacentPanelData(enemy->GetLocation());
+	ePanelID panel = StageData::GetPanelData(enemy->GetLocation());
+
 
 }
 
@@ -302,7 +284,8 @@ void EnemyTypeBase::EscMonsterRoom(float delta_second)
 	if (ret == GATE)
 	{
 		enemy->SetMobility(eMobilityType::Movable);
-		enemy->ChangeEnemyState(eATTACK);
+		enemy->ChangeEnemyState(ePATROL);
+		this->now_direction = eEnemyDirectionState::LEFT;
 	}
 }
 

@@ -31,7 +31,6 @@ private:
 	float world_time;
 	int flash_count;
 	float izike_time;
-	float move_count;
 	int life;
 
 public:	
@@ -48,7 +47,7 @@ public:
 	virtual void OnHitCollision(GameObjectBase* hit_object) override;
 	eEnemyState GetEnemyState();
 	void ChangeEnemyState(eEnemyState state);
-	void SetEnemytype(int);
+	void SetEnemytype();
 	void SetPlayer(Player* object);
 	Player* GetPlayer();
 	void SetVelocity(Vector2D velocity);

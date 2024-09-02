@@ -14,7 +14,6 @@ EnemyBase::EnemyBase()
 	, flash_count(0)
 	, izike_time(0.0f)
 	, player(nullptr)
-	, move_count(0.0f)
 	, life()
 {
 }
@@ -47,12 +46,12 @@ void EnemyBase::Update(float delta_second)
 		}
 		enemy_state = eEnemyState::eIZIKE;
 	}
-	else if(life == 2)
+	else if(life == 2 || life == 0)
 	{
 		enemy_state = hold_state;
 		life = 0;
 	}
-	enemy_type->Update(delta_second,enemy_state,(this));
+	enemy_type->Update(delta_second,(this));
 	location += velocity * ENEMY_SPEED * delta_second;
 }
 
@@ -187,31 +186,32 @@ void EnemyBase::ChangeEnemyState(eEnemyState state)
 	this->hold_state = state;
 }
 
-void EnemyBase::SetEnemytype(int count)
+void EnemyBase::SetEnemytype()
 {
-	switch (count)
+	int x, y;
+	StageData::ConvertToIndex(location, y, x);
+	switch (x)
 	{
-	case 0:
+	case 13:
 		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::AKABE);	
 		hold_state = eEnemyState::ePATROL;
 		break;
-	case 1:
+	case 12:
 		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::AOSUKE);
 		hold_state = eEnemyState::eIDLE;
 		break;
-	case 2:
+	case 16:
 		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::GUZUTA);
 		hold_state = eEnemyState::eIDLE;
 		break;
-	case 3:
+	case 14:
 		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::PINKY);
 		hold_state = eEnemyState::eIDLE;
 		break;
 	default:
 		break;
 	}
-
-
+	enemy_state = hold_state;
 }
 
 void EnemyBase::SetPlayer(Player* object)
