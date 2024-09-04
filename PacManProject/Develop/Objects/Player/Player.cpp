@@ -20,7 +20,8 @@ Player::Player() :
 	old_panel(ePanelID::NONE),
 	is_power_up(false),
 	is_destroy(false),
-	enemy()
+	enemy(),
+	power_time()
 {
 
 }
@@ -88,6 +89,15 @@ void Player::Update(float delta_second)
 			break;
 		default:
 			break;
+	}
+	if (is_power_up == true)
+	{
+		power_time += delta_second;
+		if (power_time >= 8.0f)
+		{
+			SetPowerDown();
+			power_time = 0.0f;
+		}
 	}
 }
 

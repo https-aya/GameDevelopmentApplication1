@@ -53,6 +53,15 @@ void EnemyBase::Update(float delta_second)
 	}
 	enemy_type->Update(delta_second,(this));
 	location += velocity * ENEMY_SPEED * delta_second;
+	if (location.x >= 640)
+	{
+		location.x = 1;
+	}
+	else if (location.x <= 0)
+	{
+		location.x = 639;
+	}
+	
 }
 
 void EnemyBase::Draw(const Vector2D& screen_offset) const
@@ -139,7 +148,15 @@ void EnemyBase::OnHitCollision(GameObjectBase* hit_object)
 {
 	Vector2D obj_loc = hit_object->GetLocation();
 
-	
+	if (hit_object->GetCollision().object_type == eObjectType::player)
+	{
+		player->SetEnemy(this);
+		if (enemy_state == eEnemyState::eIZIKE)
+		{
+			life = 1;
+			enemy_state = eEnemyState::eESCAPE;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+		}
+	}	
 
 	// 当たった、オブジェクトが壁だったら
 
@@ -164,21 +181,13 @@ void EnemyBase::OnHitCollision(GameObjectBase* hit_object)
 		location += dv.Normalize() * diff;
 	}
 
-	if (hit_object->GetCollision().object_type == eObjectType::player)
-	{
-		player->SetEnemy(this);
-		if (enemy_state == eEnemyState::eIZIKE)
-		{
-			life = 1;
-			enemy_state = eEnemyState::eESCAPE;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-		}
-	}
+
 	
 }
 
 eEnemyState EnemyBase::GetEnemyState()
 {
-	return  this->enemy_state;
+	return enemy_state;
 }
 
 void EnemyBase::ChangeEnemyState(eEnemyState state)

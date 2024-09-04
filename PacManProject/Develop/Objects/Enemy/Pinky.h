@@ -5,9 +5,7 @@
 class Pinky : public EnemyTypeBase
 {
 private:
-	int target_panel_x;
-	int target_panel_y;
-	bool fast;
+
 public:
 	Pinky(class EnemyBase* e);
 	~Pinky();

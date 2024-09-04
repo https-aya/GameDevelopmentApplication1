@@ -129,9 +129,18 @@ void InGameScene::CheckCollision(GameObjectBase* target, GameObjectBase* partner
 		// カプセル同士の当たり判定
 		if (IsCheckCollision(tc, pc))
 		{
+			if (target->GetCollision().object_type == eObjectType::player)
+			{
+				partner->OnHitCollision(target);
+				target->OnHitCollision(partner);
+			}
+			else
+			{
+				target->OnHitCollision(partner);
+				partner->OnHitCollision(target);
+			}
 			// 当たっていることを通知する
-			target->OnHitCollision(partner);
-			partner->OnHitCollision(target);
+
 		}
 		
 	}

@@ -31,10 +31,11 @@ protected:
 	std::map<eAdjacentDirection, ePanelID> ret;
 	ePanelID panel;
 	float move_count;
-
-private:
 	int target_panel_x;
 	int target_panel_y;
+
+private:
+
 	int x;
 	int	y;
 	float world_time;

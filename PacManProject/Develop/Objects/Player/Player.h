@@ -45,6 +45,7 @@ private:
 
 	// 移動アニメーションの順番
 	const int animation_num[4] = { 0, 1, 2, 1, };
+	float power_time;
 
 public:
 	Player();

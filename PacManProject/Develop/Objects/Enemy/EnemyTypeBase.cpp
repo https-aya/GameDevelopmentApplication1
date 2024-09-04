@@ -40,7 +40,6 @@ void EnemyTypeBase::Update(float delta_second , class EnemyBase* e)
 		}
 		if (izike_time >= 8.0f)
 		{
-			player->SetPowerDown();
 			izike_time = 0.0f;
 			flash_count = 0;
 			enemy->SetLife(2);
@@ -201,108 +200,39 @@ void EnemyTypeBase::PatorolMove(float delta_second)
 {
 	ret = StageData::GetAdjacentPanelData(enemy->GetLocation());
 	panel = StageData::GetPanelData(enemy->GetLocation());
-
-	move_count += delta_second;
-	if (move_count >= (1.0f / 2.0f))
+	int x, y;
+	StageData::ConvertToIndex(enemy->GetLocation(), y, x);
+	if (fast == true)
 	{
-		if (panel == ePanelID::BRANCH)
+		target_panel_x = 7;
+		target_panel_y = 15;
+		if (x == target_panel_x - 1 && y == target_panel_y - 1)
 		{
-			int x, y;
-			StageData::ConvertToIndex(enemy->GetLocation(), y, x);
-			if (fast == true)
-			{
-				target_panel_x = 7;
-				target_panel_y = 15;
-				if (x == target_panel_x - 1 && y == target_panel_y - 1)
-				{
-					fast = false;
-				}
-			}
-			if (fast == false)
-			{
-				switch (type)
-				{
-				case AKABE:
-					target_panel_x = 22;
-					target_panel_y = 3;
-					break;
-				case PINKY:
-					target_panel_x = 5;
-					target_panel_y = 3;
-					break;
-				case AOSUKE:
-					target_panel_x = 23;
-					target_panel_y = 28;
-					break;
-				case GUZUTA:
-					target_panel_x = 5;
-					target_panel_y = 28;
-					break;
-				default:
-					break;
-				}
-
-			}
-
-			int px = target_panel_x - x;
-			int py = target_panel_y - y;
-			if (px < 0)
-			{
-				px *= -1;
-			}
-			if (py < 0)
-			{
-				py *= -1;
-			}
-			if (px >= py)
-			{
-				if (target_panel_x < x && ret[eAdjacentDirection::LEFT] != ePanelID::WALL
-					&& now_direction != eEnemyDirectionState::RIGHT)
-				{
-					now_direction = eEnemyDirectionState::LEFT;
-				}
-				else if (target_panel_x > x && ret[eAdjacentDirection::RIGHT] != ePanelID::WALL
-					&& now_direction != eEnemyDirectionState::LEFT)
-				{
-					now_direction = eEnemyDirectionState::RIGHT;
-				}
-				else if (target_panel_y < y && ret[eAdjacentDirection::UP] != ePanelID::WALL
-					&& now_direction != eEnemyDirectionState::DOWN)
-				{
-					now_direction = eEnemyDirectionState::UP;
-				}
-				else if (target_panel_y > y && ret[eAdjacentDirection::DOWN] != ePanelID::WALL
-					&& now_direction != eEnemyDirectionState::UP)
-				{
-					now_direction = eEnemyDirectionState::DOWN;
-				}
-			}
-			else
-			{
-				if (target_panel_y < y && ret[eAdjacentDirection::UP] != ePanelID::WALL
-					&& now_direction != eEnemyDirectionState::DOWN)
-				{
-					now_direction = eEnemyDirectionState::UP;
-				}	
-				
-				else if (target_panel_y > y && ret[eAdjacentDirection::DOWN] != ePanelID::WALL
-					&& now_direction != eEnemyDirectionState::UP)
-				{
-					now_direction = eEnemyDirectionState::DOWN;
-				}
-				else if (target_panel_x < x && ret[eAdjacentDirection::LEFT] != ePanelID::WALL
-					&& now_direction != eEnemyDirectionState::RIGHT)
-				{
-					now_direction = eEnemyDirectionState::LEFT;
-				}
-				else if (target_panel_x > x && ret[eAdjacentDirection::RIGHT] != ePanelID::WALL
-					&& now_direction != eEnemyDirectionState::LEFT)
-				{
-					now_direction = eEnemyDirectionState::RIGHT;
-				}
-
-			}
-			move_count = 0;
+			fast = false;
+		}
+	}
+	if (fast == false)
+	{
+		switch (type)
+		{
+		case AKABE:
+			target_panel_x = 22;
+			target_panel_y = 3;
+			break;
+		case PINKY:
+			target_panel_x = 5;
+			target_panel_y = 3;
+			break;
+		case AOSUKE:
+			target_panel_x = 23;
+			target_panel_y = 28;
+			break;
+		case GUZUTA:
+			target_panel_x = 3;
+			target_panel_y = 27;
+			break;
+		default:
+			break;
 		}
 	}
 }
@@ -338,26 +268,7 @@ void EnemyTypeBase::EscapeMove(float delta_second)
 	ePanelID panel;
 	panel = StageData::GetPanelData(enemy->GetLocation());
 
-	float gloc_x = (gx + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
-	float gloc_y = (gy + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
-
-
-	enemy->SetMobility(eMobilityType::Stationary);
-	if (gloc_x + 1.0f > enemy->GetLocation().x && gloc_x - 1.0f < enemy->GetLocation().x)
-	{
-		this->now_direction = eEnemyDirectionState::UP;
-	}
-	else if (gloc_y != enemy->GetLocation().y)
-	{
-		if (gloc_x < enemy->GetLocation().x)
-		{
-			this->now_direction = eEnemyDirectionState::LEFT;
-		}
-		else
-		{
-			this->now_direction = eEnemyDirectionState::RIGHT;
-		}
-	}
+	
 	if (panel == GATE)
 	{
 		enemy->SetLife(2);
