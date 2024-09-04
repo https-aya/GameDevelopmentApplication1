@@ -37,8 +37,6 @@ void Aosuke::PatorolMove(float delta_second)
 	{
 		if (panel == ePanelID::BRANCH)
 		{
-			int x, y;
-			StageData::ConvertToIndex(enemy->GetLocation(), y, x);
 			int px = target_panel_x - x;
 			int py = target_panel_y - y;
 			if (px < 0)

@@ -154,7 +154,7 @@ void EnemyTypeBase::Movement(float delta_second)
 		IzikeMove(delta_second);
 		break;
 	}
-		switch (now_direction)
+	switch (now_direction)
 	{
 	case eEnemyDirectionState::UP:
 		velocity.y = -2.0f;
@@ -175,6 +175,10 @@ void EnemyTypeBase::Movement(float delta_second)
 	default:
 		velocity = 0.0f;
 		break;
+	}
+	if (enemy_state == eEnemyState::eESCAPE)
+	{
+		velocity *= 2.0f;
 	}
 	// ˆÚ“®—Ê * ‘¬‚³ * ŽžŠÔ ‚ÅˆÚ“®æ‚ðŒˆ’è‚·‚é
 	enemy->SetVelocity(Vector2D(velocity));
@@ -200,7 +204,6 @@ void EnemyTypeBase::PatorolMove(float delta_second)
 {
 	ret = StageData::GetAdjacentPanelData(enemy->GetLocation());
 	panel = StageData::GetPanelData(enemy->GetLocation());
-	int x, y;
 	StageData::ConvertToIndex(enemy->GetLocation(), y, x);
 	if (fast == true)
 	{
@@ -240,7 +243,7 @@ void EnemyTypeBase::PatorolMove(float delta_second)
 void EnemyTypeBase::IzikeMove(float delta_second)
 {
 	ret = StageData::GetAdjacentPanelData(enemy->GetLocation());
-	ePanelID panel = StageData::GetPanelData(enemy->GetLocation());
+	panel = StageData::GetPanelData(enemy->GetLocation());
 
 
 }
@@ -248,7 +251,6 @@ void EnemyTypeBase::IzikeMove(float delta_second)
 void EnemyTypeBase::EscapeMove(float delta_second)
 {
 	std::vector<std::vector<ePanelID>> data;
-
 	data = StageData::GetAll();
 	int px, py;
 	int gx, gy;
@@ -265,10 +267,71 @@ void EnemyTypeBase::EscapeMove(float delta_second)
 		}
 	}
 
-	ePanelID panel;
-	panel = StageData::GetPanelData(enemy->GetLocation());
-
-	
+	move_count += delta_second;
+	if (move_count >= (1.0f / 16.0f))
+	{
+		if (panel == ePanelID::BRANCH)
+		{
+			panel = StageData::GetPanelData(enemy->GetLocation());
+			StageData::ConvertToIndex(enemy->GetLocation(), y, x);
+			int px = gx - x;
+			int py = gy - y;
+			if (px < 0)
+			{
+				px *= -1;
+			}
+			if (py < 0)
+			{
+				py *= -1;
+			}
+			if (px >= py)
+			{
+				if (gx < x && ret[eAdjacentDirection::LEFT] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::RIGHT)
+				{
+					now_direction = eEnemyDirectionState::LEFT;
+				}
+				else if (gx > x && ret[eAdjacentDirection::RIGHT] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::LEFT)
+				{
+					now_direction = eEnemyDirectionState::RIGHT;
+				}
+				else if (gy > y && ret[eAdjacentDirection::DOWN] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::UP)
+				{
+					now_direction = eEnemyDirectionState::DOWN;
+				}
+				else if (gy < y && ret[eAdjacentDirection::UP] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::DOWN)
+				{
+					now_direction = eEnemyDirectionState::UP;
+				}
+			}
+			else
+			{
+				if (gy < y && ret[eAdjacentDirection::UP] != ePanelID::WALL)
+				{
+					now_direction = eEnemyDirectionState::UP;
+				}
+				else  if (gy > y && ret[eAdjacentDirection::DOWN] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::UP)
+				{
+					now_direction = eEnemyDirectionState::DOWN;
+				}
+				else if (gx < x && ret[eAdjacentDirection::LEFT] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::RIGHT)
+				{
+					now_direction = eEnemyDirectionState::LEFT;
+				}
+				else if (gx > x && ret[eAdjacentDirection::RIGHT] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::LEFT)
+				{
+					now_direction = eEnemyDirectionState::RIGHT;
+				}
+			}
+			move_count = 0.0f;
+		}
+	}
 	if (panel == GATE)
 	{
 		enemy->SetLife(2);
@@ -295,8 +358,7 @@ void EnemyTypeBase::EscMonsterRoom(float delta_second)
 		}
 	}
 
-	ePanelID ret;
-	ret = StageData::GetPanelData(enemy->GetLocation());
+	panel = StageData::GetPanelData(enemy->GetLocation());
 
 	float gloc_x = (gx + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
 	float gloc_y = (gy + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
@@ -318,7 +380,7 @@ void EnemyTypeBase::EscMonsterRoom(float delta_second)
 			this->now_direction = eEnemyDirectionState::RIGHT;
 		}		
 	}
-	if (ret == GATE)
+	if (panel == GATE)
 	{
 		enemy->SetMobility(eMobilityType::Movable);
 		enemy->ChangeEnemyState(ePATROL);

@@ -33,11 +33,11 @@ protected:
 	float move_count;
 	int target_panel_x;
 	int target_panel_y;
+	int x;
+	int	y;
 
 private:
 
-	int x;
-	int	y;
 	float world_time;
 	int flash_count;
 	float izike_time;
