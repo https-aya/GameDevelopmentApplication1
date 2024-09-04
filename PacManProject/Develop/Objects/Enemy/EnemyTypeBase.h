@@ -20,31 +20,32 @@ protected:
 	std::vector<int> animation;
 	std::vector<int> eyeanimation;
 
-	int image;
-	class EnemyBase* enemy;
+	eEnemyType type;
 	eEnemyState enemy_state;
 	eEnemyState hold_state;
 	eEnemyDirectionState now_direction;
-	class Player* player;
 	Vector2D velocity;
-	int eye_image;
-	int animation_num;
-	std::map<eAdjacentDirection, ePanelID> ret = {
-				{ eAdjacentDirection::UP, ePanelID::NONE },
-				{ eAdjacentDirection::DOWN, ePanelID::NONE },
-				{ eAdjacentDirection::LEFT, ePanelID::NONE },
-				{ eAdjacentDirection::RIGHT, ePanelID::NONE }
-			};
+	class EnemyBase* enemy;
+	class Player* player;
+
+	std::map<eAdjacentDirection, ePanelID> ret;
 	ePanelID panel;
 	float move_count;
 
 private:
+	int target_panel_x;
+	int target_panel_y;
+	int x;
+	int	y;
 	float world_time;
 	int flash_count;
 	float izike_time;
 	float animation_time;
 	int animation_count;
 	int life;
+	bool fast;
+	int eye_image;
+	int image;
 
 public:
 	EnemyTypeBase(class EnemyBase* e);

@@ -15,11 +15,9 @@ Guzuta::~Guzuta()
 
 void Guzuta::Initialize()
 {
-	__super::Initialize();
-	animation_num = 6;
-	image = animation[animation_num];
-	eye_image = eyeanimation[0];
+	type = eEnemyType::GUZUTA;
 	now_direction = eEnemyDirectionState::DOWN;
+	__super::Initialize();
 }
 
 void Guzuta::IdolMove(float delta_second)

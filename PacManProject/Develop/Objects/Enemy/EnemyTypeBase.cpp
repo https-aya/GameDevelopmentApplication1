@@ -6,6 +6,9 @@ EnemyTypeBase::EnemyTypeBase(class EnemyBase* e) : enemy(e)
 , animation()
 , eyeanimation()
 , image()
+, fast()
+, target_panel_x(0)
+, target_panel_y(0)
 {
 
 }
@@ -16,6 +19,9 @@ void EnemyTypeBase::Initialize()
 	animation = rm->GetImages("Resource/Images/monster.png", 20, 20, 1, 32, 32);
 	eyeanimation = rm->GetImages("Resource/Images/eyes.png", 4, 4, 1, 32, 32);
 	enemy_state = enemy->GetEnemyState();
+	eye_image = eyeanimation[0];
+	image = animation[type * 2];
+	fast = true;
 }
 
 void EnemyTypeBase::Update(float delta_second , class EnemyBase* e)
@@ -54,6 +60,25 @@ void EnemyTypeBase::Draw(const Vector2D& screen_offset) const
 		Vector2D graph_location = enemy->GetLocation() + screen_offset;
 		DrawRotaGraphF(graph_location.x, graph_location.y, 1.0, 0.0, eye_image, TRUE);
 	}
+	int color;
+	switch (type)
+	{
+	case AKABE:
+		color = 0xff0000;
+		break;
+	case PINKY:
+		color = 0xff66cc;
+		break;
+	case AOSUKE:
+		color = 0x0000ff;
+		break;
+	case GUZUTA:
+		color = 0xffaaaa;
+		break;
+	default:
+		break;
+	}
+	DrawFormatString(type * 100, 50, color, "%d,%d,%f", x, y , enemy->GetLocation());
 }
 
 void EnemyTypeBase::Finalize()
@@ -90,7 +115,7 @@ void EnemyTypeBase::AnimationControl(float delta_second)
 		}
 		else
 		{
-			image = animation[animation_num + animation_count];
+			image = animation[type * 2 + animation_count];
 		}
 	}
 	switch (now_direction)
@@ -160,25 +185,126 @@ void EnemyTypeBase::IdolMove(float delta_second)
 {
 	ret = StageData::GetAdjacentPanelData(enemy->GetLocation());
 		
-	move_count += delta_second;
-	if (move_count >= (1.0f / 2.0f))
-	{
-		if (ret[eAdjacentDirection::UP] != WALL)
-		{
-			now_direction = eEnemyDirectionState::UP;
-		}
-		else if (ret[eAdjacentDirection::DOWN] != WALL)
+
+		if (ret[eAdjacentDirection::UP] == WALL)
 		{
 			now_direction = eEnemyDirectionState::DOWN;
 		}
-		move_count = 0;
-	}
+		else if (ret[eAdjacentDirection::DOWN] == WALL)
+		{
+			now_direction = eEnemyDirectionState::UP;
+		}
+
 }
 
 void EnemyTypeBase::PatorolMove(float delta_second)
 {
 	ret = StageData::GetAdjacentPanelData(enemy->GetLocation());
 	panel = StageData::GetPanelData(enemy->GetLocation());
+
+	move_count += delta_second;
+	if (move_count >= (1.0f / 2.0f))
+	{
+		if (panel == ePanelID::BRANCH)
+		{
+			int x, y;
+			StageData::ConvertToIndex(enemy->GetLocation(), y, x);
+			if (fast == true)
+			{
+				target_panel_x = 7;
+				target_panel_y = 15;
+				if (x == target_panel_x - 1 && y == target_panel_y - 1)
+				{
+					fast = false;
+				}
+			}
+			if (fast == false)
+			{
+				switch (type)
+				{
+				case AKABE:
+					target_panel_x = 22;
+					target_panel_y = 3;
+					break;
+				case PINKY:
+					target_panel_x = 5;
+					target_panel_y = 3;
+					break;
+				case AOSUKE:
+					target_panel_x = 23;
+					target_panel_y = 28;
+					break;
+				case GUZUTA:
+					target_panel_x = 5;
+					target_panel_y = 28;
+					break;
+				default:
+					break;
+				}
+
+			}
+
+			int px = target_panel_x - x;
+			int py = target_panel_y - y;
+			if (px < 0)
+			{
+				px *= -1;
+			}
+			if (py < 0)
+			{
+				py *= -1;
+			}
+			if (px >= py)
+			{
+				if (target_panel_x < x && ret[eAdjacentDirection::LEFT] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::RIGHT)
+				{
+					now_direction = eEnemyDirectionState::LEFT;
+				}
+				else if (target_panel_x > x && ret[eAdjacentDirection::RIGHT] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::LEFT)
+				{
+					now_direction = eEnemyDirectionState::RIGHT;
+				}
+				else if (target_panel_y < y && ret[eAdjacentDirection::UP] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::DOWN)
+				{
+					now_direction = eEnemyDirectionState::UP;
+				}
+				else if (target_panel_y > y && ret[eAdjacentDirection::DOWN] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::UP)
+				{
+					now_direction = eEnemyDirectionState::DOWN;
+				}
+			}
+			else
+			{
+				if (target_panel_y < y && ret[eAdjacentDirection::UP] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::DOWN)
+				{
+					now_direction = eEnemyDirectionState::UP;
+				}	
+				
+				else if (target_panel_y > y && ret[eAdjacentDirection::DOWN] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::UP)
+				{
+					now_direction = eEnemyDirectionState::DOWN;
+				}
+				else if (target_panel_x < x && ret[eAdjacentDirection::LEFT] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::RIGHT)
+				{
+					now_direction = eEnemyDirectionState::LEFT;
+				}
+				else if (target_panel_x > x && ret[eAdjacentDirection::RIGHT] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::LEFT)
+				{
+					now_direction = eEnemyDirectionState::RIGHT;
+				}
+
+			}
+			move_count = 0;
+		}
+	}
 }
 
 void EnemyTypeBase::IzikeMove(float delta_second)

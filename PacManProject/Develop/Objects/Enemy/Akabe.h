@@ -5,9 +5,7 @@
 class Akabe : public EnemyTypeBase
 {
 private:
-	int target_panel_x;
-	int target_panel_y;
-	bool fast;
+
 public:
 	Akabe(class EnemyBase* e);
 	~Akabe();

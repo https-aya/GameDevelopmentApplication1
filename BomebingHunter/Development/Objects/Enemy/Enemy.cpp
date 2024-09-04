@@ -178,11 +178,6 @@ void Enemy::Draw() const
 		DrawRotaGraphF(location.x, location.y, 0.5, radian, image, TRUE, flip_flag);
 
 	}
-
-
-
-	//親クラスの描画処理を呼び出す
-	__super::Draw();
 }
 
 //終了時処理

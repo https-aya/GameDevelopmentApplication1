@@ -15,11 +15,9 @@ Aosuke::~Aosuke()
 
 void Aosuke::Initialize()
 {
-	__super::Initialize();
-	animation_num = 4;
-	image = animation[animation_num];
-	eye_image = eyeanimation[0];
+	type = eEnemyType::AOSUKE;
 	now_direction = eEnemyDirectionState::DOWN;
+	__super::Initialize();
 }
 
 void Aosuke::IdolMove(float delta_second)

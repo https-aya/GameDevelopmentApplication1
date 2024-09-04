@@ -2,7 +2,7 @@
 enum eEnemyType
 {
 	AKABE,
-	AOSUKE,
 	PINKY,
+	AOSUKE,
 	GUZUTA,
 };
