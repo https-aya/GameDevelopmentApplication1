@@ -49,12 +49,16 @@ void EnemyBase::Update(float delta_second)
 			enemy_state = eEnemyState::eIZIKE;
 		}
 	}
-	else if(life == 2 || life == 0)
+	else if(life == 2 || life == 0 && enemy_state != eEnemyState::eIDLE)
 	{
 		enemy_state = hold_state;
 	}
 	enemy_type->Update(delta_second,(this));
 	location += velocity * ENEMY_SPEED * delta_second;
+	if (enemy_state != eEnemyState::eIZIKE && enemy_state != eEnemyState::eESCAPE)
+	{
+		world_time+=delta_second;
+	}
 	if (location.x >= 640)
 	{
 		location.x = 1;

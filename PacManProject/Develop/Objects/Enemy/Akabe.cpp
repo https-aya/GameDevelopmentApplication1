@@ -104,49 +104,84 @@ void Akabe::PatorolMove(float delta_second)
 
 void Akabe::AttackMove(float delta_second, Player* playerdate)
 {
-	/*Vector2D target = player->GetLocation();
+	__super::AttackMove(delta_second, playerdate);
+	StageData::ConvertToIndex(player->GetLocation(), target_panel_y, target_panel_x);
+	int lx;
+	int ly;
 
-	std::map<eAdjacentDirection, ePanelID> ret = {
-		{ eAdjacentDirection::UP, ePanelID::NONE },
-		{ eAdjacentDirection::DOWN, ePanelID::NONE },
-		{ eAdjacentDirection::LEFT, ePanelID::NONE },
-		{ eAdjacentDirection::RIGHT, ePanelID::NONE }
-	};
-
-	if (target.y < location.y)
+	move_count += delta_second;
+	if (move_count >= (1.0f / 2.0f))
 	{
-		if (ret[eAdjacentDirection::UP] != WALL)
+		if (now_direction == eEnemyDirectionState::UP || now_direction == eEnemyDirectionState::LEFT)
 		{
-			now_direction = eEnemyDirectionState::UP;
+			lx = (enemy->GetLocation().x - (D_OBJECT_SIZE / 2.0f + 2)) / D_OBJECT_SIZE + 1;
+			ly = (enemy->GetLocation().y - (D_OBJECT_SIZE / 2.0f + 2)) / D_OBJECT_SIZE + 1;
 		}
 		else
 		{
-			if (target.x < location.x)
+			lx = (enemy->GetLocation().x - (D_OBJECT_SIZE / 2.0f)) / D_OBJECT_SIZE;
+			ly = (enemy->GetLocation().y - (D_OBJECT_SIZE / 2.0f)) / D_OBJECT_SIZE;
+		}
+
+		if (panel == ePanelID::BRANCH && x == lx && y == ly)
+		{
+			int px = target_panel_x - x;
+			int py = target_panel_y - y;
+			if (px < 0)
 			{
-				now_direction = eEnemyDirectionState::LEFT;
+				px *= -1;
+			}
+			if (py < 0)
+			{
+				py *= -1;
+			}
+			if (px >= py)
+			{
+				if (target_panel_x > x && ret[eAdjacentDirection::RIGHT] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::LEFT)
+				{
+					now_direction = eEnemyDirectionState::RIGHT;
+				}
+				else if (ret[eAdjacentDirection::LEFT] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::RIGHT)
+				{
+					now_direction = eEnemyDirectionState::LEFT;
+				}
+				else if (target_panel_y > y && ret[eAdjacentDirection::DOWN] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::UP)
+				{
+					now_direction = eEnemyDirectionState::DOWN;
+				}
+				else if (target_panel_y < y && ret[eAdjacentDirection::UP] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::DOWN)
+				{
+					now_direction = eEnemyDirectionState::UP;
+				}
 			}
 			else
 			{
-				now_direction = eEnemyDirectionState::RIGHT;
+				if (target_panel_y < y && ret[eAdjacentDirection::UP] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::DOWN)
+				{
+					now_direction = eEnemyDirectionState::UP;
+				}
+				else  if (ret[eAdjacentDirection::DOWN] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::UP)
+				{
+					now_direction = eEnemyDirectionState::DOWN;
+				}
+				else if (ret[eAdjacentDirection::LEFT] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::RIGHT)
+				{
+					now_direction = eEnemyDirectionState::LEFT;
+				}
+				else if (ret[eAdjacentDirection::RIGHT] != ePanelID::WALL
+					&& now_direction != eEnemyDirectionState::LEFT)
+				{
+					now_direction = eEnemyDirectionState::RIGHT;
+				}
 			}
+			move_count = 0.0f;
 		}
 	}
-	else
-	{
-		if (ret[eAdjacentDirection::DOWN] != WALL)
-		{
-			now_direction = eEnemyDirectionState::DOWN;
-		}
-		else
-		{
-			if (target.x < location.x)
-			{
-				now_direction = eEnemyDirectionState::LEFT;
-			}
-			else
-			{
-				now_direction = eEnemyDirectionState::RIGHT;
-			}
-		}
-	}*/
 }

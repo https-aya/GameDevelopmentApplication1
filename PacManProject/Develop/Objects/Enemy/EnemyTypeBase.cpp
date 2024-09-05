@@ -192,8 +192,9 @@ void EnemyTypeBase::Movement(float delta_second)
 void EnemyTypeBase::IdolMove(float delta_second)
 {
 	ret = StageData::GetAdjacentPanelData(enemy->GetLocation());
-		
-
+	move_count += delta_second;
+	if (move_count >= (1.0f / 4.0f))
+	{
 		if (ret[eAdjacentDirection::UP] == WALL)
 		{
 			now_direction = eEnemyDirectionState::DOWN;
@@ -202,7 +203,8 @@ void EnemyTypeBase::IdolMove(float delta_second)
 		{
 			now_direction = eEnemyDirectionState::UP;
 		}
-
+		move_count = 0;
+	}
 }
 
 void EnemyTypeBase::PatorolMove(float delta_second)
@@ -247,10 +249,49 @@ void EnemyTypeBase::PatorolMove(float delta_second)
 
 void EnemyTypeBase::IzikeMove(float delta_second)
 {
+
+	enemy->SetMobility(eMobilityType::Movable);
 	ret = StageData::GetAdjacentPanelData(enemy->GetLocation());
 	panel = StageData::GetPanelData(enemy->GetLocation());
+	StageData::ConvertToIndex(enemy->GetLocation(), y, x);
+	int lx;
+	int ly;
+	move_count += delta_second;
+	if (move_count >= (1.0f / 4.0f))
+	{
+		if (now_direction == eEnemyDirectionState::UP || now_direction == eEnemyDirectionState::LEFT)
+		{
+			lx = (enemy->GetLocation().x - (D_OBJECT_SIZE / 2.0f + 2)) / D_OBJECT_SIZE + 1;
+			ly = (enemy->GetLocation().y - (D_OBJECT_SIZE / 2.0f + 2)) / D_OBJECT_SIZE + 1;
+		}
+		else
+		{
+			lx = (enemy->GetLocation().x - (D_OBJECT_SIZE / 2.0f)) / D_OBJECT_SIZE;
+			ly = (enemy->GetLocation().y - (D_OBJECT_SIZE / 2.0f)) / D_OBJECT_SIZE;
+		}
 
-
+		if (panel == ePanelID::BRANCH && x == lx && y == ly)
+		{
+			int i = GetRand(3);
+			if (ret[eAdjacentDirection::UP] != ePanelID::WALL && i == 0)
+			{
+				now_direction = eEnemyDirectionState::UP;
+			}
+			else if (ret[eAdjacentDirection::RIGHT] != ePanelID::WALL && i == 1)
+			{
+				now_direction = eEnemyDirectionState::RIGHT;
+			}
+			else if (ret[eAdjacentDirection::DOWN] != ePanelID::WALL && i == 2)
+			{
+				now_direction = eEnemyDirectionState::DOWN;
+			}
+			else if (ret[eAdjacentDirection::LEFT] != ePanelID::WALL && i == 3)
+			{
+				now_direction = eEnemyDirectionState::LEFT;
+			}
+		}
+		move_count = 0.0f;
+	}
 }
 
 void EnemyTypeBase::EscapeMove(float delta_second)
@@ -357,21 +398,17 @@ void EnemyTypeBase::EscMonsterRoom(float delta_second)
 			}
 		}
 	}
-
+	x = (enemy->GetLocation().x - (D_OBJECT_SIZE / 2.0f)) / D_OBJECT_SIZE + 1;
+	y = (enemy->GetLocation().y - (D_OBJECT_SIZE / 2.0f)) / D_OBJECT_SIZE + 1;
 	panel = StageData::GetPanelData(enemy->GetLocation());
-
-	float gloc_x = (gx + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
-	float gloc_y = (gy + 1) * D_OBJECT_SIZE - D_OBJECT_SIZE / 2.0f;
-
-
 	enemy->SetMobility(eMobilityType::Stationary);
-	if (gloc_x + 1.0f > enemy->GetLocation().x && gloc_x - 1.0f < enemy->GetLocation().x)
+	if (gx == x)
 	{	
 		this->now_direction = eEnemyDirectionState::UP;
 	}
-	else if(gloc_y != enemy->GetLocation().y)
+	else
 	{
-		if (gloc_x < enemy->GetLocation().x)
+		if (gx < x)
 		{
 			this->now_direction = eEnemyDirectionState::LEFT;
 		}
@@ -380,7 +417,7 @@ void EnemyTypeBase::EscMonsterRoom(float delta_second)
 			this->now_direction = eEnemyDirectionState::RIGHT;
 		}		
 	}
-	if (panel == GATE)
+	if (panel == GATE && gx == x && gy == y)
 	{
 		enemy->SetMobility(eMobilityType::Movable);
 		enemy->ChangeEnemyState(ePATROL);
@@ -390,5 +427,8 @@ void EnemyTypeBase::EscMonsterRoom(float delta_second)
 
 void EnemyTypeBase::AttackMove(float delta_second, Player* playerdate)
 {
-
+	ret = StageData::GetAdjacentPanelData(enemy->GetLocation());
+	panel = StageData::GetPanelData(enemy->GetLocation());
+	StageData::ConvertToIndex(enemy->GetLocation(), y, x);
+	enemy->SetPlayer(playerdate);
 }

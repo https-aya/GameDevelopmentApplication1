@@ -53,4 +53,6 @@ public:
 	void SetVelocity(Vector2D velocity);
 	void SetMobility(eMobilityType mobility);
 	void SetLife(int num);
+	float GetWorldTime();
+	void ClearWorldTime();
 };

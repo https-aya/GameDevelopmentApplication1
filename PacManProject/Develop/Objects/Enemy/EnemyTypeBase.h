@@ -38,7 +38,6 @@ protected:
 
 private:
 
-	float world_time;
 	int flash_count;
 	float izike_time;
 	float animation_time;
@@ -59,22 +58,24 @@ public:
 	virtual void Initialize();
 
 	//XVˆ—
-	virtual void Update(float delta_second ,class EnemyBase* e);
+	void Update(float delta_second ,class EnemyBase* e);
 
 	//•`‰æˆ—
-	virtual void Draw(const Vector2D& screen_offset) const;
+	void Draw(const Vector2D& screen_offset) const;
 
 	//I—¹ˆ—ŠÖ”
-	virtual void Finalize();
+	void Finalize();
+
+
 
 protected:
 	virtual void AnimationControl(float delta_second);
-	virtual void Movement(float delta_second);
+	void Movement(float delta_second);
 	virtual void IdolMove(float delta_second);
 	virtual void PatorolMove(float delta_second);
-	virtual void IzikeMove(float delta_second);
-	virtual void EscapeMove(float delta_second);
-	virtual void EscMonsterRoom(float delta_second);
+	void IzikeMove(float delta_second);
+	void EscapeMove(float delta_second);
+	void EscMonsterRoom(float delta_second);
 
 protected:
 	virtual void AttackMove(float delta_second, Player* playerdate);
