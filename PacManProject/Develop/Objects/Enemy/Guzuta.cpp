@@ -32,10 +32,22 @@ void Guzuta::IdolMove(float delta_second)
 void Guzuta::PatorolMove(float delta_second)
 {
 	__super::PatorolMove(delta_second);
+	int lx;
+	int ly;
 	move_count += delta_second;
 	if (move_count >= (1.0f / 2.0f))
 	{
-		if (panel == ePanelID::BRANCH)
+		if (now_direction == eEnemyDirectionState::UP || now_direction == eEnemyDirectionState::LEFT)
+		{
+			lx = (enemy->GetLocation().x - (D_OBJECT_SIZE / 2.0f + 2)) / D_OBJECT_SIZE + 1;
+			ly = (enemy->GetLocation().y - (D_OBJECT_SIZE / 2.0f + 2)) / D_OBJECT_SIZE + 1;
+		}
+		else
+		{
+			lx = (enemy->GetLocation().x - (D_OBJECT_SIZE / 2.0f)) / D_OBJECT_SIZE;
+			ly = (enemy->GetLocation().y - (D_OBJECT_SIZE / 2.0f)) / D_OBJECT_SIZE;
+		}
+		if (panel == ePanelID::BRANCH && x == lx && y == ly)
 		{
 			int px = target_panel_x - x;
 			int py = target_panel_y - y;

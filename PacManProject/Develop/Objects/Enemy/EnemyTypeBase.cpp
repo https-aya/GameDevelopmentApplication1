@@ -33,6 +33,10 @@ void EnemyTypeBase::Update(float delta_second , class EnemyBase* e)
 	AnimationControl(delta_second);
 	if (enemy_state == eEnemyState::eIZIKE)
 	{
+		life = 1;
+	}
+	if (life == 1 || life == 2)
+	{
 		izike_time += delta_second;
 		if (izike_time >= 7.0f && flash_count == 0)
 		{
@@ -42,9 +46,10 @@ void EnemyTypeBase::Update(float delta_second , class EnemyBase* e)
 		{
 			izike_time = 0.0f;
 			flash_count = 0;
-			enemy->SetLife(2);
+			enemy->SetLife(0);
 		}
 	}
+
 }
 
 void EnemyTypeBase::Draw(const Vector2D& screen_offset) const
@@ -77,7 +82,7 @@ void EnemyTypeBase::Draw(const Vector2D& screen_offset) const
 	default:
 		break;
 	}
-	DrawFormatString(type * 100, 50, color, "%d,%d,%f", x, y , enemy->GetLocation());
+	DrawFormatString(type * 100, 50, color, "%d,%d,%f", x, y , enemy->GetLocation().y);
 }
 
 void EnemyTypeBase::Finalize()
@@ -269,11 +274,12 @@ void EnemyTypeBase::EscapeMove(float delta_second)
 
 	move_count += delta_second;
 	if (move_count >= (1.0f / 16.0f))
-	{
+	{	
+		panel = StageData::GetPanelData(enemy->GetLocation());
 		if (panel == ePanelID::BRANCH)
 		{
-			panel = StageData::GetPanelData(enemy->GetLocation());
 			StageData::ConvertToIndex(enemy->GetLocation(), y, x);
+			ret = StageData::GetAdjacentPanelData(enemy->GetLocation());
 			int px = gx - x;
 			int py = gy - y;
 			if (px < 0)
@@ -284,25 +290,21 @@ void EnemyTypeBase::EscapeMove(float delta_second)
 			{
 				py *= -1;
 			}
-			if (px >= py)
+			if (px > py)
 			{
-				if (gx < x && ret[eAdjacentDirection::LEFT] != ePanelID::WALL
-					&& now_direction != eEnemyDirectionState::RIGHT)
+				if (gx < x && ret[eAdjacentDirection::LEFT] != ePanelID::WALL)
 				{
 					now_direction = eEnemyDirectionState::LEFT;
 				}
-				else if (gx > x && ret[eAdjacentDirection::RIGHT] != ePanelID::WALL
-					&& now_direction != eEnemyDirectionState::LEFT)
+				else if (gx > x && ret[eAdjacentDirection::RIGHT] != ePanelID::WALL)
 				{
 					now_direction = eEnemyDirectionState::RIGHT;
 				}
-				else if (gy > y && ret[eAdjacentDirection::DOWN] != ePanelID::WALL
-					&& now_direction != eEnemyDirectionState::UP)
+				else if (gy > y && ret[eAdjacentDirection::DOWN] != ePanelID::WALL)
 				{
 					now_direction = eEnemyDirectionState::DOWN;
 				}
-				else if (gy < y && ret[eAdjacentDirection::UP] != ePanelID::WALL
-					&& now_direction != eEnemyDirectionState::DOWN)
+				else if (ret[eAdjacentDirection::UP] != ePanelID::WALL)
 				{
 					now_direction = eEnemyDirectionState::UP;
 				}
@@ -313,18 +315,15 @@ void EnemyTypeBase::EscapeMove(float delta_second)
 				{
 					now_direction = eEnemyDirectionState::UP;
 				}
-				else  if (gy > y && ret[eAdjacentDirection::DOWN] != ePanelID::WALL
-					&& now_direction != eEnemyDirectionState::UP)
+				else  if (gy > y && ret[eAdjacentDirection::DOWN] != ePanelID::WALL)
 				{
 					now_direction = eEnemyDirectionState::DOWN;
 				}
-				else if (gx < x && ret[eAdjacentDirection::LEFT] != ePanelID::WALL
-					&& now_direction != eEnemyDirectionState::RIGHT)
+				else if (gx < x && ret[eAdjacentDirection::LEFT] != ePanelID::WALL)
 				{
 					now_direction = eEnemyDirectionState::LEFT;
 				}
-				else if (gx > x && ret[eAdjacentDirection::RIGHT] != ePanelID::WALL
-					&& now_direction != eEnemyDirectionState::LEFT)
+				else if (ret[eAdjacentDirection::RIGHT] != ePanelID::WALL)
 				{
 					now_direction = eEnemyDirectionState::RIGHT;
 				}
@@ -335,6 +334,7 @@ void EnemyTypeBase::EscapeMove(float delta_second)
 	if (panel == GATE)
 	{
 		enemy->SetLife(2);
+		now_direction = eEnemyDirectionState::LEFT;
 	}
 }
 

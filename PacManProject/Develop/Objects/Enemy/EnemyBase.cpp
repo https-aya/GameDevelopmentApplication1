@@ -30,7 +30,7 @@ void EnemyBase::Initialize()
 	collision.object_type = eObjectType::enemy;
 	collision.hit_object_type.push_back(eObjectType::player);
 	collision.hit_object_type.push_back(eObjectType::wall);
-	collision.radius = (D_OBJECT_SIZE - 1.0f) / 2.0f;
+	collision.radius = (D_OBJECT_SIZE) / 2.0f;
 	// ‰Â“®«‚ÌÝ’è
 	mobility = eMobilityType::Movable;
 	z_layer = 6;
@@ -40,16 +40,18 @@ void EnemyBase::Update(float delta_second)
 {
 	if (player->GetPowerUp() == true && life == 0)
 	{
-		if (enemy_state!=eEnemyState::eIZIKE)
+		if (enemy_state!=eEnemyState::eIZIKE && enemy_state != eEnemyState::eESCAPE)
 		{
 			hold_state = enemy_state;
 		}
-		enemy_state = eEnemyState::eIZIKE;
+		if (enemy_state != eEnemyState::eESCAPE)
+		{
+			enemy_state = eEnemyState::eIZIKE;
+		}
 	}
 	else if(life == 2 || life == 0)
 	{
 		enemy_state = hold_state;
-		life = 0;
 	}
 	enemy_type->Update(delta_second,(this));
 	location += velocity * ENEMY_SPEED * delta_second;
@@ -74,76 +76,6 @@ void EnemyBase::Finalize()
 	enemy_type->Finalize();
 }
 
-//void EnemyBase::PatorolMove(float delta_second)
-//{
-//	Vector2D point = 0.0f;
-//	/*switch (enemy_type)
-//	{
-//	case eEnemyType::AKABE:
-//		point = Vector2D(510.0f, 120.0f);
-//		break;
-//	case eEnemyType::PINKY:
-//		point = Vector2D(100.0f, 120.0f);
-//		break;
-//	case eEnemyType::AOSUKE:
-//		point = Vector2D(100.0f, 900.0f);
-//		break;
-//	case eEnemyType::GUZUTA:
-//		point = Vector2D(600.0f, 900.0f);
-//		break;
-//	}*/
-//	
-//	std::map<eAdjacentDirection, ePanelID> ret = {
-//		{ eAdjacentDirection::UP, ePanelID::NONE },
-//		{ eAdjacentDirection::DOWN, ePanelID::NONE },
-//		{ eAdjacentDirection::LEFT, ePanelID::NONE },
-//		{ eAdjacentDirection::RIGHT, ePanelID::NONE }
-//	};
-//
-//	ret = StageData::GetAdjacentPanelData(this->location);
-//
-//	if (point.y < location.y)
-//	{
-//		if (ret[eAdjacentDirection::UP] != WALL)
-//		{
-//			now_direction = eEnemyDirectionState::UP;
-//		}
-//		else
-//		{
-//			if (point.x < location.x)
-//			{
-//				now_direction = eEnemyDirectionState::LEFT;
-//			}
-//			else
-//			{
-//				now_direction = eEnemyDirectionState::RIGHT;
-//			}
-//		}
-//	}
-//	else
-//	{
-//		now_direction = eEnemyDirectionState::DOWN;
-//	}
-//}
-
-//void EnemyBase::AttackMove(float delta_second, Player* playerdate)
-//{
-//	//enemy->AttackMove(delta_second,playerdate);
-//
-//	std::map<eAdjacentDirection, ePanelID> ret = {
-//		{ eAdjacentDirection::UP, ePanelID::NONE },
-//		{ eAdjacentDirection::DOWN, ePanelID::NONE },
-//		{ eAdjacentDirection::LEFT, ePanelID::NONE },
-//		{ eAdjacentDirection::RIGHT, ePanelID::NONE }
-//	};
-//
-//	ret = StageData::GetAdjacentPanelData(this->location);
-//
-//	
-//	Vector2D diff = player->GetLocation() - this->location;
-//
-//}
-
 void EnemyBase::OnHitCollision(GameObjectBase* hit_object)
 {
 	Vector2D obj_loc = hit_object->GetLocation();
@@ -153,7 +85,6 @@ void EnemyBase::OnHitCollision(GameObjectBase* hit_object)
 		player->SetEnemy(this);
 		if (enemy_state == eEnemyState::eIZIKE)
 		{
-			life = 1;
 			enemy_state = eEnemyState::eESCAPE;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 		}
 	}	
