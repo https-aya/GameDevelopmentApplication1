@@ -9,6 +9,20 @@ EnemyTypeBase::EnemyTypeBase(class EnemyBase* e) : enemy(e)
 , fast()
 , target_panel_x(0)
 , target_panel_y(0)
+, animation_count(0)
+, animation_time(0)
+, enemy_delta()
+, enemy_state()
+, eye_image()
+, flash_count()
+, izike_time()
+, move_count()
+, now_direction()
+, panel()
+, player()
+, type()
+, x()
+, y()
 {
 
 }
@@ -64,25 +78,6 @@ void EnemyTypeBase::Draw(const Vector2D& screen_offset) const
 		Vector2D graph_location = enemy->GetLocation() + screen_offset;
 		DrawRotaGraphF(graph_location.x, graph_location.y, 1.0, 0.0, eye_image, TRUE);
 	}
-	int color;
-	switch (type)
-	{
-	case AKABE:
-		color = 0xff0000;
-		break;
-	case PINKY:
-		color = 0xff66cc;
-		break;
-	case AOSUKE:
-		color = 0x0000ff;
-		break;
-	case GUZUTA:
-		color = 0xffaaaa;
-		break;
-	default:
-		break;
-	}
-	DrawFormatString(type * 100, 50, color, "%d,%d,%f", x, y , enemy->GetLocation().y);
 }
 
 void EnemyTypeBase::Finalize()

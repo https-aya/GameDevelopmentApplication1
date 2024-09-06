@@ -15,10 +15,10 @@ private:
 	EnemyTypeFactory& operator=(const EnemyTypeFactory&) = default;
 
 private:
-	class Akabe* akabe;
-	class Pinky* pinky;
-	class Aosuke* aosuke;
-	class Guzuta* guzuta;
+	class Akabe* akabe;			//アカベェのクラス
+	class Pinky* pinky;			//ピンキーのクラス
+	class Aosuke* aosuke;		//アオスケのクラス
+	class Guzuta* guzuta;		//グズタのクラス
 
 private:
 	void Initialize(class EnemyBase& enemy);

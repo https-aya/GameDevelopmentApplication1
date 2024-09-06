@@ -40,11 +40,11 @@ private:
 
 	int flash_count;							//エネミーがいじけから戻るときの点滅
 	float izike_time;							//いじけ中のカウント
-	float animation_time;						//
-	int animation_count;
-	bool fast;
-	int eye_image;
-	int image;
+	float animation_time;						//アニメーションの時間計算
+	int animation_count;						//アニメーションの番号
+	bool fast;									//外に出てすぐかどうか
+	int eye_image;								//目のイメージ
+	int image;									//イメージ
 
 public:
 	EnemyTypeBase(class EnemyBase* e);
