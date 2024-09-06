@@ -23,7 +23,7 @@ void Aosuke::Initialize()
 void Aosuke::IdolMove(float delta_second)
 {
 	__super::IdolMove(delta_second);
-	if (player->GetFoodCount() >= 35)
+	if (player->GetFoodCount() >= 20)
 	{
 		EscMonsterRoom(delta_second);
 	}
@@ -82,6 +82,25 @@ void Aosuke::PatorolMove(float delta_second)
 				{
 					now_direction = eEnemyDirectionState::UP;
 				}
+				else
+				{
+					if (ret[eAdjacentDirection::LEFT] != ePanelID::WALL && now_direction != eEnemyDirectionState::RIGHT)
+					{
+						now_direction = eEnemyDirectionState::LEFT;
+					}
+					else if (ret[eAdjacentDirection::RIGHT] != ePanelID::WALL && now_direction != eEnemyDirectionState::LEFT)
+					{
+						now_direction = eEnemyDirectionState::RIGHT;
+					}
+					else if (ret[eAdjacentDirection::UP] != ePanelID::WALL && now_direction != eEnemyDirectionState::DOWN)
+					{
+						now_direction = eEnemyDirectionState::UP;
+					}
+					else  if (ret[eAdjacentDirection::DOWN] != ePanelID::WALL && now_direction != eEnemyDirectionState::UP)
+					{
+						now_direction = eEnemyDirectionState::DOWN;
+					}
+				}
 			}
 			else
 			{
@@ -104,6 +123,25 @@ void Aosuke::PatorolMove(float delta_second)
 					&& now_direction != eEnemyDirectionState::LEFT)
 				{
 					now_direction = eEnemyDirectionState::RIGHT;
+				}
+				else
+				{
+					if (ret[eAdjacentDirection::UP] != ePanelID::WALL && now_direction != eEnemyDirectionState::DOWN)
+					{
+						now_direction = eEnemyDirectionState::UP;
+					}
+					else  if (ret[eAdjacentDirection::DOWN] != ePanelID::WALL && now_direction != eEnemyDirectionState::UP)
+					{
+						now_direction = eEnemyDirectionState::DOWN;
+					}
+					else if (ret[eAdjacentDirection::LEFT] != ePanelID::WALL && now_direction != eEnemyDirectionState::RIGHT)
+					{
+						now_direction = eEnemyDirectionState::LEFT;
+					}
+					else if (ret[eAdjacentDirection::RIGHT] != ePanelID::WALL && now_direction != eEnemyDirectionState::LEFT)
+					{
+						now_direction = eEnemyDirectionState::RIGHT;
+					}
 				}
 			}
 			move_count = 0.0f;

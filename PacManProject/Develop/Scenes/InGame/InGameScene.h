@@ -2,6 +2,8 @@
 
 #include "../SceneBase.h"
 
+#define Enemy_ALL (4)
+
 class InGameScene : public SceneBase
 {
 private:
@@ -9,7 +11,9 @@ private:
 	int back_ground_image;		// 背景画像
 	int back_ground_sound;		// BGM
 	bool pause_flag;			// 一時停止フラグ
-	class EnemyBase* enemy;
+	class EnemyBase* enemy[Enemy_ALL];	//エネミー情報
+	bool enemy_state[Enemy_ALL];			//エネミーのステートをアタックにするかパトロールにするか
+	int enemy_count;			//エネミーを何体生成したか
 
 public:
 	InGameScene();

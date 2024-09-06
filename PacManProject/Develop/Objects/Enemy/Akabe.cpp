@@ -73,6 +73,26 @@ void Akabe::PatorolMove(float delta_second)
 				{
 					now_direction = eEnemyDirectionState::UP;
 				}
+				else
+				{
+					if (ret[eAdjacentDirection::LEFT] != ePanelID::WALL && now_direction != eEnemyDirectionState::RIGHT)
+					{
+						now_direction = eEnemyDirectionState::LEFT;
+					}
+					else if (ret[eAdjacentDirection::RIGHT] != ePanelID::WALL && now_direction != eEnemyDirectionState::LEFT)
+					{
+						now_direction = eEnemyDirectionState::RIGHT;
+					}
+					else if (ret[eAdjacentDirection::UP] != ePanelID::WALL && now_direction != eEnemyDirectionState::DOWN)
+					{
+						now_direction = eEnemyDirectionState::UP;
+					}
+					else  if (ret[eAdjacentDirection::DOWN] != ePanelID::WALL && now_direction != eEnemyDirectionState::UP)
+					{
+						now_direction = eEnemyDirectionState::DOWN;
+					}
+				}
+
 			}
 			else
 			{
@@ -95,6 +115,25 @@ void Akabe::PatorolMove(float delta_second)
 					&& now_direction != eEnemyDirectionState::LEFT)
 				{
 					now_direction = eEnemyDirectionState::RIGHT;
+				}
+				else
+				{
+					if (ret[eAdjacentDirection::UP] != ePanelID::WALL && now_direction != eEnemyDirectionState::DOWN)
+					{
+						now_direction = eEnemyDirectionState::UP;
+					}
+					else  if (ret[eAdjacentDirection::DOWN] != ePanelID::WALL && now_direction != eEnemyDirectionState::UP)
+					{
+						now_direction = eEnemyDirectionState::DOWN;
+					}
+					else if (ret[eAdjacentDirection::LEFT] != ePanelID::WALL && now_direction != eEnemyDirectionState::RIGHT)
+					{
+						now_direction = eEnemyDirectionState::LEFT;
+					}
+					else if (ret[eAdjacentDirection::RIGHT] != ePanelID::WALL && now_direction != eEnemyDirectionState::LEFT)
+					{
+						now_direction = eEnemyDirectionState::RIGHT;
+					}
 				}
 			}
 			move_count = 0.0f;
@@ -157,6 +196,25 @@ void Akabe::AttackMove(float delta_second, Player* playerdate)
 				{
 					now_direction = eEnemyDirectionState::UP;
 				}
+				else
+				{
+					if (ret[eAdjacentDirection::LEFT] != ePanelID::WALL && now_direction != eEnemyDirectionState::RIGHT)
+					{
+						now_direction = eEnemyDirectionState::LEFT;
+					}
+					else if (ret[eAdjacentDirection::RIGHT] != ePanelID::WALL && now_direction != eEnemyDirectionState::LEFT)
+					{
+						now_direction = eEnemyDirectionState::RIGHT;
+					}
+					else if (ret[eAdjacentDirection::UP] != ePanelID::WALL && now_direction != eEnemyDirectionState::DOWN)
+					{
+						now_direction = eEnemyDirectionState::UP;
+					}
+					else  if (ret[eAdjacentDirection::DOWN] != ePanelID::WALL && now_direction != eEnemyDirectionState::UP)
+					{
+						now_direction = eEnemyDirectionState::DOWN;
+					}
+				}
 			}
 			else
 			{
@@ -179,6 +237,25 @@ void Akabe::AttackMove(float delta_second, Player* playerdate)
 					&& now_direction != eEnemyDirectionState::LEFT)
 				{
 					now_direction = eEnemyDirectionState::RIGHT;
+				}
+				else
+				{
+					if (ret[eAdjacentDirection::UP] != ePanelID::WALL && now_direction != eEnemyDirectionState::DOWN)
+					{
+						now_direction = eEnemyDirectionState::UP;
+					}
+					else  if (ret[eAdjacentDirection::DOWN] != ePanelID::WALL && now_direction != eEnemyDirectionState::UP)
+					{
+						now_direction = eEnemyDirectionState::DOWN;
+					}
+					else if (ret[eAdjacentDirection::LEFT] != ePanelID::WALL && now_direction != eEnemyDirectionState::RIGHT)
+					{
+						now_direction = eEnemyDirectionState::LEFT;
+					}
+					else if (ret[eAdjacentDirection::RIGHT] != ePanelID::WALL && now_direction != eEnemyDirectionState::LEFT)
+					{
+						now_direction = eEnemyDirectionState::RIGHT;
+					}
 				}
 			}
 			move_count = 0.0f;

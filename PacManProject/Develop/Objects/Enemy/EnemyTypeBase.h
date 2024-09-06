@@ -17,32 +17,31 @@ protected:
 	};
 
 protected:
-	std::vector<int> animation;
-	std::vector<int> eyeanimation;
+	std::vector<int> animation;			//アニメーション
+	std::vector<int> eyeanimation;		//目のアニメーション
 
-	eEnemyType type;
-	eEnemyState enemy_state;
-	eEnemyState hold_state;
-	eEnemyDirectionState now_direction;
-	Vector2D velocity;
-	class EnemyBase* enemy;
-	class Player* player;
+	eEnemyType type;					//エネミーの種類
+	eEnemyState enemy_state;			//エネミーの状態
+	eEnemyDirectionState now_direction; //向いてる方向
+	Vector2D velocity;					//移動方向
+	class EnemyBase* enemy;				//エネミーの情報
+	class Player* player;				//プレイヤー情報
+	eEnemyDeltaState enemy_delta;		//エネミーの生体情報
 
-	std::map<eAdjacentDirection, ePanelID> ret;
-	ePanelID panel;
-	float move_count;
-	int target_panel_x;
-	int target_panel_y;
-	int x;
-	int	y;
+	std::map<eAdjacentDirection, ePanelID> ret; //上下左右のパネル情報
+	ePanelID panel;								//現在地パネル情報
+	float move_count;							//移動のカウント
+	int target_panel_x;							//目標パネルｘ
+	int target_panel_y;							//目標パネルｙ
+	int x;										//現在パネルｘ
+	int	y;										//現在パネルｙ
 
 private:
 
-	int flash_count;
-	float izike_time;
-	float animation_time;
+	int flash_count;							//エネミーがいじけから戻るときの点滅
+	float izike_time;							//いじけ中のカウント
+	float animation_time;						//
 	int animation_count;
-	int life;
 	bool fast;
 	int eye_image;
 	int image;

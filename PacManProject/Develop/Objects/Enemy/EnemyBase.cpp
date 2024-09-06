@@ -14,7 +14,7 @@ EnemyBase::EnemyBase()
 	, flash_count(0)
 	, izike_time(0.0f)
 	, player(nullptr)
-	, life()
+	, enemy_delta(eEnemyDeltaState::NOMAL)
 {
 }
 
@@ -38,7 +38,7 @@ void EnemyBase::Initialize()
 
 void EnemyBase::Update(float delta_second)
 {
-	if (player->GetPowerUp() == true && life == 0)
+	if (player->GetPowerUp() == true && enemy_delta == eEnemyDeltaState::NOMAL)
 	{
 		if (enemy_state!=eEnemyState::eIZIKE && enemy_state != eEnemyState::eESCAPE)
 		{
@@ -49,15 +49,16 @@ void EnemyBase::Update(float delta_second)
 			enemy_state = eEnemyState::eIZIKE;
 		}
 	}
-	else if(life == 2 || life == 0 && enemy_state != eEnemyState::eIDLE)
+	else if(enemy_delta == eEnemyDeltaState::BEGIN || enemy_delta == eEnemyDeltaState::NOMAL && enemy_state != eEnemyState::eIDLE)
 	{
 		enemy_state = hold_state;
+		enemy_delta = eEnemyDeltaState::NOMAL;
 	}
 	enemy_type->Update(delta_second,(this));
 	location += velocity * ENEMY_SPEED * delta_second;
 	if (enemy_state != eEnemyState::eIZIKE && enemy_state != eEnemyState::eESCAPE)
 	{
-		world_time+=delta_second;
+		world_time += delta_second;
 	}
 	if (location.x >= 640)
 	{
@@ -67,7 +68,10 @@ void EnemyBase::Update(float delta_second)
 	{
 		location.x = 639;
 	}
-	
+	if (enemy_delta == eEnemyDeltaState::RETRUN)
+	{
+		enemy_state = hold_state;
+	}
 }
 
 void EnemyBase::Draw(const Vector2D& screen_offset) const
@@ -115,70 +119,91 @@ void EnemyBase::OnHitCollision(GameObjectBase* hit_object)
 		// diffの分だけ戻る
 		location += dv.Normalize() * diff;
 	}
-
-
-	
 }
 
+//エネミーの状態の取得
 eEnemyState EnemyBase::GetEnemyState()
 {
 	return enemy_state;
 }
 
+//エネミーの状態の変更
 void EnemyBase::ChangeEnemyState(eEnemyState state)
 {
 	this->hold_state = state;
 }
 
+//エネミーの種類を設定
 void EnemyBase::SetEnemytype()
 {
 	int x, y;
+	//現在の座標をパネルの値に変更
 	StageData::ConvertToIndex(location, y, x);
 	switch (x)
 	{
 	case 13:
-		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::AKABE);	
+		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::AKABE);
+		enemy_state = eEnemyState::ePATROL;
 		hold_state = eEnemyState::ePATROL;
 		break;
 	case 12:
 		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::AOSUKE);
-		hold_state = eEnemyState::eIDLE;
+		enemy_state = eEnemyState::eIDLE;
+		hold_state = eEnemyState::ePATROL;
 		break;
 	case 16:
 		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::GUZUTA);
-		hold_state = eEnemyState::eIDLE;
+		enemy_state = eEnemyState::eIDLE;
+		hold_state = eEnemyState::ePATROL;
 		break;
 	case 14:
 		enemy_type = EnemyTypeFactory::Get((*this), eEnemyType::PINKY);
-		hold_state = eEnemyState::eIDLE;
+		enemy_state = eEnemyState::eIDLE;
+		hold_state = eEnemyState::ePATROL;
 		break;
 	default:
 		break;
 	}
-	enemy_state = hold_state;
 }
 
+//プレイヤー情報の設定
 void EnemyBase::SetPlayer(Player* object)
 {
 	this->player = object;
 }
 
+//プレイヤー情報の取得
 Player* EnemyBase::GetPlayer()
 {
 	return player;
 }
 
+//移動情報の取得
 void EnemyBase::SetVelocity(Vector2D velocity)
 {
 	this->velocity = velocity;
 }
 
+//可動性の変更
 void EnemyBase::SetMobility(eMobilityType mobility)
 {
 	this->mobility = mobility;
 }
 
-void EnemyBase::SetLife(int num)
+//ライフ情報の取得
+void EnemyBase::SetEnemyDeltaState(eEnemyDeltaState delta)
 {
-	life = num;
+	enemy_delta = delta;
+}
+
+//カウントの取得
+float EnemyBase::GetWorldTime()
+{
+	return world_time;
+}
+
+//カウントの初期化
+void EnemyBase::ClearWorldTime()
+{
+	world_time = 0.0f;
 }

@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\Enemy\EnemyTypeBase.h" />
+    <ClInclude Include="Objects\Enemy\Enum\EnemyDeltaState.h" />
     <ClInclude Include="Objects\Enemy\Enum\EnemyState.h" />
     <ClInclude Include="Objects\Enemy\Factory\EnemyTypeFactory.h" />
     <ClInclude Include="Objects\Enemy\Enum\EnemyType.h" />

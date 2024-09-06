@@ -33,9 +33,9 @@ void EnemyTypeBase::Update(float delta_second , class EnemyBase* e)
 	AnimationControl(delta_second);
 	if (enemy_state == eEnemyState::eIZIKE)
 	{
-		life = 1;
+		enemy_delta = eEnemyDeltaState::BACKLOOM;
 	}
-	if (life == 1 || life == 2)
+	if (enemy_delta == eEnemyDeltaState::BACKLOOM || enemy_delta == eEnemyDeltaState::RETRUN)
 	{
 		izike_time += delta_second;
 		if (izike_time >= 7.0f && flash_count == 0)
@@ -46,7 +46,7 @@ void EnemyTypeBase::Update(float delta_second , class EnemyBase* e)
 		{
 			izike_time = 0.0f;
 			flash_count = 0;
-			enemy->SetLife(0);
+			enemy->SetEnemyDeltaState(eEnemyDeltaState::NOMAL);
 		}
 	}
 
@@ -374,7 +374,7 @@ void EnemyTypeBase::EscapeMove(float delta_second)
 	}
 	if (panel == GATE)
 	{
-		enemy->SetLife(2);
+		enemy->SetEnemyDeltaState(eEnemyDeltaState::RETRUN);
 		now_direction = eEnemyDirectionState::LEFT;
 	}
 }
@@ -420,7 +420,7 @@ void EnemyTypeBase::EscMonsterRoom(float delta_second)
 	if (panel == GATE && gx == x && gy == y)
 	{
 		enemy->SetMobility(eMobilityType::Movable);
-		enemy->ChangeEnemyState(ePATROL);
+		enemy->SetEnemyDeltaState(eEnemyDeltaState::BEGIN);
 		this->now_direction = eEnemyDirectionState::LEFT;
 	}
 }

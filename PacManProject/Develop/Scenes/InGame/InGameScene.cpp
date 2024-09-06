@@ -14,8 +14,13 @@ InGameScene::InGameScene()
 	, back_ground_image(NULL)
 	, back_ground_sound(NULL)
 	, pause_flag(false)
-	, enemy(NULL)
+	, enemy_count(0)
 {
+	for (int i = 0; i < Enemy_ALL; i++)
+	{
+		enemy[i] = NULL;
+		enemy_state[i] = false;
+	}
 
 }
 
@@ -39,7 +44,7 @@ void InGameScene::Initialize()
 	// BGMの読み込み
 	back_ground_sound = rm->GetSounds("Resource/Sounds/start-music.mp3");
 
-	//PlaySoundMem(back_ground_sound, DX_PLAYTYPE_BACK);
+	PlaySoundMem(back_ground_sound, DX_PLAYTYPE_BACK);
 }
 
 eSceneType InGameScene::Update(const float& delta_second)
@@ -57,7 +62,7 @@ eSceneType InGameScene::Update(const float& delta_second)
 		__super::Update(delta_second);
 
 		// 全ての餌を食べたら、再スタート
-		if (player->GetFoodCount() >= 244)
+		if (player->GetFoodCount() >= 246)
 		{
 			return eSceneType::re_start;
 		}
@@ -66,6 +71,23 @@ eSceneType InGameScene::Update(const float& delta_second)
 		if (player->GetDestroy())
 		{
 			return eSceneType::re_start;
+		}
+	}
+
+
+	for (int i = 0; i < Enemy_ALL;i++)
+	{
+		if (enemy_state[i] == false && enemy[i]->GetWorldTime() >= 8.0f)
+		{
+			enemy[i]->ChangeEnemyState(eEnemyState::eATTACK);
+			enemy[i]->ClearWorldTime();
+			enemy_state[i] = true;
+		}
+		else if (enemy_state[i] == true && enemy[i]->GetWorldTime() >= 20.0f)
+		{
+			enemy[i]->ChangeEnemyState(eEnemyState::ePATROL);
+			enemy[i]->ClearWorldTime();
+			enemy_state[i] = false;
 		}
 	}
 
@@ -197,9 +219,10 @@ void InGameScene::LoadStageMapCSV()
 			// エネミー
 			case 'E':
 				generate_location = (Vector2D((float)(spos_x - 1), (float)(spos_y - 1)) * D_OBJECT_SIZE) + (D_OBJECT_SIZE / 2.0f);
-				enemy = CreateObject<EnemyBase>(generate_location);
-				enemy->SetEnemytype();
-				enemy->SetPlayer(player);
+				enemy[enemy_count] = CreateObject<EnemyBase>(generate_location);
+				enemy[enemy_count]->SetEnemytype();
+				enemy[enemy_count]->SetPlayer(player);
+				enemy_count++;
 				break;
 			// 上記以外
 			default:

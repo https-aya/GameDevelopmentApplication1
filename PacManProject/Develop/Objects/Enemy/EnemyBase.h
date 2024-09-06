@@ -4,6 +4,7 @@
 #include "../Player/Player.h"
 #include "Enum/EnemyState.h"
 #include "Enum/EnemyType.h"
+#include "Enum/EnemyDeltaState.h"
 
 
 
@@ -21,17 +22,17 @@ enum eEnemyDirectionState : unsigned char
 	};
 
 private:
-	class EnemyTypeBase* enemy_type;
-	eEnemyState enemy_state;
-	eEnemyState hold_state;
-	Vector2D velocity;
-	class Player* player;
+	class EnemyTypeBase* enemy_type;	//エネミーの種類
+	eEnemyState enemy_state;			//エネミーの現在の状態
+	eEnemyState hold_state;				//エネミーの状態を変更する際の変数
+	Vector2D velocity;					//移動方向と速度
+	class Player* player;				//プレイヤー情報t
+	eEnemyDeltaState enemy_delta;		//エネミーの生体情報
 
 private:
-	float world_time;
-	int flash_count;
-	float izike_time;
-	int life;
+	float world_time;				//エネミーの状態を切り替えるためのカウント
+	int flash_count;				//エネミーがいじけから戻るときの点滅
+	float izike_time;				//いじけ中のカウント
 
 public:	
 
@@ -44,15 +45,15 @@ public:
 	virtual void Finalize() override;
 
 public:
-	virtual void OnHitCollision(GameObjectBase* hit_object) override;
-	eEnemyState GetEnemyState();
-	void ChangeEnemyState(eEnemyState state);
-	void SetEnemytype();
-	void SetPlayer(Player* object);
-	Player* GetPlayer();
-	void SetVelocity(Vector2D velocity);
-	void SetMobility(eMobilityType mobility);
-	void SetLife(int num);
-	float GetWorldTime();
-	void ClearWorldTime();
+	virtual void OnHitCollision(GameObjectBase* hit_object) override;		
+	eEnemyState GetEnemyState();						//エネミーの状態の取得
+	void ChangeEnemyState(eEnemyState state);			//エネミーの状態の変更
+	void SetEnemytype();								//エネミーの種類を設定
+	void SetPlayer(Player* object);						//プレイヤー情報の設定
+	Player* GetPlayer();								//プレイヤー情報の取得
+	void SetVelocity(Vector2D velocity);				//移動情報の取得
+	void SetMobility(eMobilityType mobility);			//可動性の変更
+	void SetEnemyDeltaState(eEnemyDeltaState delta);								//ライフ情報の取得
+	float GetWorldTime();								//カウントの取得
+	void ClearWorldTime();								//カウントの初期化
 };

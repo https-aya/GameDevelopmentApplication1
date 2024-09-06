@@ -11,6 +11,15 @@ enum ePlayerState
 	DIE,		// 死亡状態
 };
 
+enum eDirectionState : unsigned char
+{
+	pUP,
+	pRIGHT,
+	pDOWN,
+	pLEFT,
+	pNONE,
+};
+
 /// <summary>
 /// プレイヤークラス（パックマン）
 /// </summary>
@@ -18,14 +27,7 @@ class Player : public GameObject
 {
 private:
 	// 進行方向状態
-	enum eDirectionState : unsigned char
-	{
-		UP,
-		RIGHT,
-		DOWN,
-		LEFT,
-		NONE,
-	};
+
 
 private:
 	std::vector<int> move_animation;		// 移動のアニメーション画像
@@ -92,7 +94,18 @@ public:
 	/// <returns>プレイヤーの状態</returns>
 	bool GetDestroy() const;
 
+
+	/// <summary>
+	/// エネミーの情報を格納する
+	/// </summary>
+	/// <param name="e">エネミー情報</param>
 	void SetEnemy(class EnemyBase* e);
+
+	/// <summary>
+	/// プレイヤーが現在むいている方向を確認する
+	/// </summary>
+	/// <returns>プレイヤーの向いている方向</returns>
+	eDirectionState GetNowDirection();
 
 
 private:

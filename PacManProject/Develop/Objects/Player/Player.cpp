@@ -12,8 +12,8 @@ Player::Player() :
 	dying_animation(),
 	velocity(0.0f),
 	player_state(ePlayerState::MOVE),
-	now_direction_state(eDirectionState::LEFT),
-	next_direction_state(eDirectionState::LEFT),
+	now_direction_state(eDirectionState::pLEFT),
+	next_direction_state(eDirectionState::pLEFT),
 	food_count(0),
 	animation_time(0.0f),
 	animation_count(0),
@@ -210,6 +210,11 @@ void Player::SetEnemy(class EnemyBase* e)
 	enemy = e;
 }
 
+eDirectionState Player::GetNowDirection()
+{
+	return now_direction_state;
+}
+
 /// <summary>
 /// 移動処理
 /// </summary>
@@ -222,19 +227,19 @@ void Player::Movement(float delta_second)
 		// 移動がなければ direction_state を変更する
 		velocity = 0.0f;
 		now_direction_state = next_direction_state;
-		next_direction_state = eDirectionState::NONE;
+		next_direction_state = eDirectionState::pNONE;
 	}
 	else
 	{
 		// 移動方向に移動していなければ direction_state を変更する
 		switch(now_direction_state)
 		{
-			case eDirectionState::UP:
-			case eDirectionState::DOWN:
+			case eDirectionState::pUP:
+			case eDirectionState::pDOWN:
 			{
 				float diff = location.y - old_location.y;
-				if(((now_direction_state == eDirectionState::UP) && (diff < 0.0f)) ||
-				   ((now_direction_state == eDirectionState::DOWN) && (0.0f < diff)))
+				if(((now_direction_state == eDirectionState::pUP) && (diff < 0.0f)) ||
+				   ((now_direction_state == eDirectionState::pDOWN) && (0.0f < diff)))
 				{
 					// 移動方向に移動してるので break
 					break;
@@ -242,17 +247,17 @@ void Player::Movement(float delta_second)
 
 				velocity.y = 0.0f;
 				now_direction_state = next_direction_state;
-				next_direction_state = eDirectionState::NONE;
+				next_direction_state = eDirectionState::pNONE;
 			}
 			break;
 
-			case eDirectionState::LEFT:
-			case eDirectionState::RIGHT:
+			case eDirectionState::pLEFT:
+			case eDirectionState::pRIGHT:
 			{
 
 				float diff = location.x - old_location.x;
-				if(((now_direction_state == eDirectionState::LEFT) && (diff < 0.0f)) ||
-				   ((now_direction_state == eDirectionState::RIGHT) && (0.0f < diff)))
+				if(((now_direction_state == eDirectionState::pLEFT) && (diff < 0.0f)) ||
+				   ((now_direction_state == eDirectionState::pRIGHT) && (0.0f < diff)))
 				{
 					// 移動方向に移動してるので break
 					break;
@@ -260,7 +265,7 @@ void Player::Movement(float delta_second)
 
 				velocity.x = 0.0f;
 				now_direction_state = next_direction_state;
-				next_direction_state = eDirectionState::NONE;
+				next_direction_state = eDirectionState::pNONE;
 			}
 			break;
 
@@ -280,82 +285,82 @@ void Player::Movement(float delta_second)
 	{
 		switch(now_direction_state)
 		{
-			case eDirectionState::UP:
+			case eDirectionState::pUP:
 				old_panel = ePanelID::NONE;
-			case eDirectionState::DOWN:
-			case eDirectionState::NONE:
-				now_direction_state = eDirectionState::UP;
+			case eDirectionState::pDOWN:
+			case eDirectionState::pNONE:
+				now_direction_state = eDirectionState::pUP;
 				break;
 
 			default:
-				next_direction_state = eDirectionState::UP;
+				next_direction_state = eDirectionState::pUP;
 		}	
 	}
 	else if(input->GetKeyDown(KEY_INPUT_DOWN) || input->GetButtonDown(XINPUT_BUTTON_DPAD_DOWN))
 	{
 		switch(now_direction_state)
 		{
-			case eDirectionState::DOWN:
+			case eDirectionState::pDOWN:
 				old_panel = ePanelID::NONE;
-			case eDirectionState::UP:
-			case eDirectionState::NONE:
-				now_direction_state = eDirectionState::DOWN;
+			case eDirectionState::pUP:
+			case eDirectionState::pNONE:
+				now_direction_state = eDirectionState::pDOWN;
 				break;
 
 			default:
-				next_direction_state = eDirectionState::DOWN;
+				next_direction_state = eDirectionState::pDOWN;
 		}
 	}
 	else if(input->GetKeyDown(KEY_INPUT_LEFT) || input->GetButtonDown(XINPUT_BUTTON_DPAD_LEFT))
 	{
 		switch(now_direction_state)
 		{
-			case eDirectionState::LEFT:
+			case eDirectionState::pLEFT:
 				old_panel = ePanelID::NONE;
-			case eDirectionState::RIGHT:
-			case eDirectionState::NONE:
-				now_direction_state = eDirectionState::LEFT;
+			case eDirectionState::pRIGHT:
+			case eDirectionState::pNONE:
+				now_direction_state = eDirectionState::pLEFT;
 				break;
 
 			default:
-				next_direction_state = eDirectionState::LEFT;
+				next_direction_state = eDirectionState::pLEFT;
 		}
 	}
 	else if(input->GetKeyDown(KEY_INPUT_RIGHT) || input->GetButtonDown(XINPUT_BUTTON_DPAD_RIGHT))
 	{
 		switch(now_direction_state)
 		{
-			case eDirectionState::RIGHT:
+			case eDirectionState::pRIGHT:
 				old_panel = ePanelID::NONE;
-			case eDirectionState::LEFT:
-			case eDirectionState::NONE:
-				now_direction_state = eDirectionState::RIGHT;
+			case eDirectionState::pLEFT:
+			case eDirectionState::pNONE:
+				now_direction_state = eDirectionState::pRIGHT;
 				break;
 
 			default:
-				next_direction_state = eDirectionState::RIGHT;
+				next_direction_state = eDirectionState::pRIGHT;
 		}
 	}
 
 	// 進行方向の移動量を追加
 	switch(now_direction_state)
 	{
-		case Player::UP:
+		case eDirectionState::pUP:
 			velocity.y = -2.0f;
 			break;
-		case Player::DOWN:
+		case eDirectionState::pDOWN:
 			velocity.y = 2.0f;
 			break;
-		case Player::LEFT:
+		case eDirectionState::pLEFT:
 			velocity.x = -2.0f;
 			break;
-		case Player::RIGHT:
+		case eDirectionState::pRIGHT:
 			velocity.x = 2.0f;
 			break;
 		default:
 			velocity = 0.0f;
 			now_direction_state = next_direction_state;
-			next_direction_state = Player::NONE;
+			next_direction_state = eDirectionState::pNONE;
 			break;
 	}
 
@@ -365,16 +370,16 @@ void Player::Movement(float delta_second)
 	{
 		switch(next_direction_state)
 		{
-			case Player::UP:
+			case eDirectionState::pUP:
 				velocity.y = -2.0f;
 				break;
-			case Player::RIGHT:
+			case eDirectionState::pRIGHT:
 				velocity.x = 2.0f;
 				break;
-			case Player::DOWN:
+			case eDirectionState::pDOWN:
 				velocity.y = 2.0f;
 				break;
-			case Player::LEFT:
+			case eDirectionState::pLEFT:
 				velocity.x = -2.0f;
 				break;
 			default:
