@@ -151,5 +151,9 @@ void Aosuke::PatorolMove(float delta_second)
 
 void Aosuke::AttackMove(float delta_second, Player* playerdate)
 {
+	__super::AttackMove(delta_second, playerdate);
+	StageData::ConvertToIndex(player->GetLocation(), target_panel_y, target_panel_x);
+	int lx;
+	int ly;
 
 }
