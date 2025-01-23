@@ -36,7 +36,7 @@ void InGameScene::Initialize()
 	LoadStageMapFoodsCSV();
 
 	// スクリーンオフセットを設定
-	screen_offset.y = D_OBJECT_SIZE * 3.0f;
+	screen_offset.y = 0.5;
 
 	// 背景画像の読み込み
 	ResourceManager* rm = ResourceManager::GetInstance();
@@ -151,7 +151,7 @@ void InGameScene::CheckCollision(GameObjectBase* target, GameObjectBase* partner
 		// カプセル同士の当たり判定
 		if (IsCheckCollision(tc, pc))
 		{
-			if (target->GetCollision().object_type == eObjectType::player)
+			if (tc.object_type == eObjectType::player)
 			{
 				partner->OnHitCollision(target);
 				target->OnHitCollision(partner);
@@ -267,7 +267,6 @@ void InGameScene::LoadStageMapFoodsCSV()
 		else if (c == '.')
 		{
 			Vector2D generate_location = (Vector2D((float)x, (float)y) * D_OBJECT_SIZE) + (D_OBJECT_SIZE / 2.0f);
-
 			CreateObject<Food>(generate_location);
 			x++;
 		}
